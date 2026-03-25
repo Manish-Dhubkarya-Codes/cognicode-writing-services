@@ -38,11 +38,6 @@ export function HeroSection() {
       <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
 
-          {/* SEARCH BAR */}
-<div className="mb-10">
-  <SearchBar />
-</div>
-
           {/* TRUST BADGE */}
           <div className="mb-8 flex items-center justify-center gap-2">
             <div className="flex -space-x-1">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -23,10 +23,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Menu, X, GraduationCap, Phone, ChevronDown } from "lucide-react";
+import { Menu, X, GraduationCap, Phone, ChevronDown, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import CogniCodeLogo from "@/public/CogniCodeLogo.svg"
 import Image from "next/image";
+import { SearchBar } from "../ui/SearchBar";
 
 const aboutLinks = [
   { name: "About Us", href: "/about" },
@@ -75,11 +76,16 @@ const globalLinks = [
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+const [searchOpen, setSearchOpen] = useState(false);
   const pathname = usePathname();
+
+  useEffect(() => {
+  setSearchOpen(false);
+}, [pathname]);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+      <nav className={`mx-auto flex max-w-7xl items-center justify-between px-4 ${searchOpen?"py-[13px]":"py-4"}  sm:px-6 lg:px-8`}>
         <div className="flex  lg:flex-1">
           <Link href="/" className="-m-1.5 p-1.5 flex  items-center gap-2">
             <Image src={CogniCodeLogo} alt="CogniCode Logo" className="w-15" />
@@ -91,6 +97,7 @@ export function Header() {
         </div>
 
         {/* Desktop navigation */}
+        {!searchOpen ? (
         <div className="hidden lg:flex lg:gap-x-6">
           <Link
             href="/"
@@ -244,18 +251,43 @@ export function Header() {
           >
             Contact
           </Link>
-        </div>
+        </div> ) : (
+  <div className="hidden lg:flex flex-[3] px-6">
+    <SearchBar compact />
+  </div>
+)}
 
         <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-4">
-          <Button variant="outline" size="sm" asChild>
-            <Link href="/contact" className="flex items-center gap-2">
-              <Phone className="h-4 w-4" />
-              Get a Quote
-            </Link>
-          </Button>
-          <Button size="sm" asChild>
-            <Link href="/contact">Get Started</Link>
-          </Button>
+           {!searchOpen ? (
+            <>
+         <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => setSearchOpen(true)}
+      >
+        <Search className="h-5 w-5" />
+      </Button>
+
+      <Button variant="outline" size="sm" asChild>
+        <Link href="/contact" className="flex items-center gap-2">
+          <Phone className="h-4 w-4" />
+          Get a Quote
+        </Link>
+      </Button>
+
+      <Button size="sm" asChild>
+        <Link href="/contact">Get Started</Link>
+      </Button>
+    </>
+  ) : (
+  <Button
+    variant="ghost"
+    size="icon"
+    onClick={() => setSearchOpen(false)}
+  >
+    <X className="h-5 w-5" />
+  </Button>
+)}
         </div>
 
         {/* Mobile menu */}
