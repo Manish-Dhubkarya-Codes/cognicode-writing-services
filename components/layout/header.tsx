@@ -84,13 +84,13 @@ const [searchOpen, setSearchOpen] = useState(false);
 }, [pathname]);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="fixed top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <nav className={`mx-auto flex max-w-7xl items-center justify-between px-4 ${searchOpen?"py-[13px]":"py-4"}  sm:px-6 lg:px-8`}>
         <div className="flex  lg:flex-1">
           <Link href="/" className="-m-1.5 p-1.5 flex  items-center gap-2">
             <Image src={CogniCodeLogo} alt="CogniCode Logo" className="w-15" />
 
-            <span className="font-serif text-xl font-bold text-foreground">
+            <span className="font-serif hidden    lg:block text-xl font-bold text-foreground">
               CogniCodeWrite
             </span>
           </Link>
@@ -252,7 +252,7 @@ const [searchOpen, setSearchOpen] = useState(false);
             Contact
           </Link>
         </div> ) : (
-  <div className="hidden lg:flex flex-[3] px-6">
+  <div className="lg:flex hidden flex-[3] px-6">
     <SearchBar compact />
   </div>
 )}
@@ -267,8 +267,7 @@ const [searchOpen, setSearchOpen] = useState(false);
       >
         <Search className="h-5 w-5" />
       </Button>
-
-      <Button variant="outline" size="sm" asChild>
+<Button variant="outline" size="sm" asChild>
         <Link href="/contact" className="flex items-center gap-2">
           <Phone className="h-4 w-4" />
           Get a Quote
@@ -278,8 +277,10 @@ const [searchOpen, setSearchOpen] = useState(false);
       <Button size="sm" asChild>
         <Link href="/contact">Get Started</Link>
       </Button>
+      
     </>
   ) : (
+    <>
   <Button
     variant="ghost"
     size="icon"
@@ -287,209 +288,254 @@ const [searchOpen, setSearchOpen] = useState(false);
   >
     <X className="h-5 w-5" />
   </Button>
+  <Button variant="outline" size="sm" asChild>
+        <Link href="/contact" className="flex items-center gap-2">
+          <Phone className="h-4 w-4" />
+          Get a Quote
+        </Link>
+      </Button>
+
+      <Button size="sm" asChild>
+        <Link href="/contact">Get Started</Link>
+      </Button>
+  </>
 )}
         </div>
 
         {/* Mobile menu */}
-        <div className="flex lg:hidden">
-          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="-m-2.5">
-                <span className="sr-only">Open main menu</span>
-                <Menu className="h-6 w-6" aria-hidden="true" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-full max-w-sm overflow-y-auto">
-              <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
-              <div className="flex items-center justify-between">
-                <Link
-                  href="/"
-                  className="-m-1.5 p-1.5 flex items-center gap-2"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-                    <GraduationCap className="h-5 w-5 text-primary-foreground" />
-                  </div>
-                  <span className="font-serif text-lg font-bold">
-                    CogniCodeWrite
-                  </span>
-                </Link>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="-m-2.5"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <span className="sr-only">Close menu</span>
-                  <X className="h-6 w-6" aria-hidden="true" />
-                </Button>
-              </div>
-              <div className="mt-6 flow-root">
-                <div className="-my-6 divide-y divide-border">
-                  <div className="py-6">
-                    <Link
-                      href="/"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className={cn(
-                        "-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-muted",
-                        pathname === "/" ? "text-primary bg-muted" : "text-foreground"
-                      )}
-                    >
-                      Home
-                    </Link>
+        <div className="flex w-[100%] lg:hidden">
+          {/* Mobile SearchBar always visible */}
+<div className="flex flex-1 justify-evenly  items-center lg:hidden px-2">
+  <div className="md:w-[70%] w-[90%]">
+  <SearchBar compact />
+  </div>
+</div>
+<Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+  <SheetTrigger asChild>
+    <Button variant="ghost" size="icon" className="-mx-2 h-10 w-10 p-0">
+      <span className="sr-only">Open main menu</span>
+      <Menu className="h-6 w-6" />
+    </Button>
+  </SheetTrigger>
+  <SheetContent 
+    side="right" 
+    className="w-[90vw] max-w-sm sm:w-80 sm:max-w-md p-0"
+  >
+    {/* Sticky Header */}
+    <div className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-border/50 bg-background/95 px-4 sm:px-6 backdrop-blur-sm">
+      <Link
+        href="/"
+        className="flex items-center gap-3 -m-1 p-1"
+        onClick={() => setMobileMenuOpen(false)}
+      >
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary">
+          <GraduationCap className="h-5 w-5 text-primary-foreground" />
+        </div>
+        <span className="font-serif text-xl font-bold tracking-tight sm:text-lg">
+          CogniCodeWrite
+        </span>
+      </Link>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-10 w-10 p-0 -m-2"
+        onClick={() => setMobileMenuOpen(false)}
+      >
+        <span className="sr-only">Close menu</span>
+        <X className="h-6 w-6" />
+      </Button>
+    </div>
 
-                    <Accordion type="single" collapsible className="w-full">
-                      <AccordionItem value="about" className="border-none">
-                        <AccordionTrigger className="-mx-3 px-3 py-2 text-base font-semibold leading-7 hover:bg-muted hover:no-underline rounded-lg">
-                          About Us
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <div className="ml-4 space-y-1">
-                            {aboutLinks.map((link) => (
-                              <Link
-                                key={link.href}
-                                href={link.href}
-                                onClick={() => setMobileMenuOpen(false)}
-                                className={cn(
-                                  "block rounded-lg px-3 py-2 text-sm hover:bg-muted",
-                                  pathname === link.href
-                                    ? "text-primary bg-muted"
-                                    : "text-muted-foreground"
-                                )}
-                              >
-                                {link.name}
-                              </Link>
-                            ))}
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
+    {/* Scrollable Content */}
+    <div className="flex h-[calc(100%-4rem)] flex-col overflow-hidden">
+      <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
+        <div className="-my-2.5 divide-y divide-border/50">
+          
+          {/* Home Link */}
+          <div className="py-2.5">
+            <Link
+              href="/"
+              onClick={() => setMobileMenuOpen(false)}
+              className={cn(
+                "group flex w-full items-center rounded-xl p-3 text-base font-semibold leading-6 transition-all duration-200 hover:bg-muted/80",
+                pathname === "/" 
+                  ? "bg-primary/10 text-primary shadow-sm" 
+                  : "text-foreground hover:text-foreground"
+              )}
+            >
+              Home
+            </Link>
+          </div>
 
-                      <AccordionItem value="services" className="border-none">
-                        <AccordionTrigger className="-mx-3 px-3 py-2 text-base font-semibold leading-7 hover:bg-muted hover:no-underline rounded-lg">
-                          Services
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <div className="ml-4 space-y-1 max-h-64 overflow-y-auto">
-                            <Link
-                              href="/services"
-                              onClick={() => setMobileMenuOpen(false)}
-                              className={cn(
-                                "block rounded-lg px-3 py-2 text-sm font-medium hover:bg-muted",
-                                pathname === "/services"
-                                  ? "text-primary bg-muted"
-                                  : "text-foreground"
-                              )}
-                            >
-                              All Services
-                            </Link>
-                            {serviceLinks.map((link) => (
-                              <Link
-                                key={link.href}
-                                href={link.href}
-                                onClick={() => setMobileMenuOpen(false)}
-                                className={cn(
-                                  "block rounded-lg px-3 py-2 text-sm hover:bg-muted",
-                                  pathname === link.href
-                                    ? "text-primary bg-muted"
-                                    : "text-muted-foreground"
-                                )}
-                              >
-                                {link.name}
-                              </Link>
-                            ))}
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-
-                      <AccordionItem value="global" className="border-none">
-                        <AccordionTrigger className="-mx-3 px-3 py-2 text-base font-semibold leading-7 hover:bg-muted hover:no-underline rounded-lg">
-                          Global
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <div className="ml-4 space-y-1">
-                            {globalLinks.map((link) => (
-                              <Link
-                                key={link.href}
-                                href={link.href}
-                                onClick={() => setMobileMenuOpen(false)}
-                                className={cn(
-                                  "block rounded-lg px-3 py-2 text-sm hover:bg-muted",
-                                  pathname === link.href
-                                    ? "text-primary bg-muted"
-                                    : "text-muted-foreground"
-                                )}
-                              >
-                                {link.name}
-                              </Link>
-                            ))}
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    </Accordion>
-
-                    <Link
-                      href="/pricing"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className={cn(
-                        "-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-muted",
-                        pathname === "/pricing"
-                          ? "text-primary bg-muted"
-                          : "text-foreground"
-                      )}
-                    >
-                      Pricing
-                    </Link>
-
-                    <Link
-                      href="/samples"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className={cn(
-                        "-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-muted",
-                        pathname === "/samples"
-                          ? "text-primary bg-muted"
-                          : "text-foreground"
-                      )}
-                    >
-                      Samples
-                    </Link>
-
-                    <Link
-                      href="/contact"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className={cn(
-                        "-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 hover:bg-muted",
-                        pathname === "/contact"
-                          ? "text-primary bg-muted"
-                          : "text-foreground"
-                      )}
-                    >
-                      Contact
-                    </Link>
-                  </div>
-                  <div className="py-6 space-y-3">
-                    <Button
-                      variant="outline"
-                      className="w-full"
-                      asChild
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <Link href="/contact" className="flex items-center gap-2">
-                        <Phone className="h-4 w-4" />
-                        Get a Quote
+          {/* Accordion Sections */}
+          <div className="py-2.5">
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="about" className="border-none">
+                <AccordionTrigger className={cn(
+                  "group flex w-full items-center rounded-xl p-3 text-base font-semibold leading-6 transition-all duration-200 hover:bg-muted/80 hover:no-underline",
+                  "data-[state=open]:bg-muted/80 data-[state=open]:shadow-sm"
+                )}>
+                  About Us
+                </AccordionTrigger>
+                <AccordionContent className="pt-3">
+                  <div className="ml-4 space-y-1.5 border-l border-border/50 pl-3">
+                    {aboutLinks.map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className={cn(
+                          "group block rounded-lg p-2.5 text-sm transition-all duration-200 hover:bg-muted/60 truncate",
+                          pathname === link.href
+                            ? "bg-primary/10 text-primary border border-primary/20" 
+                            : "text-muted-foreground"
+                        )}
+                      >
+                        {link.name}
                       </Link>
-                    </Button>
-                    <Button
-                      className="w-full"
-                      asChild
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <Link href="/contact">Get Started</Link>
-                    </Button>
+                    ))}
                   </div>
-                </div>
-              </div>
-            </SheetContent>
-          </Sheet>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="services" className="border-none mt-1">
+                <AccordionTrigger className={cn(
+                  "group flex w-full items-center rounded-xl p-3 text-base font-semibold leading-6 transition-all duration-200 hover:bg-muted/80 hover:no-underline",
+                  "data-[state=open]:bg-muted/80 data-[state=open]:shadow-sm"
+                )}>
+                  Services
+                </AccordionTrigger>
+                <AccordionContent className="pt-3">
+                  <div className="space-y-1.5">
+                    <Link
+                      href="/services"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={cn(
+                        "group block rounded-lg p-2.5 text-sm font-medium transition-all duration-200 hover:bg-muted/60 truncate",
+                        pathname === "/services"
+                          ? "bg-primary/10 text-primary border border-primary/20" 
+                          : "text-foreground"
+                      )}
+                    >
+                      All Services
+                    </Link>
+                    {serviceLinks.map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className={cn(
+                          "group block rounded-lg p-2.5 text-sm transition-all duration-200 hover:bg-muted/60 truncate",
+                          pathname === link.href
+                            ? "bg-primary/10 text-primary border border-primary/20" 
+                            : "text-muted-foreground"
+                        )}
+                      >
+                        {link.name}
+                      </Link>
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="global" className="border-none mt-1">
+                <AccordionTrigger className={cn(
+                  "group flex w-full items-center rounded-xl p-3 text-base font-semibold leading-6 transition-all duration-200 hover:bg-muted/80 hover:no-underline",
+                  "data-[state=open]:bg-muted/80 data-[state=open]:shadow-sm"
+                )}>
+                  Global
+                </AccordionTrigger>
+                <AccordionContent className="pt-3">
+                  <div className="ml-4 space-y-1.5 border-l border-border/50 pl-3">
+                    {globalLinks.map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className={cn(
+                          "group block rounded-lg p-2.5 text-sm transition-all duration-200 hover:bg-muted/60 truncate",
+                          pathname === link.href
+                            ? "bg-primary/10 text-primary border border-primary/20" 
+                            : "text-muted-foreground"
+                        )}
+                      >
+                        {link.name}
+                      </Link>
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </div>
+
+          {/* Bottom Links */}
+          <div className="py-2.5 space-y-1.5">
+            <Link
+              href="/pricing"
+              onClick={() => setMobileMenuOpen(false)}
+              className={cn(
+                "group flex w-full items-center rounded-xl p-3 text-base font-semibold leading-6 transition-all duration-200 hover:bg-muted/80",
+                pathname === "/pricing"
+                  ? "bg-primary/10 text-primary shadow-sm" 
+                  : "text-foreground"
+              )}
+            >
+              Pricing
+            </Link>
+            <Link
+              href="/samples"
+              onClick={() => setMobileMenuOpen(false)}
+              className={cn(
+                "group flex w-full items-center rounded-xl p-3 text-base font-semibold leading-6 transition-all duration-200 hover:bg-muted/80",
+                pathname === "/samples"
+                  ? "bg-primary/10 text-primary shadow-sm" 
+                  : "text-foreground"
+              )}
+            >
+              Samples
+            </Link>
+            <Link
+              href="/contact"
+              onClick={() => setMobileMenuOpen(false)}
+              className={cn(
+                "group flex w-full items-center rounded-xl p-3 text-base font-semibold leading-6 transition-all duration-200 hover:bg-muted/80",
+                pathname === "/contact"
+                  ? "bg-primary/10 text-primary shadow-sm" 
+                  : "text-foreground"
+              )}
+            >
+              Contact
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Sticky CTA Section */}
+      <div className="sticky bottom-0 z-10 shrink-0 border-t border-border/50 bg-background/95 px-4 py-6 sm:px-6 backdrop-blur-sm">
+        <div className="space-y-3">
+          <Button
+            variant="outline"
+            className="w-full h-12 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 text-sm font-semibold"
+            asChild
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            <Link href="/contact" className="flex items-center gap-2">
+              <Phone className="h-4 w-4" />
+              Get a Quote
+            </Link>
+          </Button>
+          <Button
+            className="w-full h-12 rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 text-sm font-semibold"
+            asChild
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            <Link href="/contact">Get Started</Link>
+          </Button>
+        </div>
+      </div>
+    </div>
+  </SheetContent>
+</Sheet>
         </div>
       </nav>
     </header>
