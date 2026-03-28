@@ -1,0 +1,49 @@
+.react-pdf__Page__textContent.textLayer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  opacity: 1;
+  line-height: 1;
+  text-align: initial;
+  pointer-events: auto;
+}
+
+.react-pdf__Page__textContent.textLayer > span {
+  color: transparent;
+  position: absolute;
+  white-space: pre;
+  cursor: text;
+  transform-origin: 0% 0%;
+}
+
+.react-pdf__Page__textContent.textLayer span.markedContent {
+  top: 0;
+  height: 0;
+}
+
+.react-pdf__Page__textContent.textLayer ::selection {
+  background: rgba(147, 155, 242, 0.3);
+}
+
+.react-pdf__Page__textContent.textLayer ::-moz-selection {
+  background: rgba(147, 155, 242, 0.3);
+}
+
+.react-pdf__Page__textContent.textLayer .customTextSelection span::selection {
+  background: rgba(147, 155, 242, 0.3);
+}
+
+.react-pdf__Page__textContent.textLayer .customTextSelection span::-moz-selection {
+  background: rgba(147, 155, 242, 0.3);
+}
+
+.react-pdf__Page__textContent.textLayer .customTextSelection ::selection {
+  background: rgba(147, 155, 242, 0.3);
+}
+
+.react-pdf__Page__textContent.textLayer .customTextSelection ::-moz-selection {
+  background: rgba(147, 155, 242, 0.3);
+}

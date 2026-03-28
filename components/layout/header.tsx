@@ -64,6 +64,7 @@ const serviceLinks = [
   { name: "Plagiarism Check & Removal", href: "/services/plagiarism-removal" },
   { name: "Synopsis Writing Services", href: "/services/synopsis-writing" },
   { name: "Book Writing & Publishing", href: "/services/book-writing" },
+  { name: "Latex Editor", href: "/services/latex-editor" }
 ];
 
 const globalLinks = [

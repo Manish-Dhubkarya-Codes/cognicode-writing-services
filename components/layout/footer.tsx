@@ -50,30 +50,33 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer className="bg-foreground text-background" aria-labelledby="footer-heading">
-      <h2 id="footer-heading" className="sr-only">
-        Footer
-      </h2>
-      <div className="mx-auto max-w-7xl px-4 pb-8 pt-16 sm:px-6 lg:px-8 lg:pt-24">
-        <div className="xl:grid xl:grid-cols-3 xl:gap-8">
-          <div className="space-y-8">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
+    <footer className="bg-foreground text-background border-t border-background/5" aria-labelledby="footer-heading">
+      <h2 id="footer-heading" className="sr-only">Footer</h2>
+      
+      <div className="mx-auto max-w-7xl px-6 pb-8 pt-16 lg:px-8">
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4 xl:gap-8">
+          
+          {/* Brand Column */}
+          <div className="flex flex-col items-center text-center sm:items-start sm:text-left space-y-6">
+            <Link href="/" className="group flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary transition-transform group-hover:scale-110">
                 <GraduationCap className="h-6 w-6 text-primary-foreground" />
               </div>
-              <span className="font-serif text-xl font-bold">CogniCodeWrite</span>
+              <span className="font-serif text-2xl font-bold tracking-tight text-background">
+                CogniCodeWrite
+              </span>
             </Link>
-            <p className="text-sm leading-6 text-background/70">
-              Your trusted partner in academic excellence. We provide expert
-              research writing support services to help scholars achieve their
-              academic goals.
+            <p className="max-w-xs text-sm leading-relaxed text-background/60">
+              Empowering scholars through expert research writing and academic consultation. 
+              Precision, integrity, and excellence in every word.
             </p>
-            <div className="flex gap-x-6">
+            <div className="flex gap-x-5">
               {socialLinks.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
-                  className="text-background/60 hover:text-primary transition-colors"
+                  className="text-background/40 hover:text-primary transition-all duration-300 transform hover:-translate-y-1"
                 >
                   <span className="sr-only">{item.name}</span>
                   <item.icon className="h-5 w-5" aria-hidden="true" />
@@ -81,94 +84,73 @@ export function Footer() {
               ))}
             </div>
           </div>
-          <div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
-            <div className="md:grid md:grid-cols-2 md:gap-8">
-              <div>
-                <h3 className="text-sm font-semibold leading-6">Services</h3>
-                <ul role="list" className="mt-6 space-y-4">
-                  {footerNavigation.services.map((item) => (
-                    <li key={item.name}>
-                      <Link
-                        href={item.href}
-                        className="text-sm leading-6 text-background/70 hover:text-primary transition-colors"
-                      >
-                        {item.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="mt-10 md:mt-0">
-                <h3 className="text-sm font-semibold leading-6">Company</h3>
-                <ul role="list" className="mt-6 space-y-4">
-                  {footerNavigation.company.map((item) => (
-                    <li key={item.name}>
-                      <Link
-                        href={item.href}
-                        className="text-sm leading-6 text-background/70 hover:text-primary transition-colors"
-                      >
-                        {item.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+
+          {/* Navigation Sections */}
+          <div className="grid grid-cols-2 gap-8 sm:gap-4 lg:col-span-2">
+            <div className="space-y-4">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-background/90">Services</h3>
+              <ul role="list" className="space-y-3">
+                {footerNavigation.services.map((item) => (
+                  <li key={item.name}>
+                    <Link href={item.href} className="text-sm text-background/60 hover:text-primary hover:pl-1 transition-all">
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <div className="md:grid md:grid-cols-2 md:gap-8">
-              <div>
-                <h3 className="text-sm font-semibold leading-6">Resources</h3>
-                <ul role="list" className="mt-6 space-y-4">
-                  {footerNavigation.resources.map((item) => (
-                    <li key={item.name}>
-                      <Link
-                        href={item.href}
-                        className="text-sm leading-6 text-background/70 hover:text-primary transition-colors"
-                      >
-                        {item.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="mt-10 md:mt-0">
-                <h3 className="text-sm font-semibold leading-6">Contact</h3>
-                <ul role="list" className="mt-6 space-y-4">
-                  <li className="flex items-start gap-3">
-                    <Mail className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-background/70">
-                      support@cognicodewrite.com
-                    </span>
+            <div className="space-y-4">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-background/90">Company</h3>
+              <ul role="list" className="space-y-3">
+                {footerNavigation.company.map((item) => (
+                  <li key={item.name}>
+                    <Link href={item.href} className="text-sm text-background/60 hover:text-primary hover:pl-1 transition-all">
+                      {item.name}
+                    </Link>
                   </li>
-                  <li className="flex items-start gap-3">
-                    <Phone className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-background/70">
-                      +1 (555) 123-4567
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <MapPin className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-background/70">
-                      123 Academic Drive, Suite 100
-                      <br />
-                      Boston, MA 02101
-                    </span>
-                  </li>
-                </ul>
-              </div>
+                ))}
+              </ul>
             </div>
           </div>
+
+          {/* Contact Column */}
+          <div className="space-y-6">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-background/90 text-center sm:text-left">
+              Get in Touch
+            </h3>
+            <ul className="space-y-4">
+              <li className="flex items-start gap-3 group">
+                <Mail className="h-5 w-5 text-primary shrink-0 transition-colors group-hover:text-primary/80" />
+                <a href="mailto:support@cognicodewrite.com" className="text-sm text-background/60 hover:text-background transition-colors">
+                  support@cognicodewrite.com
+                </a>
+              </li>
+              <li className="flex items-start gap-3 group">
+                <Phone className="h-5 w-5 text-primary shrink-0 transition-colors group-hover:text-primary/80" />
+                <span className="text-sm text-background/60">+1 (555) 123-4567</span>
+              </li>
+              <li className="flex items-start gap-3 group">
+                <MapPin className="h-5 w-5 text-primary shrink-0 transition-colors group-hover:text-primary/80" />
+                <span className="text-sm text-background/60 leading-snug">
+                  123 Academic Drive, Suite 100<br />Boston, MA 02101
+                </span>
+              </li>
+            </ul>
+          </div>
         </div>
-        <div className="mt-16 border-t border-background/10 pt-8 sm:mt-20 lg:mt-24">
-          <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-            <p className="text-xs leading-5 text-background/50">
-              &copy; {new Date().getFullYear()} CogniCodeWrite. All rights reserved.
+
+        {/* Bottom Bar */}
+        <div className="mt-16 border-t border-background/10 pt-8">
+          <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
+            <p className="text-xs text-background/40">
+              &copy; {new Date().getFullYear()} CogniCodeWrite. Designed for academic success.
             </p>
-            <div className="flex gap-x-6">
+            <div className="flex flex-wrap justify-center gap-x-8 gap-y-2">
               {footerNavigation.legal.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="text-xs leading-5 text-background/50 hover:text-primary transition-colors"
+                  className="text-xs font-medium text-background/40 hover:text-primary transition-colors"
                 >
                   {item.name}
                 </Link>

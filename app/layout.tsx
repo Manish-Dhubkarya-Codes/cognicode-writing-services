@@ -40,8 +40,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${merriweather.variable} font-sans antialiased`}>
-        {children}
+<body 
+  suppressHydrationWarning={true}
+  className={`${inter.variable} ${merriweather.variable} font-sans antialiased`}
+>        {children}
         <Analytics />
       </body>
     </html>
