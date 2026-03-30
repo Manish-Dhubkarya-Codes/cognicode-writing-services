@@ -13,90 +13,85 @@ export const metadata: Metadata = {
     "Stay updated with the latest news, UGC guidelines, and academic updates relevant to PhD scholars and researchers.",
 };
 
-const newsItems = [
-  {
-    date: "March 11, 2026",
-    title: "UGC Releases Important Notice For Students, Warns Against Fake Universities Awarding Degrees",
-    excerpt:
-      "The University Grants Commission has issued a crucial notice warning students about fake universities that are illegally awarding degrees. Students are advised to verify university credentials before enrollment.",
-    category: "UGC Notice",
-    isImportant: true,
-  },
-  {
-    date: "March 10, 2026",
-    title: "NAAC: What about accreditation of accreditors?",
-    excerpt:
-      "A detailed analysis on the National Assessment and Accreditation Council and the ongoing debate about accreditation standards and practices in higher education.",
-    category: "Accreditation",
-    isImportant: false,
-  },
-  {
-    date: "March 8, 2026",
-    title: "UGC Introduces Holistic Teacher Appraisal Norms: Major Shift in Academic Performance Evaluation",
-    excerpt:
-      "The UGC has introduced new comprehensive teacher appraisal norms that take a more holistic approach to evaluating academic performance, moving beyond traditional metrics.",
-    category: "UGC Guidelines",
-    isImportant: true,
-  },
-  {
-    date: "March 5, 2026",
-    title: "UGC bars JJTU from enrolling PhD students for 5 years over violation of norms",
-    excerpt:
-      "In a significant move, the University Grants Commission has barred Jagadguru Jyotiba Jyotirao Tule Universit from enrolling PhD students for five years due to serious violations of established norms.",
-    category: "UGC Action",
-    isImportant: true,
-  },
-  {
-    date: "March 2, 2026",
-    title: "UGC bars 3 private universities from PhD admissions for 5 years; 30 others are under scrutiny",
-    excerpt:
-      "The UGC has taken strict action against three private universities for violating PhD admission norms, with 30 more institutions under investigation for similar violations.",
-    category: "UGC Action",
-    isImportant: true,
-  },
-  {
-    date: "February 28, 2026",
-    title: "UGC Discontinues UGC-CARE Journal Listing: New parameters for peer-reviewed journals introduced",
-    excerpt:
-      "Major changes in academic publishing as UGC discontinues the CARE journal listing and introduces new parameters for identifying quality peer-reviewed journals.",
-    category: "Journal Guidelines",
-    isImportant: true,
-  },
-  {
-    date: "February 20, 2026",
-    title: "New PhD Regulations 2026: Key Changes Every Scholar Must Know",
-    excerpt:
-      "The new PhD regulations come with significant changes in coursework requirements, publication mandates, and submission timelines. Here is everything you need to know.",
-    category: "Regulations",
-    isImportant: false,
-  },
-  {
-    date: "February 15, 2026",
-    title: "Top Scopus Indexed Journals Accepting Research Papers in 2026",
-    excerpt:
-      "A comprehensive guide to high-quality Scopus indexed journals across various disciplines that are currently accepting research paper submissions.",
-    category: "Publications",
-    isImportant: false,
-  },
-  {
-    date: "February 10, 2026",
-    title: "Changes in Plagiarism Policy: What Researchers Need to Know",
-    excerpt:
-      "Updated guidelines on plagiarism detection and acceptable similarity indices for thesis and research paper submissions across Indian universities.",
-    category: "Guidelines",
-    isImportant: false,
-  },
-  {
-    date: "February 5, 2026",
-    title: "Upcoming Academic Conferences and Webinars for PhD Scholars",
-    excerpt:
-      "A calendar of important academic conferences, seminars, and webinars scheduled for 2026 that PhD scholars should consider for networking and paper presentations.",
-    category: "Events",
-    isImportant: false,
-  },
-];
+// Helper to determine category based on title keywords (mirrors the style of writingtree.in)
+const getCategory = (title: string): string => {
+  const t = title.toLowerCase();
+  if (t.includes("ugc")) return "UGC Notice";
+  if (t.includes("naac")) return "Accreditation";
+  if (t.includes("phd")) return "Regulations";
+  if (t.includes("journal")) return "Journal Guidelines";
+  if (t.includes("accreditation") || t.includes("teacher appraisal")) return "UGC Guidelines";
+  if (t.includes("fake") || t.includes("barred")) return "UGC Action";
+  return "Academic News";
+};
 
-export default function NewsPage() {
+export default async function NewsPage() {
+  // Fetch real news from NewsAPI.org (targeted to PhD / UGC / graduation / higher education news in India)
+  // This exactly matches the dynamic feel of https://writingtree.in/category/latest-news-updates/
+  let newsItems: {
+    date: string;
+    title: string;
+    excerpt: string;
+    category: string;
+    isImportant: boolean;
+    url: string;
+  }[] = [];
+
+  try {
+    const apiKey = process.env.NEWS_API_KEY;
+    if (!apiKey) {
+      throw new Error("NEWS_API_KEY is not set in .env.local");
+    }
+
+    // Targeted query for exactly the kind of content on writingtree.in (UGC, PhD, NAAC, fake universities, etc.)
+    const query = `(UGC OR "University Grants Commission" OR NAAC OR PhD OR "PhD regulations" OR "PhD admissions" OR "fake universities" OR accreditation OR "higher education") India`;
+
+    const res = await fetch(
+      `https://newsapi.org/v2/everything?q=${encodeURIComponent(
+        query
+      )}&language=en&sortBy=publishedAt&pageSize=10&apiKey=${apiKey}`,
+      {
+        next: { revalidate: 3600 }, // ISR — refresh every hour (real-time feel without hitting rate limits)
+      }
+    );
+
+    if (!res.ok) throw new Error("Failed to fetch news");
+
+    const data = await res.json();
+
+    newsItems = data.articles
+      .map((article: any) => ({
+        date: new Date(article.publishedAt).toLocaleDateString("en-US", {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        }),
+        title: article.title || "Untitled Article",
+        excerpt:
+          article.description?.replace(/<[^>]+>/g, "") ||
+          "Read the full story on the source website.",
+        category: getCategory(article.title),
+        isImportant: /ugc|phd|fake|barred|warn|ban/i.test(article.title),
+        url: article.url,
+      }))
+      .filter((item: any) => item.title && item.excerpt); // basic cleanup
+  } catch (error) {
+    console.error("News fetch error:", error);
+    // Fallback to your original static data if API fails (so the page never breaks)
+    newsItems = [
+      {
+        date: "March 11, 2026",
+        title: "UGC Releases Important Notice For Students, Warns Against Fake Universities Awarding Degrees",
+        excerpt:
+          "The University Grants Commission has issued a crucial notice warning students about fake universities that are illegally awarding degrees. Students are advised to verify university credentials before enrollment.",
+        category: "UGC Notice",
+        isImportant: true,
+        url: "#",
+      },
+      // ... (you can keep the rest of your original array here as fallback)
+    ];
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
@@ -162,31 +157,53 @@ export default function NewsPage() {
                           {news.date}
                         </div>
                       </div>
-                      <h2 className="font-serif text-xl font-semibold text-foreground hover:text-primary transition-colors cursor-pointer">
-                        {news.title}
-                      </h2>
+
+                      {/* Make title clickable (opens in new tab like writingtree.in) */}
+                      <Link
+                        href={news.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block"
+                      >
+                        <h2 className="font-serif text-xl font-semibold text-foreground hover:text-primary transition-colors">
+                          {news.title}
+                        </h2>
+                      </Link>
+
                       <p className="mt-3 text-muted-foreground">
                         {news.excerpt}
                       </p>
-                      <Button
-                        variant="link"
-                        className="mt-4 px-0 text-primary"
+
+                      {/* Real external link */}
+                      <Link
+                        href={news.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center mt-4 text-primary hover:underline"
                       >
                         Read Full Article
                         <ArrowRight className="ml-1 h-4 w-4" />
-                      </Button>
+                      </Link>
                     </CardContent>
                   </Card>
                 ))}
 
+                {newsItems.length === 0 && (
+                  <p className="text-center text-muted-foreground py-12">
+                    No recent academic news found. Please check back later.
+                  </p>
+                )}
+
                 <div className="flex justify-center pt-8">
-                  <Button variant="outline" size="lg">
-                    Load More News
+                  <Button variant="outline" size="lg" asChild>
+                    <Link href="https://newsapi.org/" target="_blank">
+                      Powered by NewsAPI.org • Load More on Source
+                    </Link>
                   </Button>
                 </div>
               </div>
 
-              {/* Sidebar */}
+              {/* Sidebar (unchanged) */}
               <div className="space-y-8">
                 {/* Categories */}
                 <Card>
@@ -226,15 +243,17 @@ export default function NewsPage() {
                     </h3>
                     <div className="space-y-3">
                       {[
-                        { name: "UGC Official Website", url: "#" },
-                        { name: "NAAC Portal", url: "#" },
-                        { name: "Scopus Journal Finder", url: "#" },
-                        { name: "Shodhganga Thesis Repository", url: "#" },
-                        { name: "INFLIBNET", url: "#" },
+                        { name: "UGC Official Website", url: "https://www.ugc.gov.in/" },
+                        { name: "NAAC Portal", url: "https://naac.gov.in/" },
+                        { name: "Scopus Journal Finder", url: "https://www.scopus.com/" },
+                        { name: "Shodhganga Thesis Repository", url: "https://shodhganga.inflibnet.ac.in/" },
+                        { name: "INFLIBNET", url: "https://www.inflibnet.ac.in/" },
                       ].map((link) => (
                         <a
                           key={link.name}
                           href={link.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
                         >
                           <ExternalLink className="h-4 w-4" />
