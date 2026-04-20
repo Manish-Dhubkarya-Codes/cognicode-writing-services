@@ -45,8 +45,8 @@ const serviceLinks = [
   { name: "PhD Thesis Writing Services", href: "/services/phd-thesis-writing" },
   { name: "PhD Thesis Writing Assistance", href: "/services/thesis-assistance" },
   { name: "Dissertation Consultation", href: "/services/dissertation-consultation" },
-  { name: "Essay Writing Service", href: "/services/essay-writing" },
-  { name: "Journal Writing Services", href: "/services/journal-writing" },
+  // { name: "Essay Writing Service", href: "/services/essay-writing" },
+  // { name: "Journal Writing Services", href: "/services/journal-writing" },
   { name: "PhD Topic Selection", href: "/services/topic-selection" },
   { name: "PhD Scholar Guidance", href: "/services/scholar-guidance" },
   { name: "PhD Consultation Services", href: "/services/phd-consultation" },
@@ -64,7 +64,8 @@ const serviceLinks = [
   { name: "Plagiarism Check & Removal", href: "/services/plagiarism-removal" },
   { name: "Synopsis Writing Services", href: "/services/synopsis-writing" },
   { name: "Book Writing & Publishing", href: "/services/book-writing" },
-  { name: "Latex Editor", href: "/services/latex-editor" }
+  { name: "Latex Editor", href: "/services/latex-editor" },
+  { name: "Publishing", href: "/services/publishing" },
 ];
 
 const globalLinks = [
@@ -147,51 +148,54 @@ const [searchOpen, setSearchOpen] = useState(false);
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Services Dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              className={cn(
-                "flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary outline-none",
-                pathname.startsWith("/services")
-                  ? "text-primary"
-                  : "text-muted-foreground"
-              )}
-            >
-              Services
-              <ChevronDown className="h-4 w-4" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="start"
-              className="w-64 max-h-96 overflow-y-auto"
-            >
-              <DropdownMenuItem asChild>
-                <Link
-                  href="/services"
-                  className={cn(
-                    "w-full cursor-pointer font-semibold",
-                    pathname === "/services" && "bg-muted"
-                  )}
-                >
-                  All Services
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              {serviceLinks.map((link) => (
-                <DropdownMenuItem key={link.href} asChild>
-                  <Link
-                    href={link.href}
-                    className={cn(
-                      "w-full cursor-pointer text-sm",
-                      pathname === link.href && "bg-muted"
-                    )}
-                  >
-                    {link.name}
-                  </Link>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+{/* Services Dropdown */}
+<DropdownMenu>
+  <DropdownMenuTrigger
+    className={cn(
+      "flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary outline-none",
+      pathname.startsWith("/services")
+        ? "text-primary"
+        : "text-muted-foreground"
+    )}
+  >
+    Services
+    <ChevronDown className="h-4 w-4" />
+  </DropdownMenuTrigger>
 
+  <DropdownMenuContent
+    align="start"
+    className="w-64 max-h-96 overflow-y-auto"
+  >
+    <DropdownMenuItem asChild>
+      <Link
+        href="/services"
+        className={cn(
+          "w-full cursor-pointer font-semibold",
+          pathname === "/services" && "bg-muted"
+        )}
+      >
+        All Services
+      </Link>
+    </DropdownMenuItem>
+
+    {/* Replaced Separator with Tailwind divider */}
+    <div className="my-1 h-px bg-border mx-2" />
+
+    {serviceLinks.map((link) => (
+      <DropdownMenuItem key={link.href} asChild>
+        <Link
+          href={link.href}
+          className={cn(
+            "w-full cursor-pointer text-sm",
+            pathname === link.href && "bg-muted"
+          )}
+        >
+          {link.name}
+        </Link>
+      </DropdownMenuItem>
+    ))}
+  </DropdownMenuContent>
+</DropdownMenu>
           {/* Global Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger
