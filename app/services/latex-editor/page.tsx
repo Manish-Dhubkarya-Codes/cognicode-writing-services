@@ -31,6 +31,7 @@ const Page = dynamic(
   { ssr: false }
 ) as React.FC<PageProps>;
 // Safe CSS imports
+// ✅ Correct imports for react-pdf (works with Next.js + Turbopack)
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 // CodeMirror imports (yeh missing the isliye error aa raha tha)
@@ -196,7 +197,7 @@ export default function LatexEditorPage() {
         viewRef.current = null;
       }
     };
-  }, [isDarkMode, code]); // ← code bhi add kiya taaki update ho
+  }, [isDarkMode]); // ← code bhi add kiya taaki update ho
 
   // PDF text selection → editor sync
   useEffect(() => {
