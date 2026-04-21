@@ -345,8 +345,8 @@ export default function LiveTrackingMap() {
       <div className="rounded-2xl overflow-hidden border border-border shadow-lg" style={{ height: 500 }}>
         <MapContainer center={OFFICE_COORDS} zoom={16} style={{ height: "100%", width: "100%" }} zoomControl={true}>
           <TileLayer
-            url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>'
+            url="https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
+            attribution='&copy; Google Maps'
             maxZoom={20}
           />
           <AutoFitBounds userLocation={userLocation} officeCoords={OFFICE_COORDS} route={route} trigger={fitTrigger} />
