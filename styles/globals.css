@@ -74,6 +74,21 @@
   --sidebar-ring: oklch(0.439 0 0);
 }
 
+.office-label {
+  background: white !important;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+  border-radius: 6px !important;
+  padding: 4px 10px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #111 !important;
+  white-space: nowrap !important;
+}
+.office-label::before {
+  border-right-color: white !important;
+}
+
 @theme inline {
   --font-sans: 'Geist', 'Geist Fallback';
   --font-mono: 'Geist Mono', 'Geist Mono Fallback';

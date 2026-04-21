@@ -19,6 +19,7 @@ import {
   Popup,
   Polyline,
   useMap,
+  Tooltip
 } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -352,6 +353,14 @@ export default function LiveTrackingMap() {
           <AutoFitBounds userLocation={userLocation} officeCoords={OFFICE_COORDS} route={route} trigger={fitTrigger} />
 
           <Marker position={OFFICE_COORDS} icon={officeIcon}>
+            <Tooltip
+    permanent
+    direction="right"
+    offset={[12, -20]}
+    className="office-label"
+  >
+    <strong>CogniCode IT Solutions</strong>
+  </Tooltip>
             <Popup>
               <div style={{ textAlign: "center", lineHeight: 1.5 }}>
                 <strong style={{ fontSize: 14 }}>CogniCode IT Solutions</strong><br />
