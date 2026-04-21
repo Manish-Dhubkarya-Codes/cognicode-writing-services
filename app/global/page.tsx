@@ -7,9 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Globe, MapPin, Users, Award, ArrowRight } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Global Academic Support | CogniCodeWrite",
+  title: "Global Academic Support | CogniCode",
   description:
-    "CogniCodeWrite provides academic research writing support to scholars across the globe - UK, USA, UAE, and more.",
+    "CogniCode provides academic research writing support to scholars across the globe - UK, USA, UAE, and more.",
 };
 
 const regions = [
@@ -83,7 +83,7 @@ export default function GlobalPage() {
                 Academic Support Across the Globe
               </h1>
               <p className="mt-6 text-lg leading-8 text-muted-foreground">
-                CogniCodeWrite brings trusted academic support to scholars
+                CogniCode brings trusted academic support to scholars
                 worldwide. From India to the UK, USA, UAE, and beyond, we
                 understand and cater to diverse university requirements.
               </p>

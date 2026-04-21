@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle, Users, Clock, Shield, Award, FileText, BookOpen, Search, Target, Globe, Edit, BarChart3, Cpu, FileCode, Code, Database, Terminal } from "lucide-react";
 
-export const metadata: Metadata = { title: "Coding & Implementation | CogniCodeWrite", description: "Professional coding and software implementation support for academic research projects. Python, R, MATLAB, Java, and more." };
+export const metadata: Metadata = { title: "Coding & Implementation | CogniCode", description: "Professional coding and software implementation support for academic research projects. Python, R, MATLAB, Java, and more." };
 
 const features = [
   { icon: Cpu, title: "Algorithm Development", description: "Design and implement custom algorithms for machine learning, optimization, signal processing, and domain-specific research problems." },
@@ -53,7 +53,7 @@ export default function ServicePage() {
 <option value="other">Other</option></select><Button className="w-full" size="lg">Get Free Consultation</Button></form></CardContent></Card>
         </div></div></section>
 
-        <section className="bg-primary py-16"><div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center"><h2 className="font-serif text-3xl font-bold text-primary-foreground sm:text-4xl">Need Research Coding Support?</h2><p className="mx-auto mt-4 max-w-2xl text-lg text-primary-foreground/90">From Python scripts to full ML pipelines — our expert developers have you covered.</p><div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row"><Button size="lg" variant="secondary" asChild><Link href="/contact">Get Started</Link></Button><Button size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary" asChild><Link href="/pricing">View Pricing</Link></Button></div></div></section>
+        <section className="bg-primary py-16"><div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center"><h2 className="font-serif text-3xl font-bold text-black sm:text-4xl">Need Research Coding Support?</h2><p className="mx-auto mt-4 max-w-2xl text-lg text-primary-foreground/90">From Python scripts to full ML pipelines — our expert developers have you covered.</p><div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row"><Button size="lg" variant="secondary" asChild><Link href="/contact">Get Started</Link></Button><Button size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary" asChild><Link href="/pricing">View Pricing</Link></Button></div></div></section>
       </main>
       <Footer />
     </div>

@@ -4,7 +4,7 @@ const testimonials = [
   {
     id: 1,
     content:
-      "CogniCodeWrite transformed my PhD journey. Their expert guidance helped me complete my thesis ahead of schedule with exceptional quality. The team understood my research area deeply.",
+      "CogniCode transformed my PhD journey. Their expert guidance helped me complete my thesis ahead of schedule with exceptional quality. The team understood my research area deeply.",
     author: "Dr. Sarah Mitchell",
     role: "PhD in Psychology",
     university: "Stanford University",
@@ -22,7 +22,7 @@ const testimonials = [
   {
     id: 3,
     content:
-      "I was struggling with my literature review for months. CogniCodeWrite's team helped me structure it properly and identify key gaps in my research. Highly recommended for any PhD scholar.",
+      "I was struggling with my literature review for months. CogniCode's team helped me structure it properly and identify key gaps in my research. Highly recommended for any PhD scholar.",
     author: "Dr. Emily Rodriguez",
     role: "Postdoctoral Researcher",
     university: "Harvard University",

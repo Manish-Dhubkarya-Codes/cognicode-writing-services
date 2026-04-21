@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "PhD Thesis Writing Services | CogniCodeWrite",
+  title: "PhD Thesis Writing Services | CogniCode",
   description:
     "Professional PhD thesis writing support services. Expert guidance from topic selection to final submission with guaranteed quality.",
 };
@@ -326,7 +326,7 @@ export default function ThesisWritingPage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                className="border-primary-foreground text-black hover:bg-primary-foreground hover:text-primary"
                 asChild
               >
                 <Link href="/pricing">View Pricing</Link>

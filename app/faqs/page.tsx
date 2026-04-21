@@ -13,7 +13,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { MessageCircle, Mail, Phone } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Frequently Asked Questions | CogniCodeWrite",
+  title: "Frequently Asked Questions | CogniCode",
   description:
     "Find answers to common questions about our academic research writing services, pricing, and support process.",
 };
@@ -23,7 +23,7 @@ const faqCategories = [
     title: "General Questions",
     faqs: [
       {
-        question: "What services does CogniCodeWrite offer?",
+        question: "What services does CogniCode offer?",
         answer:
           "We offer comprehensive academic support services including PhD thesis writing, synopsis writing, research paper writing, dissertation support, journal publication assistance, data analysis, plagiarism removal, proofreading, and editing services. Our team of PhD experts provides guidance across all disciplines.",
       },
@@ -100,7 +100,7 @@ const faqCategories = [
       {
         question: "What are your packages or plans?",
         answer:
-          "We offer flexible packages: CogniCodeWrite Lite (standard academic support with basic features) and CogniCodeWrite Premium (expert-guided research with advanced features including dedicated mentorship). Pricing varies based on project type, academic level, and urgency.",
+          "We offer flexible packages: CogniCode Lite (standard academic support with basic features) and CogniCode Premium (expert-guided research with advanced features including dedicated mentorship). Pricing varies based on project type, academic level, and urgency.",
       },
       {
         question: "Do you offer customized pricing?",
@@ -130,7 +130,7 @@ const faqCategories = [
       {
         question: "Do you provide revisions?",
         answer:
-          "Yes, we offer multiple revision rounds to ensure your satisfaction. CogniCodeWrite Lite includes 1 revision, while Premium includes up to 3 revisions. Additional revisions are available at nominal cost.",
+          "Yes, we offer multiple revision rounds to ensure your satisfaction. CogniCode Lite includes 1 revision, while Premium includes up to 3 revisions. Additional revisions are available at nominal cost.",
       },
       {
         question: "Can you help with data collection?",
@@ -241,7 +241,7 @@ export default function FAQsPage() {
                     Response within 24 hours
                   </p>
                   <Button variant="outline" className="mt-4" asChild>
-                    <a href="mailto:support@cognicodewrite.com">Send Email</a>
+                    <a href="mailto:office.cognicode@gmail.com">Send Email</a>
                   </Button>
                 </CardContent>
               </Card>

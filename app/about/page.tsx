@@ -16,9 +16,9 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About Us | CogniCodeWrite",
+  title: "About Us | CogniCode",
   description:
-    "Learn about CogniCodeWrite's mission to support academic excellence. Our team of PhD experts is dedicated to helping scholars succeed.",
+    "Learn about CogniCode's mission to support academic excellence. Our team of PhD experts is dedicated to helping scholars succeed.",
 };
 
 const team = [
@@ -72,7 +72,7 @@ const values = [
 ];
 
 const milestones = [
-  { year: "2009", title: "Founded", description: "CogniCodeWrite was established with a vision to support academic research." },
+  { year: "2009", title: "Founded", description: "CogniCode was established with a vision to support academic research." },
   { year: "2012", title: "1,000 Projects", description: "Reached our first major milestone of completed projects." },
   { year: "2016", title: "Global Expansion", description: "Extended our services to scholars in 50+ countries." },
   { year: "2020", title: "10,000 Projects", description: "Celebrated a decade of academic excellence." },
@@ -89,7 +89,7 @@ export default function AboutPage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
               <h1 className="font-serif text-4xl font-bold tracking-tight text-background sm:text-5xl">
-                About CogniCodeWrite
+                About CogniCode
               </h1>
               <p className="mt-6 text-lg leading-8 text-background/70">
                 We are a team of dedicated academic professionals committed to
@@ -150,7 +150,7 @@ export default function AboutPage() {
                 Our Core Values
               </h2>
               <p className="mt-4 text-lg leading-8 text-muted-foreground">
-                These principles guide everything we do at CogniCodeWrite.
+                These principles guide everything we do at CogniCode.
               </p>
             </div>
             <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-8 lg:max-w-none lg:grid-cols-4">

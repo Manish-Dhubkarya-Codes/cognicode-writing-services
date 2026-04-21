@@ -290,12 +290,12 @@ export async function generateMetadata({
 
   if (!service) {
     return {
-      title: "Service Not Found | CogniCodeWrite",
+      title: "Service Not Found | CogniCode",
     };
   }
 
   return {
-    title: `${service.title} | CogniCodeWrite`,
+    title: `${service.title} | CogniCode`,
     description: service.description,
   };
 }

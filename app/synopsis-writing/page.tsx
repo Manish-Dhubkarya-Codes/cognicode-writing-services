@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Synopsis Writing Services | CogniCodeWrite",
+  title: "Synopsis Writing Services | CogniCode",
   description:
     "Professional PhD synopsis writing support services. Get your synopsis approved quickly with our expert guidance.",
 };

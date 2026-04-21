@@ -17,7 +17,7 @@ const merriweather = Merriweather({
 });
 
 export const metadata: Metadata = {
-  title: 'CogniCodeWrite | Academic Research Writing Services',
+  title: 'CogniCode | Academic Research Writing Services',
   description: 'Professional academic research writing services for PhD thesis, research papers, dissertations, and more. Expert guidance for your scholarly success.',
   keywords: 'academic writing, research papers, PhD thesis, dissertation, academic support, scholarly writing',
   generator: 'v0.app',

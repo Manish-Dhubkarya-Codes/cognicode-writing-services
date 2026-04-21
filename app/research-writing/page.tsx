@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Research Paper Writing Services | CogniCodeWrite",
+  title: "Research Paper Writing Services | CogniCode",
   description:
     "Professional research paper writing support for journal publications. Get your research published in Scopus, SCI, and UGC-approved journals.",
 };
@@ -314,7 +314,7 @@ export default function ResearchWritingPage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                className="border-primary-foreground text-black hover:bg-primary-foreground hover:text-primary"
                 asChild
               >
                 <Link href="/pricing">View Pricing</Link>

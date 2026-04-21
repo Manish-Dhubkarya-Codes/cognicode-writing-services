@@ -20,9 +20,9 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Why Choose Us | CogniCodeWrite",
+  title: "Why Choose Us | CogniCode",
   description:
-    "Discover why thousands of PhD scholars trust CogniCodeWrite for their academic research writing needs.",
+    "Discover why thousands of PhD scholars trust CogniCode for their academic research writing needs.",
 };
 
 const reasons = [
@@ -133,7 +133,7 @@ export default function WhyUsPage() {
               </h1>
               <p className="mt-6 text-lg leading-8 text-muted-foreground">
                 Discover why thousands of PhD scholars, researchers, and
-                academics choose CogniCodeWrite for their research writing and
+                academics choose CogniCode for their research writing and
                 support needs.
               </p>
             </div>
@@ -163,7 +163,7 @@ export default function WhyUsPage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
               <h2 className="font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-                8 Reasons to Choose CogniCodeWrite
+                8 Reasons to Choose CogniCode
               </h2>
               <p className="mt-4 text-lg text-muted-foreground">
                 We are committed to providing exceptional academic support that
@@ -239,7 +239,7 @@ export default function WhyUsPage() {
           <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
             <blockquote className="relative">
               <p className="font-serif text-2xl font-medium italic text-foreground md:text-3xl">
-                &quot;CogniCodeWrite helped me navigate through my entire PhD
+                &quot;CogniCode helped me navigate through my entire PhD
                 journey. Their expert guidance in thesis writing and data
                 analysis was invaluable. I highly recommend their services to
                 any PhD scholar.&quot;
@@ -278,7 +278,7 @@ export default function WhyUsPage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="min-w-[200px] border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                className="min-w-[200px] border-primary-foreground text-black hover:bg-primary-foreground hover:text-primary"
                 asChild
               >
                 <Link href="/services">Explore Services</Link>

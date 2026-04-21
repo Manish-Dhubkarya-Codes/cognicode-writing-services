@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "UAE Academic Writing Support | CogniCodeWrite",
+  title: "UAE Academic Writing Support | CogniCode",
   description:
     "Professional academic writing support for UAE universities. Expert guidance for PhD research, MBA dissertations, and academic papers.",
 };
@@ -105,7 +105,7 @@ export default function UAEPage() {
                 </h1>
                 <p className="mt-6 text-lg leading-8 text-muted-foreground">
                   Expert academic support tailored for UAE universities.
-                  CogniCodeWrite provides trusted research writing services to
+                  CogniCode provides trusted research writing services to
                   scholars across the Emirates with deep understanding of
                   regional academic requirements.
                 </p>

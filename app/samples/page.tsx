@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Research Work Samples | CogniCodeWrite",
+  title: "Research Work Samples | CogniCode",
   description:
     "View samples of our academic writing work including thesis, synopsis, research papers, and more.",
 };
@@ -249,7 +249,7 @@ export default function SamplesPage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                className="border-primary-foreground text-black hover:bg-primary-foreground hover:text-primary"
                 asChild
               >
                 <Link href="/pricing">View Pricing</Link>

@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "PhD Admissions Support | CogniCodeWrite",
+  title: "PhD Admissions Support | CogniCode",
   description:
     "Get expert guidance for PhD admissions, entrance exam preparation, and university selection. Navigate your doctoral journey with confidence.",
 };

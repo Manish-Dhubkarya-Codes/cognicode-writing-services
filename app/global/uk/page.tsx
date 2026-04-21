@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "UK Academic Writing Support | CogniCodeWrite",
+  title: "UK Academic Writing Support | CogniCode",
   description:
     "Professional academic writing support for UK universities. Expert guidance for PhD thesis, dissertations, and research papers aligned with British academic standards.",
 };
@@ -105,7 +105,7 @@ export default function UKPage() {
                 </h1>
                 <p className="mt-6 text-lg leading-8 text-muted-foreground">
                   Expert academic support tailored for UK universities.
-                  CogniCodeWrite brings trusted research writing services to
+                  CogniCode brings trusted research writing services to
                   scholars across the United Kingdom with deep understanding of
                   British academic standards.
                 </p>

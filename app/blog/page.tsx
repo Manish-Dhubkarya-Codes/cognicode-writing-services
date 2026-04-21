@@ -6,7 +6,7 @@ import Link from "next/link";
 import { ArrowRight, Calendar, User, Clock, Tag } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Blog | CogniCodeWrite",
+  title: "Blog | CogniCode",
   description:
     "Expert insights, research tips, and academic writing guides from our team of PhD scholars.",
 };

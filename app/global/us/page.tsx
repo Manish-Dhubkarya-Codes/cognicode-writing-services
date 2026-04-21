@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "US Academic Writing Support | CogniCodeWrite",
+  title: "US Academic Writing Support | CogniCode",
   description:
     "Professional academic writing support for US universities. Expert guidance for doctoral dissertations, research papers, and thesis aligned with American academic standards.",
 };
@@ -250,7 +250,7 @@ export default function USPage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                className="border-primary-foreground text-black hover:bg-primary-foreground hover:text-primary"
                 asChild
               >
                 <Link href="/pricing">View Pricing</Link>

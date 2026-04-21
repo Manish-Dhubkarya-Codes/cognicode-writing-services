@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar, ArrowRight, ExternalLink } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Latest News & Updates | CogniCodeWrite",
+  title: "Latest News & Updates | CogniCode",
   description:
     "Stay updated with the latest news, UGC guidelines, and academic updates relevant to PhD scholars and researchers.",
 };

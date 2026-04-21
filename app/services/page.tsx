@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Services | CogniCodeWrite",
+  title: "Services | CogniCode",
   description:
     "Explore our comprehensive academic writing services including thesis writing, research papers, data analysis, and more.",
 };
@@ -300,7 +300,7 @@ export default function ServicesPage() {
                   size="lg"
                   variant="outline"
                   asChild
-                  className="bg-transparent border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
+                  className="bg-transparent border-primary-foreground/30 text-black hover:bg-primary-foreground/10"
                 >
                   <Link href="/pricing">View Pricing</Link>
                 </Button>

@@ -8,6 +8,7 @@ import {
   Twitter,
   Linkedin,
   Instagram,
+  ExternalLink 
 } from "lucide-react";
 
 const footerNavigation = {
@@ -42,10 +43,10 @@ const footerNavigation = {
 };
 
 const socialLinks = [
-  { name: "Facebook", icon: Facebook, href: "#" },
-  { name: "Twitter", icon: Twitter, href: "#" },
-  { name: "LinkedIn", icon: Linkedin, href: "#" },
-  { name: "Instagram", icon: Instagram, href: "#" },
+  { name: "Facebook", icon: Facebook, href: "https://www.facebook.com/CogniCode" },
+  { name: "LinkedIn", icon: Linkedin, href: "https://www.linkedin.com/company/cognicodindia/" },
+  { name: "Instagram", icon: Instagram, href: "https://www.instagram.com/cognicodethesiswriting" },
+  { name: "External Link", icon: ExternalLink, href: "https://share.google/SAralwG2DYtufKBQ9" },
 ];
 
 export function Footer() {
@@ -64,7 +65,7 @@ export function Footer() {
                 <GraduationCap className="h-6 w-6 text-primary-foreground" />
               </div>
               <span className="font-serif text-2xl font-bold tracking-tight text-background">
-                CogniCodeWrite
+                CogniCode
               </span>
             </Link>
             <p className="max-w-xs text-sm leading-relaxed text-background/60">
@@ -74,6 +75,7 @@ export function Footer() {
             <div className="flex gap-x-5">
               {socialLinks.map((item) => (
                 <a
+                target="_blank"
                   key={item.name}
                   href={item.href}
                   className="text-background/40 hover:text-primary transition-all duration-300 transform hover:-translate-y-1"
@@ -121,18 +123,18 @@ export function Footer() {
             <ul className="space-y-4">
               <li className="flex items-start gap-3 group">
                 <Mail className="h-5 w-5 text-primary shrink-0 transition-colors group-hover:text-primary/80" />
-                <a href="mailto:support@cognicodewrite.com" className="text-sm text-background/60 hover:text-background transition-colors">
-                  support@cognicodewrite.com
+                <a href="mailto:office.cognicode@gmail.com" className="text-sm text-background/60 hover:text-background transition-colors">
+                  office.cognicode@gmail.com
                 </a>
               </li>
               <li className="flex items-start gap-3 group">
                 <Phone className="h-5 w-5 text-primary shrink-0 transition-colors group-hover:text-primary/80" />
-                <span className="text-sm text-background/60">+1 (555) 123-4567</span>
+                <span className="text-sm text-background/60">+917000515617</span>
               </li>
               <li className="flex items-start gap-3 group">
                 <MapPin className="h-5 w-5 text-primary shrink-0 transition-colors group-hover:text-primary/80" />
                 <span className="text-sm text-background/60 leading-snug">
-                  123 Academic Drive, Suite 100<br />Boston, MA 02101
+                  B/2, Mahesh Nagar Colony<br />Gwalior, Madhya Pradesh 474002
                 </span>
               </li>
             </ul>
@@ -143,7 +145,7 @@ export function Footer() {
         <div className="mt-16 border-t border-background/10 pt-8">
           <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
             <p className="text-xs text-background/40">
-              &copy; {new Date().getFullYear()} CogniCodeWrite. Designed for academic success.
+              &copy; {new Date().getFullYear()} CogniCode. Designed for academic success.
             </p>
             <div className="flex flex-wrap justify-center gap-x-8 gap-y-2">
               {footerNavigation.legal.map((item) => (

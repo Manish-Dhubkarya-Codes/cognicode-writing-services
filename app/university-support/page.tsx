@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "University Scholars Support | CogniCodeWrite",
+  title: "University Scholars Support | CogniCode",
   description:
     "Specialized PhD research support for scholars from specific universities across India. Tailored guidance based on institutional requirements.",
 };

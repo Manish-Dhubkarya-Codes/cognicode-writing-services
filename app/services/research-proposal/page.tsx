@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle, Users, Clock, Shield, Award, FileText, BookOpen, Search, Target, Globe, Edit, BarChart3, ClipboardList, Lightbulb, Calendar } from "lucide-react";
 
-export const metadata: Metadata = { title: "Research Proposal Writing | CogniCodeWrite", description: "Professionally crafted research proposals designed for university approval and funding success." };
+export const metadata: Metadata = { title: "Research Proposal Writing | CogniCode", description: "Professionally crafted research proposals designed for university approval and funding success." };
 
 const features = [
   { icon: Lightbulb, title: "Problem Statement", description: "Clear articulation of the research problem establishing the need for your study and its academic significance." },
@@ -51,7 +51,7 @@ export default function ServicePage() {
 <option value="conference">Conference Submission</option></select><Button className="w-full" size="lg">Get Free Consultation</Button></form></CardContent></Card>
         </div></div></section>
 
-        <section className="bg-primary py-16"><div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center"><h2 className="font-serif text-3xl font-bold text-primary-foreground sm:text-4xl">Ready to Write a Winning Proposal?</h2><p className="mx-auto mt-4 max-w-2xl text-lg text-primary-foreground/90">Let our expert writers craft a compelling proposal that gets approved.</p><div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row"><Button size="lg" variant="secondary" asChild><Link href="/contact">Get Started</Link></Button><Button size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary" asChild><Link href="/pricing">View Pricing</Link></Button></div></div></section>
+        <section className="bg-primary py-16"><div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center"><h2 className="font-serif text-3xl font-bold text-primary-foreground sm:text-4xl">Ready to Write a Winning Proposal?</h2><p className="mx-auto mt-4 max-w-2xl text-lg text-primary-foreground/90">Let our expert writers craft a compelling proposal that gets approved.</p><div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row"><Button size="lg" variant="secondary" asChild><Link href="/contact">Get Started</Link></Button><Button size="lg" variant="outline" className="border-primary-foreground text-black hover:bg-primary-foreground hover:text-primary" asChild><Link href="/pricing">View Pricing</Link></Button></div></div></section>
       </main>
       <Footer />
     </div>

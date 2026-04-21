@@ -62,8 +62,8 @@ const serviceLinks = [
   { name: "Literature Review Writing", href: "/services/literature-review" },
   { name: "Review Paper Writing", href: "/services/review-paper" },
   { name: "Plagiarism Check & Removal", href: "/services/plagiarism-removal" },
-  { name: "Synopsis Writing Services", href: "/services/synopsis-writing" },
-  { name: "Book Writing & Publishing", href: "/services/book-writing" },
+  // { name: "Synopsis Writing Services", href: "/services/synopsis-writing" },
+  // { name: "Book Writing & Publishing", href: "/services/book-writing" },
   { name: "Latex Editor", href: "/services/latex-editor" },
   { name: "Publishing", href: "/services/publishing" },
 ];
@@ -87,14 +87,10 @@ const [searchOpen, setSearchOpen] = useState(false);
 
   return (
     <header className="fixed top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <nav className={`mx-auto flex max-w-7xl items-center justify-between px-4 ${searchOpen?"py-[13px]":"py-4"}  sm:px-6 lg:px-8`}>
+      <nav className={`mx-auto flex max-w-7xl items-center justify-between px-4 ${searchOpen?"py-[4px]":"py-0"}  sm:px-6 lg:px-8`}>
         <div className="flex  lg:flex-1">
-          <Link href="/" className="-m-1.5 p-1.5 flex  items-center gap-2">
-            <Image src={CogniCodeLogo} alt="CogniCode Logo" className="w-15" />
-
-            <span className="font-serif hidden    lg:block text-xl font-bold text-foreground">
-              CogniCodeWrite
-            </span>
+          <Link href="/" className=" p-1.5 flex  items-center gap-2">
+            <Image src={CogniCodeLogo} alt="CogniCode Logo" className="w-25" />
           </Link>
         </div>
 
@@ -278,10 +274,6 @@ const [searchOpen, setSearchOpen] = useState(false);
           Get a Quote
         </Link>
       </Button>
-
-      <Button size="sm" asChild>
-        <Link href="/contact">Get Started</Link>
-      </Button>
       
     </>
   ) : (
@@ -298,10 +290,6 @@ const [searchOpen, setSearchOpen] = useState(false);
           <Phone className="h-4 w-4" />
           Get a Quote
         </Link>
-      </Button>
-
-      <Button size="sm" asChild>
-        <Link href="/contact">Get Started</Link>
       </Button>
   </>
 )}
@@ -337,7 +325,7 @@ const [searchOpen, setSearchOpen] = useState(false);
           <GraduationCap className="h-5 w-5 text-primary-foreground" />
         </div>
         <span className="font-serif text-xl font-bold tracking-tight sm:text-lg">
-          CogniCodeWrite
+          CogniCode
         </span>
       </Link>
       <Button
@@ -519,22 +507,14 @@ const [searchOpen, setSearchOpen] = useState(false);
       <div className="sticky bottom-0 z-10 shrink-0 border-t border-border/50 bg-background/95 px-4 py-6 sm:px-6 backdrop-blur-sm">
         <div className="space-y-3">
           <Button
-            variant="outline"
-            className="w-full h-12 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 text-sm font-semibold"
-            asChild
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            <Link href="/contact" className="flex items-center gap-2">
-              <Phone className="h-4 w-4" />
-              Get a Quote
-            </Link>
-          </Button>
-          <Button
             className="w-full h-12 rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 text-sm font-semibold"
             asChild
             onClick={() => setMobileMenuOpen(false)}
           >
-            <Link href="/contact">Get Started</Link>
+             <Link href="/contact" className="flex items-center gap-2">
+              <Phone className="h-4 w-4" />
+              Get a Quote
+            </Link>
           </Button>
         </div>
       </div>

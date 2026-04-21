@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Pricing | CogniCodeWrite",
+  title: "Pricing | CogniCode",
   description:
     "Flexible pricing plans for academic writing support services. Choose the plan that fits your needs and budget.",
 };
