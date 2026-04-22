@@ -13,7 +13,6 @@ import {
   MapPinned,
   Volume2,
   VolumeX,
-  Compass,
   ArrowUp,
   ChevronRight,
   CornerUpLeft,
@@ -388,7 +387,7 @@ function MapController({
   officeCoords,
   route,
   fitTrigger,
-  isNavigationMode,
+  isTracking,
   followUser,
   speed,
 }: {
@@ -396,7 +395,7 @@ function MapController({
   officeCoords: [number, number];
   route: [number, number][];
   fitTrigger: number;
-  isNavigationMode: boolean;
+  isTracking: boolean;
   followUser: boolean;
   speed: number;
 }) {
@@ -411,11 +410,11 @@ function MapController({
     }
   }, [fitTrigger]);
 
-  // Follow user in navigation mode with speed-based zoom
+  // Follow user when tracking with speed-based zoom
   useEffect(() => {
     if (!targetPosition || !followUser) return;
 
-    if (isNavigationMode) {
+    if (isTracking) {
       // Speed-based zoom: zoom out at higher speeds for better forward visibility
       const kmh = speed * 3.6;
       let zoom = 18;
@@ -429,7 +428,7 @@ function MapController({
         duration: 0.8,
       });
     }
-  }, [targetPosition, isNavigationMode, followUser, speed, map]);
+  }, [targetPosition, isTracking, followUser, speed, map]);
 
   return null;
 }
@@ -459,7 +458,6 @@ export default function LiveTrackingMap() {
   const [fitTrigger, setFitTrigger] = useState(0);
   const [heading, setHeading] = useState<number | null>(null);
   const [smoothedHeading, setSmoothedHeading] = useState<number | null>(null);
-  const [isNavigationMode, setIsNavigationMode] = useState(false);
   const [followUser, setFollowUser] = useState(true);
   const [audioEnabled, setAudioEnabled] = useState(true);
   const [speed, setSpeed] = useState(0); // m/s
@@ -747,6 +745,7 @@ export default function LiveTrackingMap() {
     setCurrentStepIndex(0);
     currentStepRef.current = 0;
     setIsOffRoute(false);
+    setFollowUser(true);
 
     let initialRouteFetched = false;
 
@@ -832,7 +831,6 @@ export default function LiveTrackingMap() {
     }
     window.speechSynthesis?.cancel();
     setIsTracking(false);
-    setIsNavigationMode(false);
     setIsOffRoute(false);
     setTrackingStatus((prev) => (prev === "arrived" ? "arrived" : "idle"));
   }, []);
@@ -970,11 +968,11 @@ export default function LiveTrackingMap() {
         )}
 
         {/* Control Buttons */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
           {!isTracking ? (
             <Button
               size="lg"
-              className="md:col-span-2 w-full gap-2 text-base font-semibold"
+              className="col-span-2 md:col-span-1 w-full gap-2 text-base font-semibold"
               onClick={startTracking}
               disabled={isLoadingLocation}
             >
@@ -985,26 +983,11 @@ export default function LiveTrackingMap() {
             <Button
               size="lg"
               variant="destructive"
-              className="md:col-span-2 w-full gap-2 text-base font-semibold"
+              className="w-full gap-2 text-base font-semibold"
               onClick={stopTracking}
             >
               <Locate className="h-5 w-5" />
               Stop Tracking
-            </Button>
-          )}
-
-          {isTracking && (
-            <Button
-              size="lg"
-              variant={isNavigationMode ? "default" : "outline"}
-              className="w-full gap-2"
-              onClick={() => {
-                setIsNavigationMode((p) => !p);
-                setFollowUser(true);
-              }}
-            >
-              <Compass className="h-4 w-4" />
-              {isNavigationMode ? "Nav Mode ON" : "Nav Mode"}
             </Button>
           )}
 
@@ -1137,7 +1120,7 @@ export default function LiveTrackingMap() {
             officeCoords={OFFICE_COORDS}
             route={route}
             fitTrigger={fitTrigger}
-            isNavigationMode={isNavigationMode}
+            isTracking={isTracking}
             followUser={followUser}
             speed={speed}
           />
@@ -1285,14 +1268,6 @@ export default function LiveTrackingMap() {
           </button>
         )}
       </div>
-
-      {/* Navigation mode hint */}
-      {isNavigationMode && (
-        <p className="text-center text-xs text-blue-600 dark:text-blue-400 font-medium mt-3">
-          <Compass className="inline h-3 w-3 mr-1" />
-          Navigation mode active — map follows you with speed-adaptive zoom.
-        </p>
-      )}
 
       {/* Accuracy info */}
       {isTracking && accuracy && (
