@@ -593,22 +593,25 @@ export default function LiveTrackingMap() {
         .active-step { animation: step-pulse 2s ease-in-out infinite; }
       `}</style>
 
-      {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
-        <div>
-          <div className="flex items-center gap-3 mb-1">
+      {/* ==================== IMPROVED RESPONSIVE HEADER + BUTTONS + STATS ==================== */}
+      <div className="mb-6">
+        {/* Title + Status Row - aligned on all screens, status moves to right on large screens */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-4">
+          <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
               <Navigation className="h-5 w-5 text-primary-foreground" />
             </div>
-            <h2 className="font-serif text-2xl font-bold text-foreground">
-              Live Directions to Our Office
-            </h2>
+            <div>
+              <h2 className="font-serif text-2xl font-bold text-foreground leading-tight">
+                Live Directions to Our Office
+              </h2>
+              <p className="text-muted-foreground text-sm">
+                B/2, Mahesh Nagar, Tulsi Vihar Colony, Gwalior, MP 474002
+              </p>
+            </div>
           </div>
-          <p className="text-muted-foreground ml-[52px] text-sm">
-            B/2, Mahesh Nagar, Tulsi Vihar Colony, Gwalior, MP 474002
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
+
+          {/* Status Badge */}
           {trackingStatus !== "idle" && (
             <div
               className={`flex items-center gap-2 px-4 py-2 rounded-full text-white text-sm font-semibold shadow-md ${status.color}`}
@@ -620,86 +623,129 @@ export default function LiveTrackingMap() {
             </div>
           )}
         </div>
-      </div>
 
-      {/* Buttons */}
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-5">
-        {!isTracking ? (
-          <Button
-            size="lg"
-            className="sm:col-span-2 w-full gap-2 text-base font-semibold"
-            onClick={startTracking}
-            disabled={isLoadingLocation}
-          >
-            <Locate className="h-5 w-5" />
-            {isLoadingLocation
-              ? "Getting Your Location..."
-              : "Start Live Tracking"}
-          </Button>
-        ) : (
-          <Button
-            size="lg"
-            variant="destructive"
-            className="sm:col-span-2 w-full gap-2 text-base font-semibold"
-            onClick={stopTracking}
-          >
-            <Locate className="h-5 w-5" />
-            Stop Tracking
-          </Button>
-        )}
+        {/* Control Buttons - Responsive: 2 columns on mobile, 4 columns (one line) on md+ screens */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+          {!isTracking ? (
+            <Button
+              size="lg"
+              className="md:col-span-2 w-full gap-2 text-base font-semibold"
+              onClick={startTracking}
+              disabled={isLoadingLocation}
+            >
+              <Locate className="h-5 w-5" />
+              {isLoadingLocation
+                ? "Getting Your Location..."
+                : "Start Live Tracking"}
+            </Button>
+          ) : (
+            <Button
+              size="lg"
+              variant="destructive"
+              className="md:col-span-2 w-full gap-2 text-base font-semibold"
+              onClick={stopTracking}
+            >
+              <Locate className="h-5 w-5" />
+              Stop Tracking
+            </Button>
+          )}
 
-        {/* Navigation mode toggle (rotation) */}
-        {isTracking && (
+          {/* Navigation mode toggle (only when tracking) */}
+          {isTracking && (
+            <Button
+              size="lg"
+              variant={isNavigationMode ? "default" : "outline"}
+              className="w-full gap-2"
+              onClick={() => {
+                setIsNavigationMode((p) => !p);
+                setFollowUser(true);
+              }}
+            >
+              <Compass className="h-4 w-4" />
+              {isNavigationMode ? "Nav Mode ON" : "Nav Mode"}
+            </Button>
+          )}
+
+          {/* Audio toggle (only when tracking) */}
+          {isTracking && (
+            <Button
+              size="lg"
+              variant={audioEnabled ? "default" : "outline"}
+              className="w-full gap-2"
+              onClick={() => {
+                setAudioEnabled((p) => {
+                  if (p) window.speechSynthesis?.cancel();
+                  return !p;
+                });
+              }}
+            >
+              {audioEnabled ? (
+                <Volume2 className="h-4 w-4" />
+              ) : (
+                <VolumeX className="h-4 w-4" />
+              )}
+              {audioEnabled ? "Audio ON" : "Audio OFF"}
+            </Button>
+          )}
+
+          {/* Google Maps - always visible */}
           <Button
             size="lg"
-            variant={isNavigationMode ? "default" : "outline"}
+            variant="outline"
             className="w-full gap-2"
-            onClick={() => {
-              setIsNavigationMode((p) => !p);
-              setFollowUser(true);
-            }}
+            onClick={() =>
+              window.open(
+                "https://www.google.com/maps/dir/?api=1&destination=26.2097169,78.1959066&destination_place_id=ChIJA79LlZnHdDkRbo6OmkmKWK8&travelmode=driving",
+                "_blank"
+              )
+            }
           >
-            <Compass className="h-4 w-4" />
-            {isNavigationMode ? "Nav Mode ON" : "Nav Mode"}
+            <ExternalLink className="h-4 w-4" />
+            Google Maps
           </Button>
-        )}
+        </div>
 
-        {/* Audio toggle */}
-        {isTracking && (
-          <Button
-            size="lg"
-            variant={audioEnabled ? "default" : "outline"}
-            className="w-full gap-2"
-            onClick={() => {
-              setAudioEnabled((p) => {
-                if (p) window.speechSynthesis?.cancel();
-                return !p;
-              });
-            }}
-          >
-            {audioEnabled ? (
-              <Volume2 className="h-4 w-4" />
-            ) : (
-              <VolumeX className="h-4 w-4" />
-            )}
-            {audioEnabled ? "Audio ON" : "Audio OFF"}
-          </Button>
+        {/* Route Stats - ALWAYS in one horizontal row on every screen size (less vertical space) */}
+        {distance && duration && (
+          <div className="flex overflow-x-auto w-[100%] gap-3">
+            <div className="bg-card shrink-0 rounded-xl border px-4 py-2 w-fit flex items-center gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-950">
+                <Route className="h-5 w-5 text-blue-600" />
+              </div>
+              <div>
+                <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
+                  Distance
+                </p>
+                <p className="text-lg font-bold text-foreground">{distance}</p>
+              </div>
+            </div>
+            <div className="bg-card rounded-xl shrink-0 border px-4 py-2 w-fit flex items-center gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-50 dark:bg-emerald-950">
+                <Timer className="h-5 w-5 text-emerald-600" />
+              </div>
+              <div>
+                <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
+                
+                  ETA
+                </p>
+                <p className="text-lg font-bold text-foreground">{duration}</p>
+              </div>
+            </div>
+            <div className="bg-card rounded-xl border px-4 py-2 w-fit flex items-center gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-red-50 dark:bg-red-950">
+                <MapPinned className="h-5 w-5 text-red-600" />
+              </div>
+              <div>
+                <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
+                  To
+                </p>
+                <p className="text-sm font-bold text-foreground leading-tight">
+                  CogniCode Office
+                </p>
+              </div>
+            </div>
+          </div>
         )}
-
-        <Button
-          size="lg"
-          variant="outline"
-          className={`w-full gap-2 ${!isTracking ? "sm:col-span-2" : ""}`}
-          onClick={() =>
-            window.open(
-              "https://www.google.com/maps/dir/?api=1&destination=26.2097169,78.1959066&destination_place_id=ChIJA79LlZnHdDkRbo6OmkmKWK8&travelmode=driving",
-              "_blank"
-            )
-          }
-        >
-          <ExternalLink className="h-4 w-4" />
-          Google Maps
-        </Button>
       </div>
 
       {/* Error */}
@@ -713,113 +759,6 @@ export default function LiveTrackingMap() {
             On desktop, location is approximate. For GPS accuracy, use your
             phone.
           </p>
-        </div>
-      )}
-
-      {/* Route Stats */}
-      {distance && duration && (
-        <div className="grid grid-cols-3 gap-3 mb-5">
-          <div className="bg-card rounded-xl border p-4 flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-950">
-              <Route className="h-5 w-5 text-blue-600" />
-            </div>
-            <div>
-              <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
-                Distance
-              </p>
-              <p className="text-lg font-bold text-foreground">{distance}</p>
-            </div>
-          </div>
-          <div className="bg-card rounded-xl border p-4 flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-50 dark:bg-emerald-950">
-              <Timer className="h-5 w-5 text-emerald-600" />
-            </div>
-            <div>
-              <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
-                ETA
-              </p>
-              <p className="text-lg font-bold text-foreground">{duration}</p>
-            </div>
-          </div>
-          <div className="bg-card rounded-xl border p-4 flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-red-50 dark:bg-red-950">
-              <MapPinned className="h-5 w-5 text-red-600" />
-            </div>
-            <div>
-              <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-medium">
-                To
-              </p>
-              <p className="text-sm font-bold text-foreground leading-tight">
-                CogniCode Office
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ===== Turn-by-Turn Directions Panel ===== */}
-      {isTracking && upcomingSteps.length > 0 && (
-        <div className="bg-card rounded-xl border mb-5 overflow-hidden">
-          {/* Current/Next maneuver – hero banner */}
-          <div className="bg-blue-600 text-white p-4 flex items-center gap-4">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-white/20">
-              <DirectionIcon
-                type={upcomingSteps[0].maneuverType}
-                modifier={upcomingSteps[0].maneuverModifier}
-                size={28}
-              />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-lg font-bold leading-tight truncate">
-                {upcomingSteps[0].instruction}
-              </p>
-              <p className="text-blue-100 text-sm mt-0.5">
-                {formatDist(upcomingSteps[0].distance)}
-                {upcomingSteps[0].name && (
-                  <span className="ml-2 opacity-75">
-                    • {upcomingSteps[0].name}
-                  </span>
-                )}
-              </p>
-            </div>
-            <Button
-              size="sm"
-              variant="ghost"
-              className="text-white hover:bg-white/20 shrink-0"
-              onClick={() => speak(upcomingSteps[0].instruction)}
-            >
-              <Volume2 className="h-5 w-5" />
-            </Button>
-          </div>
-
-          {/* Upcoming steps list */}
-          {upcomingSteps.length > 1 && (
-            <div className="direction-panel max-h-36 overflow-y-auto divide-y divide-border">
-              {upcomingSteps.slice(1).map((step, i) => (
-                <div
-                  key={currentStepIndex + 1 + i}
-                  className="flex items-center gap-3 px-4 py-3 hover:bg-muted/50 transition-colors"
-                >
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
-                    <DirectionIcon
-                      type={step.maneuverType}
-                      modifier={step.maneuverModifier}
-                      size={18}
-                    />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-foreground truncate">
-                      {step.instruction}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {formatDist(step.distance)}
-                      {step.name && <span> • {step.name}</span>}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
       )}
 
@@ -846,7 +785,6 @@ export default function LiveTrackingMap() {
           zoom={16}
           style={{ height: "100%", width: "100%" }}
           zoomControl={true}
-          // Leaflet allows pan/zoom by default; dragging + scrollWheelZoom are true by default
         >
           <TileLayer
             url="https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
