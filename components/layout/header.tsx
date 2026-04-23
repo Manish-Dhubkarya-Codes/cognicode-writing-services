@@ -34,10 +34,10 @@ const aboutLinks = [
   { name: "Why Choose Us", href: "/why-us" },
   { name: "Latest News & Updates", href: "/news" },
   { name: "Blogs", href: "/blog" },
-  { name: "Admissions", href: "/admissions" },
-  { name: "Thesis Writing", href: "/thesis-writing" },
-  { name: "Synopsis Writing", href: "/synopsis-writing" },
-  { name: "Research Writing", href: "/research-writing" },
+  // { name: "Admissions", href: "/admissions" },
+  // { name: "Thesis Writing", href: "/thesis-writing" },
+  // { name: "Synopsis Writing", href: "/synopsis-writing" },
+  // { name: "Research Writing", href: "/research-writing" },
   { name: "FAQs", href: "/faqs" },
 ];
 
