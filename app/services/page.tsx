@@ -18,6 +18,10 @@ import {
   Globe,
 } from "lucide-react";
 
+import Thesis from "@/public/Services/Thesis.png"
+import Research_Paper from "@/public/Services/Research_Paper.jpg"
+import Image from "next/image";
+
 export const metadata: Metadata = {
   title: "Services | CogniCode",
   description:
@@ -31,6 +35,7 @@ const mainServices = [
     description:
       "Comprehensive thesis writing assistance from topic selection to final submission. Our PhD experts guide you through every chapter, ensuring your thesis meets the highest academic standards.",
     icon: BookOpen,
+    image: Thesis,
     features: [
       "Topic selection and refinement",
       "Chapter-by-chapter guidance",
@@ -46,6 +51,7 @@ const mainServices = [
     description:
       "High-quality research papers crafted by subject matter experts. Perfect for journal publications, academic conferences, and course requirements.",
     icon: FileText,
+    image: Research_Paper,
     features: [
       "Original research development",
       "Journal-ready formatting",
@@ -61,6 +67,7 @@ const mainServices = [
     description:
       "End-to-end dissertation support for doctoral candidates. We help you navigate the complex process of completing your doctoral research.",
     icon: GraduationCap,
+    image: Thesis,
     features: [
       "Proposal development",
       "Research design consultation",
@@ -76,6 +83,7 @@ const mainServices = [
     description:
       "In-depth literature reviews that critically analyze existing research and identify gaps in your field of study. Essential for establishing your research foundation.",
     icon: Search,
+    image: Thesis,
     features: [
       "Comprehensive source identification",
       "Critical analysis and synthesis",
@@ -91,6 +99,7 @@ const mainServices = [
     description:
       "Well-structured research proposals and synopsis writing to get quick university approval for your research projects.",
     icon: PenTool,
+    image: Thesis,
     features: [
       "Problem statement formulation",
       "Research objectives alignment",
@@ -106,6 +115,7 @@ const mainServices = [
     description:
       "Expert statistical analysis using SPSS, R, Python, and other tools. We help interpret your data meaningfully and present results effectively.",
     icon: BarChart3,
+    image: Thesis,
     features: [
       "Statistical test selection",
       "SPSS, R, Python analysis",
@@ -121,6 +131,7 @@ const mainServices = [
     description:
       "Thorough plagiarism checking and removal services to ensure your work is 100% original and publication-ready.",
     icon: Shield,
+    image: Thesis,
     features: [
       "Turnitin similarity check",
       "AI detection screening",
@@ -136,6 +147,7 @@ const mainServices = [
     description:
       "Professional academic editing and proofreading services to polish your work before submission.",
     icon: Edit3,
+    image: Thesis,
     features: [
       "Grammar and spelling correction",
       "Style and clarity enhancement",
@@ -235,9 +247,17 @@ export default function ServicesPage() {
                     </div>
                   </div>
                   <div className="flex-1">
-                    <div className="aspect-[4/3] rounded-2xl bg-muted flex items-center justify-center">
-                      <service.icon className="h-32 w-32 text-primary/20" />
-                    </div>
+                    <div className="flex aspect-4/4 items-center justify-center rounded-lg bg-primary overflow-hidden">
+  {service.image ? (
+    <Image
+      src={service.image}
+      alt={service.name}
+      className="h-full w-full object-contain"
+    />
+  ) : (
+    <service.icon className="h-6 w-6 text-primary-foreground" />
+  )}
+</div>
                   </div>
                 </div>
               ))}

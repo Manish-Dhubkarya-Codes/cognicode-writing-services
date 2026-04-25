@@ -23,6 +23,32 @@ export const metadata: Metadata = {
 
 const plans = [
   {
+    name: "Basic",
+    subtitle: "Free Starter Consultation",
+    description:
+      "Get started at no cost. Discuss your project, explore topics, and understand how we can help — completely free.",
+    price: "Free",
+    priceNote: "no commitment",
+    featured: false,
+    badge: "Start Here",
+    ctaLabel: "Book Free Call",
+    features: [
+      { name: "Free first consultation call", included: true },
+      { name: "Research topic selection guidance", included: true },
+      { name: "Initial work & requirement discussion", included: true },
+      { name: "Project scope & feasibility review", included: true },
+      { name: "Preliminary advice from experts", included: true },
+      { name: "Custom quote & plan recommendation", included: true },
+      { name: "WhatsApp & email query support", included: true },
+      { name: "No obligation to purchase", included: true },
+      { name: "Content writing & delivery", included: false },
+      { name: "Data analysis & methodology", included: false },
+      { name: "Plagiarism report (Turnitin)", included: false },
+      { name: "Revisions & formatting", included: false },
+      { name: "Dedicated mentor", included: false },
+    ],
+  },
+  {
     name: "Standard",
     subtitle: "Essential Academic Support",
     description:
@@ -30,6 +56,7 @@ const plans = [
     price: "Contact",
     priceNote: "for custom quote",
     featured: false,
+    ctaLabel: "Get Started",
     features: [
       { name: "Standard delivery timeline", included: true },
       { name: "Email & WhatsApp support", included: true },
@@ -55,6 +82,8 @@ const plans = [
     price: "Contact",
     priceNote: "for custom quote",
     featured: true,
+    badge: "Most Popular",
+    ctaLabel: "Get Started",
     features: [
       { name: "Fast-track & urgent delivery", included: true },
       { name: "Priority support 24/7", included: true },
@@ -109,6 +138,11 @@ const features = [
 
 const faqs = [
   {
+    question: "Is the Basic plan really free?",
+    answer:
+      "Yes, completely free with no obligation. The Basic plan is our way of helping you get started — we'll discuss your project, help you shape your topic, and recommend the best path forward. You only pay if you decide to move ahead with Standard or Premium.",
+  },
+  {
     question: "How is the pricing determined?",
     answer:
       "Pricing depends on factors such as project type, academic level, complexity, word count, and deadline. Contact us for a personalized quote based on your specific requirements.",
@@ -121,12 +155,12 @@ const faqs = [
   {
     question: "What if I need revisions?",
     answer:
-      "Revisions are included in both plans. Standard plan includes 1 revision round, while Premium plan includes up to 3 revision rounds to ensure your complete satisfaction.",
+      "Revisions are included in Standard and Premium plans. Standard includes 1 revision round, while Premium includes up to 3 revision rounds to ensure your complete satisfaction.",
   },
   {
     question: "Can I upgrade my plan mid-project?",
     answer:
-      "Yes, you can upgrade from Standard to Premium at any point during your project. We'll adjust the pricing and services accordingly.",
+      "Yes, you can upgrade from Basic to Standard, or Standard to Premium at any point. We'll adjust the pricing and services accordingly.",
   },
 ];
 
@@ -143,8 +177,8 @@ export default function PricingPage() {
                 Flexible Pricing Plans
               </h1>
               <p className="mt-6 text-lg leading-8 text-background/70">
-                Choose a plan that matches your academic goals and budget. We
-                offer transparent pricing with no hidden fees.
+                Start with a free consultation, then choose a plan that matches
+                your academic goals and budget. Transparent pricing, no hidden fees.
               </p>
             </div>
           </div>
@@ -153,7 +187,7 @@ export default function PricingPage() {
         {/* Pricing Cards */}
         <section className="bg-background py-24 sm:py-32">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mx-auto grid max-w-md grid-cols-1 gap-8 lg:max-w-4xl lg:grid-cols-2">
+            <div className="mx-auto grid max-w-md grid-cols-1 gap-8 lg:max-w-6xl lg:grid-cols-3">
               {plans.map((plan) => (
                 <div
                   key={plan.name}
@@ -164,9 +198,15 @@ export default function PricingPage() {
                   }`}
                 >
                   <div>
-                    {plan.featured && (
-                      <p className="mb-4 inline-flex rounded-full bg-primary px-4 py-1 text-xs font-semibold text-primary-foreground">
-                        Most Popular
+                    {plan.badge && (
+                      <p
+                        className={`mb-4 inline-flex rounded-full px-4 py-1 text-xs font-semibold ${
+                          plan.featured
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-primary/10 text-primary"
+                        }`}
+                      >
+                        {plan.badge}
                       </p>
                     )}
                     <h3
@@ -255,7 +295,7 @@ export default function PricingPage() {
                     asChild
                   >
                     <Link href="/contact">
-                      Get Started
+                      {plan.ctaLabel ?? "Get Started"}
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
