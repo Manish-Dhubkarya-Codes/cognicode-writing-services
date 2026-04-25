@@ -350,42 +350,67 @@ export default function LiveTrackingMap() {
     }, MANUAL_ROTATION_RESUME_MS);
   }, [driveMode]);
 
-  // ── Two-finger touch rotation (mobile)
-  useEffect(() => {
-    const el = mapContainerRef.current;
-    if (!el) return;
-    const getAngle = (t1: Touch, t2: Touch) =>
-      (Math.atan2(t2.clientY - t1.clientY, t2.clientX - t1.clientX) * 180) / Math.PI;
+// ── IMPROVED Two-finger touch rotation (mobile) ─────────────────────────────
+useEffect(() => {
+  const el = mapContainerRef.current;
+  if (!el) return;
 
-    const onStart = (e: TouchEvent) => {
-      if (e.touches.length === 2) {
-        touchStartAngleRef.current = getAngle(e.touches[0], e.touches[1]);
-        touchStartRotRef.current = mapRotation;
-        setTouchRotationActive(true);
-        triggerManualRotationOverride();
-      }
-    };
-    const onMove = (e: TouchEvent) => {
-      if (e.touches.length === 2 && touchStartAngleRef.current !== null) {
-        let delta = getAngle(e.touches[0], e.touches[1]) - touchStartAngleRef.current;
-        if (delta > 180) delta -= 360; if (delta < -180) delta += 360;
-        setMapRotation(((touchStartRotRef.current - delta) % 360 + 360) % 360);
-      }
-    };
-    const onEnd = (e: TouchEvent) => {
-      if (e.touches.length < 2) { touchStartAngleRef.current = null; setTouchRotationActive(false); }
-    };
-    el.addEventListener("touchstart", onStart, { passive: true });
-    el.addEventListener("touchmove", onMove, { passive: true });
-    el.addEventListener("touchend", onEnd, { passive: true });
-    el.addEventListener("touchcancel", onEnd, { passive: true });
-    return () => {
-      el.removeEventListener("touchstart", onStart);
-      el.removeEventListener("touchmove", onMove);
-      el.removeEventListener("touchend", onEnd);
-      el.removeEventListener("touchcancel", onEnd);
-    };
-  }, [mapRotation, triggerManualRotationOverride]);
+  const getAngle = (t1: Touch, t2: Touch) =>
+    (Math.atan2(t2.clientY - t1.clientY, t2.clientX - t1.clientX) * 180) / Math.PI;
+
+  let initialAngle = 0;
+  let initialRot = 0;
+  let isRotating = false;
+
+  const onStart = (e: TouchEvent) => {
+    if (e.touches.length === 2) {
+      initialAngle = getAngle(e.touches[0], e.touches[1]);
+      initialRot = mapRotation;
+      isRotating = true;
+      setTouchRotationActive(true);
+      triggerManualRotationOverride();
+      e.preventDefault();           // ← stops Leaflet interference
+      e.stopPropagation();
+    }
+  };
+
+  const onMove = (e: TouchEvent) => {
+    if (!isRotating || e.touches.length !== 2) return;
+
+    e.preventDefault();             // ← critical for smooth rotation
+    e.stopPropagation();
+
+    const currentAngle = getAngle(e.touches[0], e.touches[1]);
+    let delta = currentAngle - initialAngle;
+
+    if (delta > 180) delta -= 360;
+    if (delta < -180) delta += 360;
+
+    // Small threshold to avoid jitter
+    if (Math.abs(delta) > 3) {
+      const newRotation = ((initialRot - delta) % 360 + 360) % 360;
+      setMapRotation(newRotation);
+    }
+  };
+
+  const onEnd = () => {
+    isRotating = false;
+    setTouchRotationActive(false);
+  };
+
+  // Non-passive listeners so preventDefault works
+  el.addEventListener("touchstart", onStart, { passive: false });
+  el.addEventListener("touchmove", onMove, { passive: false });
+  el.addEventListener("touchend", onEnd, { passive: true });
+  el.addEventListener("touchcancel", onEnd, { passive: true });
+
+  return () => {
+    el.removeEventListener("touchstart", onStart);
+    el.removeEventListener("touchmove", onMove);
+    el.removeEventListener("touchend", onEnd);
+    el.removeEventListener("touchcancel", onEnd);
+  };
+}, [mapRotation, triggerManualRotationOverride]);
 
   // ── Mouse rotation (desktop): right-click drag OR Alt+Left-click drag
   // Mirrors Google Maps' Ctrl+drag behavior; doesn't conflict with Leaflet's

@@ -89,6 +89,17 @@
   border-right-color: white !important;
 }
 
+.map-wrap {
+  touch-action: none;           /* gives us full control over gestures */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Optional: slightly smoother rotation on mobile */
+.leaflet-container {
+  will-change: transform;
+}
+
 @theme inline {
   --font-sans: 'Geist', 'Geist Fallback';
   --font-mono: 'Geist Mono', 'Geist Mono Fallback';
