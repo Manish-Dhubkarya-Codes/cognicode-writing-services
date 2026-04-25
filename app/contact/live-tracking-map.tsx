@@ -350,76 +350,42 @@ export default function LiveTrackingMap() {
     }, MANUAL_ROTATION_RESUME_MS);
   }, [driveMode]);
 
-// ── BEST Two-finger rotation – Google Maps style (smooth & stable) ──────────
-useEffect(() => {
-  const el = mapContainerRef.current;
-  if (!el) return;
+  // ── Two-finger touch rotation (mobile)
+  useEffect(() => {
+    const el = mapContainerRef.current;
+    if (!el) return;
+    const getAngle = (t1: Touch, t2: Touch) =>
+      (Math.atan2(t2.clientY - t1.clientY, t2.clientX - t1.clientX) * 180) / Math.PI;
 
-  let startAngle = 0;
-  let startRotation = 0;
-  let isRotating = false;
-  let lastAngle = 0;
-
-  const getAngle = (t1: Touch, t2: Touch) => {
-    const dx = t2.clientX - t1.clientX;
-    const dy = t2.clientY - t1.clientY;
-    return Math.atan2(dy, dx) * (180 / Math.PI);
-  };
-
-  const onStart = (e: TouchEvent) => {
-    if (e.touches.length !== 2) return;
-
-    startAngle = getAngle(e.touches[0], e.touches[1]);
-    startRotation = mapRotation;
-    lastAngle = startAngle;
-    isRotating = true;
-    setTouchRotationActive(true);
-    triggerManualRotationOverride();
-
-    e.preventDefault();
-    e.stopImmediatePropagation();
-  };
-
-  const onMove = (e: TouchEvent) => {
-    if (!isRotating || e.touches.length !== 2) return;
-
-    e.preventDefault();
-    e.stopImmediatePropagation();
-
-    const currentAngle = getAngle(e.touches[0], e.touches[1]);
-    let delta = currentAngle - startAngle;
-
-    // Normalize delta to -180 ~ +180
-    if (delta > 180) delta -= 360;
-    if (delta < -180) delta += 360;
-
-    const newRotation = ((startRotation - delta) % 360 + 360) % 360;
-
-    // Smooth update
-    setMapRotation(newRotation);
-    lastAngle = currentAngle;
-  };
-
-  const onEnd = () => {
-    if (isRotating) {
-      isRotating = false;
-      setTouchRotationActive(false);
-    }
-  };
-
-  // Critical: non-passive + stopImmediatePropagation
-  el.addEventListener("touchstart", onStart, { passive: false });
-  el.addEventListener("touchmove", onMove, { passive: false });
-  el.addEventListener("touchend", onEnd, { passive: true });
-  el.addEventListener("touchcancel", onEnd, { passive: true });
-
-  return () => {
-    el.removeEventListener("touchstart", onStart);
-    el.removeEventListener("touchmove", onMove);
-    el.removeEventListener("touchend", onEnd);
-    el.removeEventListener("touchcancel", onEnd);
-  };
-}, [mapRotation, triggerManualRotationOverride]);
+    const onStart = (e: TouchEvent) => {
+      if (e.touches.length === 2) {
+        touchStartAngleRef.current = getAngle(e.touches[0], e.touches[1]);
+        touchStartRotRef.current = mapRotation;
+        setTouchRotationActive(true);
+        triggerManualRotationOverride();
+      }
+    };
+    const onMove = (e: TouchEvent) => {
+      if (e.touches.length === 2 && touchStartAngleRef.current !== null) {
+        let delta = getAngle(e.touches[0], e.touches[1]) - touchStartAngleRef.current;
+        if (delta > 180) delta -= 360; if (delta < -180) delta += 360;
+        setMapRotation(((touchStartRotRef.current - delta) % 360 + 360) % 360);
+      }
+    };
+    const onEnd = (e: TouchEvent) => {
+      if (e.touches.length < 2) { touchStartAngleRef.current = null; setTouchRotationActive(false); }
+    };
+    el.addEventListener("touchstart", onStart, { passive: true });
+    el.addEventListener("touchmove", onMove, { passive: true });
+    el.addEventListener("touchend", onEnd, { passive: true });
+    el.addEventListener("touchcancel", onEnd, { passive: true });
+    return () => {
+      el.removeEventListener("touchstart", onStart);
+      el.removeEventListener("touchmove", onMove);
+      el.removeEventListener("touchend", onEnd);
+      el.removeEventListener("touchcancel", onEnd);
+    };
+  }, [mapRotation, triggerManualRotationOverride]);
 
   // ── Mouse rotation (desktop): right-click drag OR Alt+Left-click drag
   // Mirrors Google Maps' Ctrl+drag behavior; doesn't conflict with Leaflet's

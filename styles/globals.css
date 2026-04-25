@@ -89,22 +89,6 @@
   border-right-color: white !important;
 }
 
-.map-wrap {
-  touch-action: none !important;
-  -webkit-touch-callout: none;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-.leaflet-container {
-  touch-action: none !important;
-}
-
-/* Helps reduce blank tile corners during rotation */
-.leaflet-tile-pane {
-  transition: transform 0.05s linear;
-}
-
 @theme inline {
   --font-sans: 'Geist', 'Geist Fallback';
   --font-mono: 'Geist Mono', 'Geist Mono Fallback';
