@@ -90,14 +90,19 @@
 }
 
 .map-wrap {
-  touch-action: none;           /* gives us full control over gestures */
+  touch-action: none !important;
+  -webkit-touch-callout: none;
   user-select: none;
   -webkit-user-select: none;
 }
 
-/* Optional: slightly smoother rotation on mobile */
 .leaflet-container {
-  will-change: transform;
+  touch-action: none !important;
+}
+
+/* Helps reduce blank tile corners during rotation */
+.leaflet-tile-pane {
+  transition: transform 0.05s linear;
 }
 
 @theme inline {

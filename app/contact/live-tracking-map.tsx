@@ -350,55 +350,64 @@ export default function LiveTrackingMap() {
     }, MANUAL_ROTATION_RESUME_MS);
   }, [driveMode]);
 
-// ── IMPROVED Two-finger touch rotation (mobile) ─────────────────────────────
+// ── BEST Two-finger rotation – Google Maps style (smooth & stable) ──────────
 useEffect(() => {
   const el = mapContainerRef.current;
   if (!el) return;
 
-  const getAngle = (t1: Touch, t2: Touch) =>
-    (Math.atan2(t2.clientY - t1.clientY, t2.clientX - t1.clientX) * 180) / Math.PI;
-
-  let initialAngle = 0;
-  let initialRot = 0;
+  let startAngle = 0;
+  let startRotation = 0;
   let isRotating = false;
+  let lastAngle = 0;
+
+  const getAngle = (t1: Touch, t2: Touch) => {
+    const dx = t2.clientX - t1.clientX;
+    const dy = t2.clientY - t1.clientY;
+    return Math.atan2(dy, dx) * (180 / Math.PI);
+  };
 
   const onStart = (e: TouchEvent) => {
-    if (e.touches.length === 2) {
-      initialAngle = getAngle(e.touches[0], e.touches[1]);
-      initialRot = mapRotation;
-      isRotating = true;
-      setTouchRotationActive(true);
-      triggerManualRotationOverride();
-      e.preventDefault();           // ← stops Leaflet interference
-      e.stopPropagation();
-    }
+    if (e.touches.length !== 2) return;
+
+    startAngle = getAngle(e.touches[0], e.touches[1]);
+    startRotation = mapRotation;
+    lastAngle = startAngle;
+    isRotating = true;
+    setTouchRotationActive(true);
+    triggerManualRotationOverride();
+
+    e.preventDefault();
+    e.stopImmediatePropagation();
   };
 
   const onMove = (e: TouchEvent) => {
     if (!isRotating || e.touches.length !== 2) return;
 
-    e.preventDefault();             // ← critical for smooth rotation
-    e.stopPropagation();
+    e.preventDefault();
+    e.stopImmediatePropagation();
 
     const currentAngle = getAngle(e.touches[0], e.touches[1]);
-    let delta = currentAngle - initialAngle;
+    let delta = currentAngle - startAngle;
 
+    // Normalize delta to -180 ~ +180
     if (delta > 180) delta -= 360;
     if (delta < -180) delta += 360;
 
-    // Small threshold to avoid jitter
-    if (Math.abs(delta) > 3) {
-      const newRotation = ((initialRot - delta) % 360 + 360) % 360;
-      setMapRotation(newRotation);
-    }
+    const newRotation = ((startRotation - delta) % 360 + 360) % 360;
+
+    // Smooth update
+    setMapRotation(newRotation);
+    lastAngle = currentAngle;
   };
 
   const onEnd = () => {
-    isRotating = false;
-    setTouchRotationActive(false);
+    if (isRotating) {
+      isRotating = false;
+      setTouchRotationActive(false);
+    }
   };
 
-  // Non-passive listeners so preventDefault works
+  // Critical: non-passive + stopImmediatePropagation
   el.addEventListener("touchstart", onStart, { passive: false });
   el.addEventListener("touchmove", onMove, { passive: false });
   el.addEventListener("touchend", onEnd, { passive: true });
