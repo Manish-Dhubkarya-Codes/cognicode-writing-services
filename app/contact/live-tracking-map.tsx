@@ -219,14 +219,18 @@ function MapController({
       const pane = panes[paneName];
       if (!pane) continue;
       pane.style.transformOrigin = origin;
-      pane.style.transform = rot !== 0 ? `rotate(${rot}deg)` : "";
+      pane.style.transform =
+  rot !== 0 ? `rotate(${rot}deg) scale(1.35)` : "";
     }
 
     for (const paneName of ["markerPane", "shadowPane", "tooltipPane", "popupPane"]) {
       const pane = panes[paneName];
       if (!pane) continue;
       pane.style.transformOrigin = origin;
-      pane.style.transform = counterRot !== 0 ? `rotate(${counterRot}deg)` : "";
+      pane.style.transform =
+  counterRot !== 0
+    ? `rotate(${counterRot}deg) scale(1.35)`
+    : "";
     }
   }, [mapRotation, map]);
 
@@ -365,18 +369,27 @@ export default function LiveTrackingMap() {
         triggerManualRotationOverride();
       }
     };
-    const onMove = (e: TouchEvent) => {
-      if (e.touches.length === 2 && touchStartAngleRef.current !== null) {
-        let delta = getAngle(e.touches[0], e.touches[1]) - touchStartAngleRef.current;
-        if (delta > 180) delta -= 360; if (delta < -180) delta += 360;
-        setMapRotation(((touchStartRotRef.current - delta) % 360 + 360) % 360);
-      }
-    };
+const onMove = (e: TouchEvent) => {
+  if (e.touches.length === 2 && touchStartAngleRef.current !== null) {
+    e.preventDefault(); // critical
+
+    let delta =
+      getAngle(e.touches[0], e.touches[1]) -
+      touchStartAngleRef.current;
+
+    if (delta > 180) delta -= 360;
+    if (delta < -180) delta += 360;
+
+    setMapRotation(
+      ((touchStartRotRef.current - delta) % 360 + 360) % 360
+    );
+  }
+};
     const onEnd = (e: TouchEvent) => {
       if (e.touches.length < 2) { touchStartAngleRef.current = null; setTouchRotationActive(false); }
     };
     el.addEventListener("touchstart", onStart, { passive: true });
-    el.addEventListener("touchmove", onMove, { passive: true });
+    el.addEventListener("touchmove", onMove, { passive: false });
     el.addEventListener("touchend", onEnd, { passive: true });
     el.addEventListener("touchcancel", onEnd, { passive: true });
     return () => {
