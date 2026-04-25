@@ -55,6 +55,48 @@ const regions = [
     ],
     universities: "UAE University, UAEU, AUS, Khalifa University",
   },
+  {
+    name: "Canada",
+    flag: "�🇦",
+    href: "/global/canada",
+    description:
+      "Expert support for Canadian university requirements, British academic standards, and Canadian-specific formatting guidelines.",
+    services: [
+      "PhD Thesis Support",
+      "Dissertation Writing",
+      "Assignment Help",
+      "Coursework Support",
+    ],
+    universities: "Toronto, McGill,UBC, Queen's, Western University",
+  },
+  {
+    name: "Australia",
+    flag: "�🇺",
+    href: "/global/australia",
+    description:
+      "Expert support for Australian university requirements, British academic standards, and Australian-specific formatting guidelines.",
+    services: [
+      "PhD Thesis Support",
+      "Dissertation Writing",
+      "Assignment Help",
+      "Coursework Support",
+    ],
+    universities: "ANU, UNSW, UQ, Monash, RMIT",
+  },
+  {
+    name: "Germany",
+    flag: "�🇪",
+    href: "/global/germany",
+    description:
+      "Expert support for German university requirements, British academic standards, and German-specific formatting guidelines.",
+    services: [
+      "PhD Thesis Support",
+      "Dissertation Writing",
+      "Assignment Help",
+      "Coursework Support",
+    ],
+    universities: "Oxford, Cambridge, Imperial, LSE, UCL",
+  },
 ];
 
 const globalStats = [

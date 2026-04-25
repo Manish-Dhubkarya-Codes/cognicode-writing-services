@@ -73,6 +73,9 @@ const globalLinks = [
   { name: "United Kingdom Support", href: "/global/uk" },
   { name: "United States Support", href: "/global/us" },
   { name: "UAE Support", href: "/global/uae" },
+  { name: "Canada", href: "/global/canada" },
+  { name: "Australia", href: "/global/australia" },
+  { name: "Germany", href: "/global/germany" },
   { name: "University Scholars Support", href: "/university-support" },
 ];
 

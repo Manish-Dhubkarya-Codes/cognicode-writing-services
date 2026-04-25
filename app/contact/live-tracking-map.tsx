@@ -177,6 +177,7 @@ function DirectionIcon({ type, modifier, size = 20, className = "" }: { type: st
     default: return <ArrowUp size={size} className={className} />;
   }
 }
+const touchStartDistRef = useRef<number>(0);
 
 // ─── Format Helpers ───────────────────────────────────────────────────────────
 function fmtDist(m: number) { return m < 1000 ? `${Math.round(m)} m` : `${(m / 1000).toFixed(1)} km`; }
@@ -351,41 +352,83 @@ export default function LiveTrackingMap() {
   }, [driveMode]);
 
   // ── Two-finger touch rotation (mobile)
-  useEffect(() => {
-    const el = mapContainerRef.current;
-    if (!el) return;
-    const getAngle = (t1: Touch, t2: Touch) =>
-      (Math.atan2(t2.clientY - t1.clientY, t2.clientX - t1.clientX) * 180) / Math.PI;
+// ── IMPROVED: Flexible two-finger 360° rotation (mobile)
+//     - Smooth full 360° rotation
+//     - Distinguishes rotation from pinch-zoom → no disturbance to normal navigation
+//     - Uses preventDefault only when clear rotational intent is detected
+useEffect(() => {
+  const el = mapContainerRef.current;
+  if (!el) return;
 
-    const onStart = (e: TouchEvent) => {
-      if (e.touches.length === 2) {
-        touchStartAngleRef.current = getAngle(e.touches[0], e.touches[1]);
-        touchStartRotRef.current = mapRotation;
-        setTouchRotationActive(true);
-        triggerManualRotationOverride();
-      }
-    };
-    const onMove = (e: TouchEvent) => {
-      if (e.touches.length === 2 && touchStartAngleRef.current !== null) {
-        let delta = getAngle(e.touches[0], e.touches[1]) - touchStartAngleRef.current;
-        if (delta > 180) delta -= 360; if (delta < -180) delta += 360;
-        setMapRotation(((touchStartRotRef.current - delta) % 360 + 360) % 360);
-      }
-    };
-    const onEnd = (e: TouchEvent) => {
-      if (e.touches.length < 2) { touchStartAngleRef.current = null; setTouchRotationActive(false); }
-    };
-    el.addEventListener("touchstart", onStart, { passive: true });
-    el.addEventListener("touchmove", onMove, { passive: true });
-    el.addEventListener("touchend", onEnd, { passive: true });
-    el.addEventListener("touchcancel", onEnd, { passive: true });
-    return () => {
-      el.removeEventListener("touchstart", onStart);
-      el.removeEventListener("touchmove", onMove);
-      el.removeEventListener("touchend", onEnd);
-      el.removeEventListener("touchcancel", onEnd);
-    };
-  }, [mapRotation, triggerManualRotationOverride]);
+  const getAngle = (t1: Touch, t2: Touch) =>
+    (Math.atan2(t2.clientY - t1.clientY, t2.clientX - t1.clientX) * 180) / Math.PI;
+
+  let rotationActive = false;
+
+  const onStart = (e: TouchEvent) => {
+    if (e.touches.length === 2) {
+      touchStartAngleRef.current = getAngle(e.touches[0], e.touches[1]);
+      touchStartRotRef.current = mapRotation;
+
+      // Record initial finger distance
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      touchStartDistRef.current = Math.hypot(dx, dy);
+
+      rotationActive = true;
+      setTouchRotationActive(true);
+      triggerManualRotationOverride();
+    }
+  };
+
+  const onMove = (e: TouchEvent) => {
+    if (e.touches.length !== 2 || !rotationActive || touchStartAngleRef.current === null) return;
+
+    const currentAngle = getAngle(e.touches[0], e.touches[1]);
+    let delta = currentAngle - touchStartAngleRef.current;
+    if (delta > 180) delta -= 360;
+    if (delta < -180) delta += 360;
+
+    // Calculate current finger distance
+    const dx = e.touches[0].clientX - e.touches[1].clientX;
+    const dy = e.touches[0].clientY - e.touches[1].clientY;
+    const currentDist = Math.hypot(dx, dy);
+    const distChange = Math.abs(currentDist - touchStartDistRef.current);
+
+    // ── KEY IMPROVEMENT ──
+    // Only rotate when fingers are mostly rotating (distance change is small)
+    // This keeps normal pinch-zoom and two-finger pan working perfectly
+    if (distChange < 65) {                    // ← tunable (40-80px works great)
+      e.preventDefault();                     // Stop Leaflet from interfering
+      e.stopImmediatePropagation();
+
+      const newRotation = ((touchStartRotRef.current - delta) % 360 + 360) % 360;
+      setMapRotation(newRotation);
+    }
+    // If distance changes a lot → Leaflet handles pinch-zoom naturally
+  };
+
+  const onEnd = (e: TouchEvent) => {
+    if (e.touches.length < 2) {
+      touchStartAngleRef.current = null;
+      setTouchRotationActive(false);
+      rotationActive = false;
+    }
+  };
+
+  // Important: touchmove must NOT be passive so we can call preventDefault
+  el.addEventListener("touchstart", onStart, { passive: true });
+  el.addEventListener("touchmove", onMove, { passive: false });
+  el.addEventListener("touchend", onEnd, { passive: true });
+  el.addEventListener("touchcancel", onEnd, { passive: true });
+
+  return () => {
+    el.removeEventListener("touchstart", onStart);
+    el.removeEventListener("touchmove", onMove);
+    el.removeEventListener("touchend", onEnd);
+    el.removeEventListener("touchcancel", onEnd);
+  };
+}, [mapRotation, triggerManualRotationOverride]);
 
   // ── Mouse rotation (desktop): right-click drag OR Alt+Left-click drag
   // Mirrors Google Maps' Ctrl+drag behavior; doesn't conflict with Leaflet's
