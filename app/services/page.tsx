@@ -18,8 +18,8 @@ import {
   Globe,
 } from "lucide-react";
 
-import Thesis from "../../public/Services/Thesis.png"
-import Research_Paper from "../../public/Services/Research_Paper.jpg"
+import Thesis from "@/public/Services/Thesis.png"
+import Research_Paper from "@/public/Services/Research_Paper.jpg"
 import Image from "next/image";
 
 export const metadata: Metadata = {
