@@ -191,17 +191,20 @@ function fmtArrival(s: number) {
 }
 
 // ─── Map Controller ───────────────────────────────────────────────────────────
-// KEY FIX: Rotates only Leaflet map panes, NOT the outer wrapper.
-// This prevents the whole page from rotating.
+// Rotates only Leaflet map panes, NOT the outer wrapper.
+// Also detects user pans to disable auto-follow (Google-Maps style).
 function MapController({
   targetPosition, officeCoords, route, fitTrigger,
   isTracking, followUser, speed, driveMode, mapRotation,
+  onUserPan,
 }: {
   targetPosition: [number, number] | null; officeCoords: [number, number];
   route: [number, number][]; fitTrigger: number; isTracking: boolean;
   followUser: boolean; speed: number; driveMode: boolean; mapRotation: number;
+  onUserPan: () => void;
 }) {
   const map = useMap();
+  const programmaticMoveRef = useRef(false);
 
   // ── Apply rotation to Leaflet panes only (tiles + overlays rotate, markers counter-rotate)
   useEffect(() => {
@@ -209,10 +212,9 @@ function MapController({
     const size = map.getSize();
     const cx = size.x / 2; const cy = size.y / 2;
     const origin = `${cx}px ${cy}px`;
-    const rot = -mapRotation; // negative: rotate map in opposite direction of heading
+    const rot = -mapRotation;
     const counterRot = mapRotation;
 
-    // Rotate tile + overlay (route lines) panes
     for (const paneName of ["tilePane", "overlayPane"]) {
       const pane = panes[paneName];
       if (!pane) continue;
@@ -220,7 +222,6 @@ function MapController({
       pane.style.transform = rot !== 0 ? `rotate(${rot}deg)` : "";
     }
 
-    // Counter-rotate marker/label panes so they stay upright
     for (const paneName of ["markerPane", "shadowPane", "tooltipPane", "popupPane"]) {
       const pane = panes[paneName];
       if (!pane) continue;
@@ -240,11 +241,19 @@ function MapController({
     };
   }, [map]);
 
+  // ── Detect user pan/drag to disable follow mode
+  useEffect(() => {
+    const onDragStart = () => { onUserPan(); };
+    map.on("dragstart", onDragStart);
+    return () => { map.off("dragstart", onDragStart); };
+  }, [map, onUserPan]);
+
   // ── Fit bounds when route loads
   useEffect(() => {
     if (targetPosition && route.length > 0 && fitTrigger > 0 && !driveMode) {
       const bounds = L.latLngBounds([targetPosition, officeCoords]);
       route.forEach((c) => bounds.extend(c));
+      programmaticMoveRef.current = true;
       map.fitBounds(bounds, { padding: [60, 60], maxZoom: 16 });
     }
   }, [fitTrigger]);
@@ -255,6 +264,7 @@ function MapController({
     if (isTracking) {
       const kmh = speed * 3.6;
       const zoom = driveMode ? 18 : kmh > 60 ? 15 : kmh > 30 ? 16 : kmh > 10 ? 17 : 17.5;
+      programmaticMoveRef.current = true;
       map.setView(targetPosition, zoom, { animate: true, duration: 0.7 });
     }
   }, [targetPosition, isTracking, followUser, speed, driveMode, map]);
@@ -268,6 +278,7 @@ const ARRIVAL_THRESHOLD_M = 100;
 const OFF_ROUTE_THRESHOLD_M = 50;
 const REROUTE_COOLDOWN_MS = 8000;
 const STEP_ADVANCE_RADIUS_M = 30;
+const MANUAL_ROTATION_RESUME_MS = 6000; // drive mode: resume auto-rotate after this delay
 
 // ─── STATUS CONFIG ────────────────────────────────────────────────────────────
 const STATUS_CONFIG = {
@@ -308,6 +319,7 @@ export default function LiveTrackingMap() {
   const [driveMode, setDriveMode] = useState(false);
   const [mapRotation, setMapRotation] = useState(0);
   const [touchRotationActive, setTouchRotationActive] = useState(false);
+  const [manualRotationActive, setManualRotationActive] = useState(false); // drive-mode override flag
   const [stepsExpanded, setStepsExpanded] = useState(false);
 
   const watchIdRef = useRef<number | null>(null);
@@ -320,12 +332,25 @@ export default function LiveTrackingMap() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const touchStartAngleRef = useRef<number | null>(null);
   const touchStartRotRef = useRef(0);
+  const manualRotationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => { stepsRef.current = steps; }, [steps]);
   useEffect(() => { routeRef.current = route; }, [route]);
   useEffect(() => { currentStepRef.current = currentStepIndex; }, [currentStepIndex]);
 
-  // ── Two-finger map rotation (applied to mapContainerRef only, not whole page)
+  // ── Trigger manual rotation override (drive mode only)
+  // When user manually rotates while in drive mode, pause auto-heading-lock
+  // for MANUAL_ROTATION_RESUME_MS so they can peek around.
+  const triggerManualRotationOverride = useCallback(() => {
+    if (!driveMode) return;
+    setManualRotationActive(true);
+    if (manualRotationTimeoutRef.current) clearTimeout(manualRotationTimeoutRef.current);
+    manualRotationTimeoutRef.current = setTimeout(() => {
+      setManualRotationActive(false);
+    }, MANUAL_ROTATION_RESUME_MS);
+  }, [driveMode]);
+
+  // ── Two-finger touch rotation (mobile)
   useEffect(() => {
     const el = mapContainerRef.current;
     if (!el) return;
@@ -337,6 +362,7 @@ export default function LiveTrackingMap() {
         touchStartAngleRef.current = getAngle(e.touches[0], e.touches[1]);
         touchStartRotRef.current = mapRotation;
         setTouchRotationActive(true);
+        triggerManualRotationOverride();
       }
     };
     const onMove = (e: TouchEvent) => {
@@ -346,7 +372,9 @@ export default function LiveTrackingMap() {
         setMapRotation(((touchStartRotRef.current - delta) % 360 + 360) % 360);
       }
     };
-    const onEnd = (e: TouchEvent) => { if (e.touches.length < 2) { touchStartAngleRef.current = null; setTouchRotationActive(false); } };
+    const onEnd = (e: TouchEvent) => {
+      if (e.touches.length < 2) { touchStartAngleRef.current = null; setTouchRotationActive(false); }
+    };
     el.addEventListener("touchstart", onStart, { passive: true });
     el.addEventListener("touchmove", onMove, { passive: true });
     el.addEventListener("touchend", onEnd, { passive: true });
@@ -357,14 +385,75 @@ export default function LiveTrackingMap() {
       el.removeEventListener("touchend", onEnd);
       el.removeEventListener("touchcancel", onEnd);
     };
-  }, [mapRotation]);
+  }, [mapRotation, triggerManualRotationOverride]);
 
-  // ── Auto-rotate in drive mode
+  // ── Mouse rotation (desktop): right-click drag OR Alt+Left-click drag
+  // Mirrors Google Maps' Ctrl+drag behavior; doesn't conflict with Leaflet's
+  // built-in left-drag pan or shift-drag box-zoom.
   useEffect(() => {
-    if (driveMode && smoothedHeading !== null && !touchRotationActive) {
+    const el = mapContainerRef.current;
+    if (!el) return;
+
+    let isRotating = false;
+    let startX = 0;
+    let startRot = 0;
+
+    const onMouseDown = (e: MouseEvent) => {
+      // Right-click (button 2) OR Alt+Left-click (button 0 with altKey)
+      if (e.button === 2 || (e.button === 0 && e.altKey)) {
+        e.preventDefault();
+        e.stopPropagation();
+        isRotating = true;
+        startX = e.clientX;
+        startRot = mapRotation;
+        setTouchRotationActive(true);
+        triggerManualRotationOverride();
+        document.body.style.cursor = "grabbing";
+        document.body.style.userSelect = "none";
+      }
+    };
+    const onMouseMove = (e: MouseEvent) => {
+      if (!isRotating) return;
+      e.preventDefault();
+      // 0.5 deg per pixel — comfortable rotation feel
+      const delta = (e.clientX - startX) * 0.5;
+      setMapRotation((((startRot + delta) % 360) + 360) % 360);
+    };
+    const onMouseUp = () => {
+      if (isRotating) {
+        isRotating = false;
+        setTouchRotationActive(false);
+        document.body.style.cursor = "";
+        document.body.style.userSelect = "";
+      }
+    };
+    const onContextMenu = (e: MouseEvent) => e.preventDefault(); // suppress right-click menu over map
+
+    el.addEventListener("mousedown", onMouseDown);
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onMouseUp);
+    el.addEventListener("contextmenu", onContextMenu);
+    return () => {
+      el.removeEventListener("mousedown", onMouseDown);
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
+      el.removeEventListener("contextmenu", onContextMenu);
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+    };
+  }, [mapRotation, triggerManualRotationOverride]);
+
+  // ── Auto-rotate in drive mode (paused while user is manually rotating)
+  useEffect(() => {
+    if (driveMode && smoothedHeading !== null && !touchRotationActive && !manualRotationActive) {
       setMapRotation(smoothedHeading);
     }
-  }, [driveMode, smoothedHeading, touchRotationActive]);
+  }, [driveMode, smoothedHeading, touchRotationActive, manualRotationActive]);
+
+  // ── Cleanup the manual-rotation timeout on unmount
+  useEffect(() => () => {
+    if (manualRotationTimeoutRef.current) clearTimeout(manualRotationTimeoutRef.current);
+  }, []);
 
   // ── Voice
   const speak = useCallback((text: string, priority = false) => {
@@ -506,6 +595,8 @@ export default function LiveTrackingMap() {
     if (watchIdRef.current !== null) { navigator.geolocation.clearWatch(watchIdRef.current); watchIdRef.current = null; }
     window.speechSynthesis?.cancel();
     setIsTracking(false); setIsOffRoute(false); setDriveMode(false); setMapRotation(0);
+    setManualRotationActive(false);
+    if (manualRotationTimeoutRef.current) clearTimeout(manualRotationTimeoutRef.current);
     setTrackingStatus((p) => p === "arrived" ? "arrived" : "idle");
   }, []);
 
@@ -517,9 +608,24 @@ export default function LiveTrackingMap() {
   const toggleDriveMode = useCallback(() => {
     setDriveMode((prev) => {
       if (!prev) { setFollowUser(true); return true; }
-      setMapRotation(0); return false;
+      setMapRotation(0);
+      setManualRotationActive(false);
+      if (manualRotationTimeoutRef.current) clearTimeout(manualRotationTimeoutRef.current);
+      return false;
     });
   }, []);
+
+  // ── Recenter handler — used by the always-visible FAB
+  // Re-engages follow, resets rotation in normal mode, clears manual override in drive mode.
+  const handleRecenter = useCallback(() => {
+    setFollowUser(true);
+    if (!driveMode) {
+      setMapRotation(0);
+    } else {
+      setManualRotationActive(false);
+      if (manualRotationTimeoutRef.current) clearTimeout(manualRotationTimeoutRef.current);
+    }
+  }, [driveMode]);
 
   const displayLocation = useMemo(() => {
     if (isOffRoute || !snappedLocation) return rawUserLocation;
@@ -552,6 +658,11 @@ export default function LiveTrackingMap() {
         @keyframes slide-up { from { transform:translateY(12px);opacity:0 } to { transform:translateY(0);opacity:1 } }
         @keyframes fade-in { from { opacity:0 } to { opacity:1 } }
         @keyframes pulse-ring { 0%,100% { box-shadow:0 0 0 0 rgba(37,99,235,0.4) } 50% { box-shadow:0 0 0 8px rgba(37,99,235,0) } }
+        @keyframes pulse-recenter {
+          0%, 100% { box-shadow: 0 4px 16px rgba(37,99,235,0.45), 0 0 0 0 rgba(37,99,235,0.45); }
+          50% { box-shadow: 0 4px 16px rgba(37,99,235,0.45), 0 0 0 14px rgba(37,99,235,0); }
+        }
+        @keyframes fab-pop { from { transform:scale(0.6);opacity:0 } to { transform:scale(1);opacity:1 } }
 
         .live-dot { animation: blink 1.4s ease-in-out infinite; }
         .slide-up { animation: slide-up 0.3s ease-out both; }
@@ -563,7 +674,7 @@ export default function LiveTrackingMap() {
         .leaflet-popup-content-wrapper { border-radius: 14px !important; box-shadow: 0 8px 32px rgba(0,0,0,0.18) !important; border: 1px solid rgba(0,0,0,0.06) !important; }
         .leaflet-popup-content { margin: 12px 16px !important; font-family: 'DM Sans', system-ui, sans-serif !important; }
 
-        /* Map container - overflow hidden keeps rotation clipped */
+        /* Map container */
         .map-wrap {
           position: relative;
           border-radius: 16px;
@@ -584,13 +695,8 @@ export default function LiveTrackingMap() {
           height: 100dvh !important;
         }
 
-        /* HUD overlay layers (sit on TOP of the map, not rotated) */
-        .hud-layer {
-          position: absolute;
-          inset: 0;
-          pointer-events: none;
-          z-index: 1000;
-        }
+        /* HUD overlay */
+        .hud-layer { position: absolute; inset: 0; pointer-events: none; z-index: 1000; }
         .hud-layer > * { pointer-events: auto; }
 
         /* Scrollbar */
@@ -605,16 +711,14 @@ export default function LiveTrackingMap() {
           border-radius: 14px;
           box-shadow: 0 2px 12px rgba(0,0,0,0.07);
           padding: 12px 16px;
-          display: flex;
-          align-items: center;
-          gap: 12px;
+          display: flex; align-items: center; gap: 12px;
           flex-shrink: 0;
         }
         @media (prefers-color-scheme: dark) {
           .info-card { background:#1e293b; border-color:rgba(255,255,255,0.08); }
         }
 
-        /* Drive HUD panels */
+        /* Drive HUD glass */
         .drive-glass {
           background: rgba(255,255,255,0.96);
           backdrop-filter: blur(24px) saturate(180%);
@@ -625,35 +729,18 @@ export default function LiveTrackingMap() {
           .drive-glass { background:rgba(15,23,42,0.96); border-color:rgba(255,255,255,0.08); }
         }
 
-        /* Status badge */
         .status-badge {
-          display: flex;
-          align-items: center;
-          gap: 7px;
-          padding: 6px 14px 6px 10px;
-          border-radius: 100px;
-          font-size: 13px;
-          font-weight: 600;
-          color: white;
-          line-height: 1;
+          display: flex; align-items: center; gap: 7px;
+          padding: 6px 14px 6px 10px; border-radius: 100px;
+          font-size: 13px; font-weight: 600; color: white; line-height: 1;
           box-shadow: 0 2px 10px rgba(0,0,0,0.15);
         }
 
-        /* Btn base */
+        /* Buttons */
         .nav-btn {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-          border-radius: 12px;
-          font-weight: 600;
-          font-size: 14px;
-          cursor: pointer;
-          transition: all 0.15s ease;
-          border: none;
-          padding: 0 18px;
-          height: 44px;
-          white-space: nowrap;
+          display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+          border-radius: 12px; font-weight: 600; font-size: 14px; cursor: pointer;
+          transition: all 0.15s ease; border: none; padding: 0 18px; height: 44px; white-space: nowrap;
         }
         .nav-btn:active { transform: scale(0.97); }
         .btn-primary { background: #2563EB; color: white; }
@@ -664,68 +751,40 @@ export default function LiveTrackingMap() {
         .btn-ghost:hover { background: #f9fafb; }
         .btn-ghost.active { background: #EFF6FF; color: #2563EB; border-color: #BFDBFE; }
 
-        /* Instruction panel (drive mode top) */
+        /* Instruction panel */
         .instruction-panel {
-          margin: 12px;
-          border-radius: 18px;
-          overflow: hidden;
+          margin: 12px; border-radius: 18px; overflow: hidden;
           box-shadow: 0 8px 40px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.10);
         }
-        .instruction-main {
-          display: flex;
-          align-items: stretch;
-        }
+        .instruction-main { display: flex; align-items: stretch; }
         .instruction-icon-col {
-          background: #1D4ED8;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          padding: 16px 18px;
-          min-width: 88px;
-          gap: 6px;
+          background: #1D4ED8; display: flex; flex-direction: column;
+          align-items: center; justify-content: center;
+          padding: 16px 18px; min-width: 88px; gap: 6px;
         }
         .instruction-text-col {
-          flex: 1;
-          padding: 14px 16px;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          min-width: 0;
-          background: white;
+          flex: 1; padding: 14px 16px; display: flex; flex-direction: column;
+          justify-content: center; min-width: 0; background: white;
         }
         @media (prefers-color-scheme: dark) {
           .instruction-text-col { background: #0f172a; }
         }
         .instruction-next {
-          background: #F8FAFF;
-          border-top: 1.5px solid rgba(37,99,235,0.10);
-          padding: 9px 16px;
-          display: flex;
-          align-items: center;
-          gap: 10px;
+          background: #F8FAFF; border-top: 1.5px solid rgba(37,99,235,0.10);
+          padding: 9px 16px; display: flex; align-items: center; gap: 10px;
         }
         @media (prefers-color-scheme: dark) {
           .instruction-next { background: #1e293b; border-color: rgba(255,255,255,0.06); }
         }
 
-        /* Bottom bar (drive mode) */
         .drive-bottom-bar {
-          margin: 0 12px 12px;
-          border-radius: 18px;
-          overflow: hidden;
+          margin: 0 12px 12px; border-radius: 18px; overflow: hidden;
           box-shadow: 0 8px 40px rgba(0,0,0,0.16), 0 2px 8px rgba(0,0,0,0.08);
         }
         .speed-gauge {
-          width: 56px;
-          height: 56px;
-          border-radius: 12px;
-          background: #F1F5F9;
-          border: 2px solid #E2E8F0;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
+          width: 56px; height: 56px; border-radius: 12px;
+          background: #F1F5F9; border: 2px solid #E2E8F0;
+          display: flex; flex-direction: column; align-items: center; justify-content: center;
           flex-shrink: 0;
         }
         @media (prefers-color-scheme: dark) {
@@ -735,33 +794,81 @@ export default function LiveTrackingMap() {
           .instruction-next { color: #94a3b8; }
         }
 
-        /* Compass button */
+        /* Compass */
         .compass-btn {
-          width: 44px; height: 44px;
-          border-radius: 50%;
+          width: 44px; height: 44px; border-radius: 50%;
           background: rgba(255,255,255,0.95);
           border: 1.5px solid rgba(0,0,0,0.08);
           box-shadow: 0 2px 12px rgba(0,0,0,0.12);
           display: flex; align-items: center; justify-content: center;
-          cursor: pointer;
-          transition: all 0.15s;
-          backdrop-filter: blur(8px);
+          cursor: pointer; transition: all 0.15s; backdrop-filter: blur(8px);
         }
         .compass-btn:hover { background: white; box-shadow: 0 4px 20px rgba(0,0,0,0.18); }
 
-        /* Float buttons */
+        /* Float buttons (drive mode) */
         .float-btn {
-          width: 44px; height: 44px;
-          border-radius: 12px;
+          width: 44px; height: 44px; border-radius: 12px;
           background: rgba(255,255,255,0.95);
           border: 1.5px solid rgba(0,0,0,0.07);
           box-shadow: 0 2px 12px rgba(0,0,0,0.12);
           display: flex; align-items: center; justify-content: center;
-          cursor: pointer; transition: all 0.15s;
-          backdrop-filter: blur(8px);
+          cursor: pointer; transition: all 0.15s; backdrop-filter: blur(8px);
         }
         .float-btn:hover { background: white; }
         .float-btn.active { background: #EFF6FF; border-color: #BFDBFE; }
+
+        /* ──────────────────────────────────────────────────────────────
+           NEW: Always-visible Recenter FAB
+           - "following" state: subtle white, sitting calmly
+           - "lost" state: pulsing blue, demanding attention
+        ────────────────────────────────────────────────────────────── */
+        .recenter-fab {
+          width: 50px; height: 50px;
+          border-radius: 50%;
+          border: 1.5px solid transparent;
+          display: flex; align-items: center; justify-content: center;
+          cursor: pointer;
+          transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.25s ease;
+          z-index: 1002;
+          font-family: inherit;
+          padding: 0;
+          animation: fab-pop 0.25s ease-out;
+        }
+        .recenter-fab.following {
+          background: rgba(255,255,255,0.96);
+          box-shadow: 0 4px 16px rgba(0,0,0,0.14), 0 1px 4px rgba(0,0,0,0.08);
+          border-color: rgba(0,0,0,0.06);
+          backdrop-filter: blur(8px);
+        }
+        .recenter-fab.following:hover {
+          background: white;
+          transform: translateY(-2px);
+          box-shadow: 0 6px 22px rgba(0,0,0,0.18);
+        }
+        .recenter-fab.lost {
+          background: #2563EB;
+          box-shadow: 0 4px 16px rgba(37,99,235,0.45);
+          animation: fab-pop 0.25s ease-out, pulse-recenter 1.8s ease-in-out 0.25s infinite;
+        }
+        .recenter-fab.lost:hover {
+          background: #1D4ED8;
+          transform: translateY(-2px);
+        }
+        .recenter-fab:active { transform: translateY(0) scale(0.96); }
+        @media (prefers-color-scheme: dark) {
+          .recenter-fab.following {
+            background: rgba(30,41,59,0.96);
+            border-color: rgba(255,255,255,0.08);
+          }
+          .recenter-fab.following:hover { background: rgba(15,23,42,1); }
+        }
+
+        /* Off-route banner */
+        .off-route-banner {
+          display: flex; align-items: center; gap: 10px;
+          background: #F59E0B; color: white;
+          padding: 8px 16px; font-size: 13px; font-weight: 600;
+        }
 
         /* Steps drawer */
         .steps-drawer {
@@ -772,14 +879,7 @@ export default function LiveTrackingMap() {
           box-shadow: -8px 0 32px rgba(0,0,0,0.15);
         }
 
-        /* Off-route banner */
-        .off-route-banner {
-          display: flex; align-items: center; gap: 10px;
-          background: #F59E0B; color: white;
-          padding: 8px 16px; font-size: 13px; font-weight: 600;
-        }
-
-        /* Compact step row */
+        /* Step row */
         .step-row {
           display: flex; align-items: center; gap: 12px;
           padding: 11px 16px;
@@ -792,13 +892,11 @@ export default function LiveTrackingMap() {
         .step-icon-box {
           width: 32px; height: 32px; border-radius: 10px;
           display: flex; align-items: center; justify-content: center;
-          flex-shrink: 0;
-          background: #F1F5F9;
-          color: #64748B;
+          flex-shrink: 0; background: #F1F5F9; color: #64748B;
         }
         .step-icon-box.current-icon { background: #2563EB; color: white; }
 
-        /* Leaflet zoom control repositioning */
+        /* Leaflet zoom control */
         .leaflet-control-zoom { border: none !important; box-shadow: 0 2px 12px rgba(0,0,0,0.12) !important; border-radius: 10px !important; overflow: hidden; }
         .leaflet-control-zoom a { color: #374151 !important; font-size: 18px !important; line-height: 36px !important; width: 36px !important; height: 36px !important; }
       `}</style>
@@ -809,7 +907,6 @@ export default function LiveTrackingMap() {
         {!driveMode && (
           <div className="slide-up" style={{ marginBottom: 24 }}>
 
-            {/* Title Row */}
             <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, marginBottom: 16, flexWrap: "wrap" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                 <div style={{ width: 44, height: 44, borderRadius: 12, background: "linear-gradient(135deg,#1D4ED8,#2563EB)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 14px rgba(37,99,235,0.35)", flexShrink: 0 }}>
@@ -829,7 +926,6 @@ export default function LiveTrackingMap() {
               )}
             </div>
 
-            {/* Off-route warning */}
             {isOffRoute && isTracking && (
               <div style={{ display: "flex", alignItems: "center", gap: 10, background: "#FFFBEB", border: "1.5px solid #FCD34D", borderRadius: 12, padding: "10px 14px", marginBottom: 14 }}>
                 <AlertTriangle size={16} color="#D97706" style={{ flexShrink: 0 }} />
@@ -840,7 +936,6 @@ export default function LiveTrackingMap() {
               </div>
             )}
 
-            {/* Error */}
             {locationError && (
               <div style={{ display: "flex", gap: 10, background: "#FEF2F2", border: "1.5px solid #FECACA", borderRadius: 12, padding: "10px 14px", marginBottom: 14 }}>
                 <MapPin size={16} color="#DC2626" style={{ flexShrink: 0, marginTop: 1 }} />
@@ -851,7 +946,6 @@ export default function LiveTrackingMap() {
               </div>
             )}
 
-            {/* Arrived */}
             {trackingStatus === "arrived" && (
               <div style={{ background: "#F0FDF4", border: "1.5px solid #86EFAC", borderRadius: 14, padding: "18px 20px", marginBottom: 14, textAlign: "center" }}>
                 <CheckCircle size={36} color="#16A34A" style={{ marginBottom: 8 }} />
@@ -860,7 +954,6 @@ export default function LiveTrackingMap() {
               </div>
             )}
 
-            {/* Control Buttons */}
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 16 }}>
               {!isTracking ? (
                 <button className="nav-btn btn-primary" onClick={startTracking} disabled={isLoadingLocation}
@@ -894,7 +987,6 @@ export default function LiveTrackingMap() {
               </button>
             </div>
 
-            {/* Route Stats */}
             {distanceRemaining && etaSeconds > 0 && (
               <div style={{ display: "flex", gap: 10, overflowX: "auto", paddingBottom: 4 }}>
                 <div className="info-card">
@@ -942,15 +1034,10 @@ export default function LiveTrackingMap() {
 
         {/* ══════════════════════════════════════════════════════════════════
             MAP CONTAINER
-            - In normal mode: inline with height 480px
-            - In drive mode: fixed full-screen via .drive-mode class
-            - Map rotation is handled INSIDE by MapController (pane transforms)
-              so this div NEVER rotates — only map tiles rotate!
         ════════════════════════════════════════════════════════════════════ */}
         <div ref={mapContainerRef} className={`map-wrap ${driveMode ? "drive-mode" : ""}`}
           style={driveMode ? {} : { height: 480 }}>
 
-          {/* ── Leaflet Map (no transform wrapper!) ── */}
           <MapContainer
             center={OFFICE_COORDS}
             zoom={15}
@@ -972,9 +1059,9 @@ export default function LiveTrackingMap() {
               speed={speed}
               driveMode={driveMode}
               mapRotation={mapRotation}
+              onUserPan={() => setFollowUser(false)}
             />
 
-            {/* Office */}
             <Marker position={OFFICE_COORDS} icon={officeIcon}>
               {!driveMode && (
                 <Tooltip permanent direction="right" offset={[12, -20]}>
@@ -989,31 +1076,25 @@ export default function LiveTrackingMap() {
               </Popup>
             </Marker>
 
-            {/* GPS accuracy circle */}
             {displayLocation && accuracy && accuracy > 15 && !driveMode && (
               <Circle center={displayLocation} radius={accuracy}
                 pathOptions={{ color: "rgba(37,99,235,0.3)", fillColor: "rgba(37,99,235,0.07)", fillOpacity: 1, weight: 1 }} />
             )}
 
-            {/* User marker */}
             {displayLocation && <Marker position={displayLocation} icon={currentUserIcon}><Popup><div style={{ textAlign: "center" }}><strong>Your Location</strong><br /><span style={{ fontSize: 11, color: "#666" }}>{snappedLocation && !isOffRoute ? "On route" : "GPS"}{accuracy && ` • ±${Math.round(accuracy)}m`}</span></div></Popup></Marker>}
 
-            {/* Traveled route */}
             {traveledRoute.length > 1 && <Polyline positions={traveledRoute} pathOptions={{ color: "#94A3B8", weight: driveMode ? 7 : 5, opacity: 0.45, lineCap: "round", lineJoin: "round" }} />}
 
-            {/* Remaining route */}
             {remainingRoute.length > 1 && (<>
               <Polyline positions={remainingRoute} pathOptions={{ color: "#2563EB", weight: driveMode ? 16 : 12, opacity: 0.12 }} />
               <Polyline positions={remainingRoute} pathOptions={{ color: "#2563EB", weight: driveMode ? 8 : 5, opacity: 0.9, lineCap: "round", lineJoin: "round" }} />
             </>)}
 
-            {/* Full route if not split */}
             {traveledRoute.length === 0 && route.length > 0 && (<>
               <Polyline positions={route} pathOptions={{ color: "#2563EB", weight: driveMode ? 14 : 10, opacity: 0.12 }} />
               <Polyline positions={route} pathOptions={{ color: "#2563EB", weight: driveMode ? 7 : 5, opacity: 0.85, lineCap: "round", lineJoin: "round" }} />
             </>)}
 
-            {/* Maneuver dots */}
             {steps.filter((s, i) => s.maneuverType !== "depart" && s.maneuverType !== "arrive" && i >= currentStepIndex).map((step, i) => {
               const isNext = steps.indexOf(step) === currentStepIndex;
               return (
@@ -1029,14 +1110,21 @@ export default function LiveTrackingMap() {
           </MapContainer>
 
           {/* ══════════════════════════════════════════════════════════════
-              HUD OVERLAY — sits on top of map, never rotated
+              HUD OVERLAY
           ══════════════════════════════════════════════════════════════ */}
           <div className="hud-layer">
 
-            {/* ── Compass (always visible when rotated or in drive mode) ── */}
+            {/* ── Compass: appears whenever map is rotated, click to reset ── */}
             {(mapRotation > 1 || driveMode) && (
-              <button className="compass-btn" onClick={() => { if (!driveMode) setMapRotation(0); }}
-                title={driveMode ? "Auto-rotating with heading" : "Reset North"}
+              <button className="compass-btn" onClick={() => {
+                setMapRotation(0);
+                if (driveMode) {
+                  // In drive mode: also clear manual override so heading-lock can resume
+                  setManualRotationActive(false);
+                  if (manualRotationTimeoutRef.current) clearTimeout(manualRotationTimeoutRef.current);
+                }
+              }}
+                title="Reset orientation to North"
                 style={{ position: "absolute", top: 12, left: 12 }}>
                 <svg viewBox="0 0 36 36" style={{ width: 28, height: 28, transform: `rotate(${-mapRotation}deg)`, transition: "transform 0.4s ease-out" }}>
                   <path d="M18 5 L21 18 L18 16 L15 18 Z" fill="#EF4444" />
@@ -1046,11 +1134,29 @@ export default function LiveTrackingMap() {
               </button>
             )}
 
-            {/* ── Re-center (normal mode) ── */}
-            {isTracking && !followUser && !driveMode && (
-              <button className="compass-btn" onClick={() => setFollowUser(true)}
-                title="Re-center" style={{ position: "absolute", bottom: 16, right: 16 }}>
-                <LocateFixed size={18} color="#2563EB" />
+            {/* ────────────────────────────────────────────────────────────
+                ALWAYS-VISIBLE RECENTER FAB
+                Visible during tracking. Two states:
+                  • following → calm white, sits in the corner
+                  • lost (panned away) → pulsing blue, demands a tap
+            ──────────────────────────────────────────────────────────── */}
+            {isTracking && trackingStatus !== "arrived" && (
+              <button
+                className={`recenter-fab ${followUser ? "following" : "lost"}`}
+                onClick={handleRecenter}
+                title={followUser ? "Centered on your location" : "Tap to recenter on you"}
+                aria-label={followUser ? "Centered on your location" : "Recenter map on your location"}
+                style={{
+                  position: "absolute",
+                  bottom: driveMode ? 110 : 16,
+                  right: 16,
+                }}
+              >
+                {followUser ? (
+                  <LocateFixed size={22} color="#2563EB" />
+                ) : (
+                  <Locate size={22} color="white" strokeWidth={2.5} />
+                )}
               </button>
             )}
 
@@ -1059,7 +1165,6 @@ export default function LiveTrackingMap() {
             ═══════════════════════════════════════════ */}
             {driveMode && isTracking && (
               <>
-                {/* Off-route banner */}
                 {isOffRoute && (
                   <div className="off-route-banner" style={{ position: "absolute", top: 0, left: 0, right: 0 }}>
                     <AlertTriangle size={15} style={{ flexShrink: 0 }} />
@@ -1067,7 +1172,6 @@ export default function LiveTrackingMap() {
                   </div>
                 )}
 
-                {/* ── TOP: Current instruction ── */}
                 {currentStep && (
                   <div className="instruction-panel drive-glass slide-up"
                     style={{ position: "absolute", top: isOffRoute ? 38 : 0, left: 0, right: 0 }}>
@@ -1102,24 +1206,24 @@ export default function LiveTrackingMap() {
                   </div>
                 )}
 
-                {/* ── RIGHT: Float controls ── */}
+                {/* Right side: audio + steps drawer toggle (recenter is now the FAB above) */}
                 <div style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", display: "flex", flexDirection: "column", gap: 10 }}>
                   <button className={`float-btn ${audioEnabled ? "active" : ""}`}
                     onClick={() => setAudioEnabled((p) => { if (p) window.speechSynthesis?.cancel(); return !p; })}
                     title={audioEnabled ? "Mute" : "Unmute"}>
                     {audioEnabled ? <Volume2 size={18} color="#2563EB" /> : <VolumeX size={18} color="#94A3B8" />}
                   </button>
-                  {!followUser && (
-                    <button className="float-btn" onClick={() => setFollowUser(true)} title="Re-center">
-                      <LocateFixed size={18} color="#2563EB" />
-                    </button>
-                  )}
                   <button className={`float-btn ${stepsExpanded ? "active" : ""}`} onClick={() => setStepsExpanded((p) => !p)} title="All steps">
                     <Milestone size={18} color={stepsExpanded ? "#2563EB" : "#64748B"} />
                   </button>
+                  {/* Indicator that auto-rotation is paused (drive mode only) */}
+                  {manualRotationActive && (
+                    <div className="float-btn" style={{ background: "#FEF3C7", borderColor: "#FCD34D", cursor: "default" }} title="Auto-rotate paused — tap recenter to resume">
+                      <RotateCw size={16} color="#B45309" />
+                    </div>
+                  )}
                 </div>
 
-                {/* ── Steps drawer ── */}
                 {stepsExpanded && (
                   <div className="steps-drawer drive-glass fade-in">
                     <div style={{ padding: "14px 16px", borderBottom: "1.5px solid rgba(0,0,0,0.07)", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
@@ -1146,7 +1250,6 @@ export default function LiveTrackingMap() {
                   </div>
                 )}
 
-                {/* ── BOTTOM: Speed + ETA ── */}
                 <div className="drive-bottom-bar drive-glass" style={{ position: "absolute", bottom: 0, left: 0, right: 0 }}>
                   {accuracy && accuracy > 30 && (
                     <div style={{ background: "#FEF3C7", padding: "6px 16px", textAlign: "center", borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
@@ -1154,7 +1257,6 @@ export default function LiveTrackingMap() {
                     </div>
                   )}
                   <div style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 16px" }}>
-                    {/* Speed */}
                     <div className="speed-gauge">
                       <span className="nav-mono" style={{ fontSize: 20, fontWeight: 700, lineHeight: 1, color: "var(--foreground,#0F172A)" }}>
                         {speed > 0.5 ? fmtSpeed(speed) : "0"}
@@ -1162,7 +1264,6 @@ export default function LiveTrackingMap() {
                       <span style={{ fontSize: 9, fontWeight: 600, color: "#94A3B8", marginTop: 2 }}>km/h</span>
                     </div>
 
-                    {/* ETA */}
                     <div style={{ flex: 1, textAlign: "center" }}>
                       <p className="nav-mono" style={{ margin: 0, fontSize: 26, fontWeight: 700, lineHeight: 1, color: "var(--foreground,#0F172A)" }}>{fmtETA(etaSeconds)}</p>
                       <p style={{ margin: "4px 0 0", fontSize: 11, color: "#64748B" }}>
@@ -1170,7 +1271,6 @@ export default function LiveTrackingMap() {
                       </p>
                     </div>
 
-                    {/* Exit */}
                     <button onClick={toggleDriveMode} style={{ width: 48, height: 48, borderRadius: 14, background: "#EF4444", border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", boxShadow: "0 4px 14px rgba(239,68,68,0.4)", flexShrink: 0 }}>
                       <X size={22} color="white" />
                     </button>
@@ -1183,7 +1283,6 @@ export default function LiveTrackingMap() {
         </div>
         {/* end map-wrap */}
 
-        {/* ── Footer hints ── */}
         {!driveMode && isTracking && accuracy && (
           <p style={{ textAlign: "center", fontSize: 11, color: "#94A3B8", marginTop: 8 }}>
             GPS ±{Math.round(accuracy)}m{accuracy > 100 ? " • low accuracy, try outdoors" : ""}
@@ -1192,11 +1291,10 @@ export default function LiveTrackingMap() {
         )}
         {!driveMode && (
           <p style={{ textAlign: "center", fontSize: 11, color: "#CBD5E1", marginTop: 4 }}>
-            Two-finger rotate map • Snaps to road • Auto-reroutes when off-track
+            Two-finger or right-click drag to rotate • Drag to explore • Tap recenter to snap back
           </p>
         )}
 
-        {/* ── Full directions (normal mode) ── */}
         {steps.length > 0 && !driveMode && (
           <div style={{ marginTop: 20 }}>
             <button onClick={() => setStepsExpanded((p) => !p)}
