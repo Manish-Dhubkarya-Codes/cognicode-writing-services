@@ -177,7 +177,6 @@ function DirectionIcon({ type, modifier, size = 20, className = "" }: { type: st
     default: return <ArrowUp size={size} className={className} />;
   }
 }
-const touchStartDistRef = useRef<number>(0);
 
 // ─── Format Helpers ───────────────────────────────────────────────────────────
 function fmtDist(m: number) { return m < 1000 ? `${Math.round(m)} m` : `${(m / 1000).toFixed(1)} km`; }
@@ -295,6 +294,8 @@ const STATUS_CONFIG = {
 //  MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════════
 export default function LiveTrackingMap() {
+const touchStartDistRef = useRef<number>(0);
+
   const [rawUserLocation, setRawUserLocation] = useState<[number, number] | null>(null);
   const [snappedLocation, setSnappedLocation] = useState<[number, number] | null>(null);
   const [route, setRoute] = useState<[number, number][]>([]);
