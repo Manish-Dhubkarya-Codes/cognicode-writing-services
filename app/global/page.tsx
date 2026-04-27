@@ -57,7 +57,7 @@ const regions = [
   },
   {
     name: "Canada",
-    flag: "�🇦",
+    flag: "🇨🇦",
     href: "/global/canada",
     description:
       "Expert support for Canadian university requirements, British academic standards, and Canadian-specific formatting guidelines.",
@@ -71,7 +71,7 @@ const regions = [
   },
   {
     name: "Australia",
-    flag: "�🇺",
+    flag: "🇦🇺",
     href: "/global/australia",
     description:
       "Expert support for Australian university requirements, British academic standards, and Australian-specific formatting guidelines.",
@@ -85,7 +85,7 @@ const regions = [
   },
   {
     name: "Germany",
-    flag: "�🇪",
+    flag: "🇩🇪",
     href: "/global/germany",
     description:
       "Expert support for German university requirements, British academic standards, and German-specific formatting guidelines.",

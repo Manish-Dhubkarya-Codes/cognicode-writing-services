@@ -158,6 +158,12 @@ export function Footer() {
                 </Link>
               ))}
             </div>
+            <div className="flex items-center gap-1 text-xs font-medium text-background/50">
+  Made with <span className="text-red-500 animate-pulse">❤️</span> in 
+  <span className="bg-gradient-to-r from-orange-400 via-white to-green-500 bg-clip-text font-bold text-transparent drop-shadow-sm ml-0.5">
+    India
+  </span>
+</div>
           </div>
         </div>
       </div>
