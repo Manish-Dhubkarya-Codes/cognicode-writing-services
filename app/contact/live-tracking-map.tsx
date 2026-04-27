@@ -212,6 +212,44 @@ function MapController({
 }) {
   const map = useMap();
   const lastAppliedRotRef = useRef(0);
+  const tilesPatchedRef = useRef(false);
+
+  // ════════════════════════════════════════════════════════════════════════
+  // TILE BUFFER PATCH — fixes gray corners during rotation.
+  //
+  // Leaflet only loads tiles for the unrotated visible rectangle. When the
+  // map rotates, the corners of the visible area extend beyond that rectangle
+  // and show as gray. We override `_getTiledPixelBounds` on every TileLayer
+  // to load 50% extra tiles in every direction, which is enough to cover
+  // any rotation up to ~60° with no visible gaps.
+  // ════════════════════════════════════════════════════════════════════════
+  useEffect(() => {
+    if (tilesPatchedRef.current) return;
+    let patched = false;
+    map.eachLayer((layer) => {
+      const tl = layer as any;
+      if (tl && typeof tl._getTiledPixelBounds === "function" && !tl._rotationBufferPatched) {
+        const orig = tl._getTiledPixelBounds.bind(tl);
+        tl._getTiledPixelBounds = function (center: any) {
+          const b = orig(center);
+          const w = b.max.x - b.min.x;
+          const h = b.max.y - b.min.y;
+          // 50% extra on each side handles rotations up to ~60° without gray corners.
+          // sqrt(2) ≈ 1.41 covers a 45° rotation; we add headroom.
+          const padX = w * 0.5;
+          const padY = h * 0.5;
+          return new (L as any).Bounds(
+            new (L as any).Point(b.min.x - padX, b.min.y - padY),
+            new (L as any).Point(b.max.x + padX, b.max.y + padY)
+          );
+        };
+        tl._rotationBufferPatched = true;
+        if (typeof tl.redraw === "function") tl.redraw();
+        patched = true;
+      }
+    });
+    if (patched) tilesPatchedRef.current = true;
+  }, [map]);
 
   // ── Apply rotation to Leaflet panes
   // tilePane + overlayPane rotate; markerPane/shadowPane/popup/tooltip counter-rotate
@@ -229,12 +267,12 @@ function MapController({
     const rot = -mapRotation;
     const counterRot = mapRotation;
 
-    // Decide whether to use a transition. During active gesture: instant. Otherwise: smooth.
-    // We also skip transitions if rotation snapped back to 0 abruptly (e.g. recenter).
+    // Decide whether to use a transition. During active gesture: instant (snappy).
+    // Otherwise: smooth easing for heading updates and snap-backs.
     const delta = Math.abs(angleDelta(lastAppliedRotRef.current, mapRotation));
-    const useTransition = !isUserGesturing && delta > 0.1 && delta < 90;
+    const useTransition = !isUserGesturing && delta > 0.1 && delta < 120;
     const transitionStr = useTransition
-      ? "transform 450ms cubic-bezier(0.22, 1, 0.36, 1)"
+      ? "transform 320ms cubic-bezier(0.22, 1, 0.36, 1)"
       : "transform 0s";
 
     for (const paneName of ["tilePane", "overlayPane"]) {
@@ -368,12 +406,14 @@ export default function LiveTrackingMap() {
   const manualRotationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Gesture refs — using refs avoids re-binding listeners during interaction
+  // We accumulate per-frame deltas (NOT delta from initial) so rotation past
+  // 180° works cleanly without wraparound. This is what makes Google Maps feel
+  // continuous — your fingers can spin freely and the map follows turn-for-turn.
   const gestureRef = useRef({
     active: false,
-    initialAngle: 0,    // angle between two fingers (deg) at gesture start
-    initialRotation: 0, // mapRotation at gesture start
-    pivotX: 0,          // midpoint of two fingers — rotation pivot (screen coords)
-    pivotY: 0,
+    startRotation: 0,    // mapRotation at gesture start
+    prevAngle: 0,        // angle between the two fingers from the previous frame
+    accumulatedDelta: 0, // total angular distance the fingers have swept
   });
   const mouseGestureRef = useRef({ active: false, startX: 0, startRot: 0 });
 
@@ -391,15 +431,29 @@ export default function LiveTrackingMap() {
     }, MANUAL_ROTATION_RESUME_MS);
   }, [driveMode]);
 
-  // ── Two-finger touch rotation
-  // Google-Maps-feel: smooth 360° rotation, pivot tracks the midpoint of the two fingers,
-  // doesn't conflict with Leaflet's pinch-zoom (we use passive listeners and no preventDefault).
+  // ════════════════════════════════════════════════════════════════════════
+  //  TWO-FINGER ROTATION (Google Maps style)
+  //
+  //  KEY FIX: We accumulate the angular delta PER FRAME, not from the gesture's
+  //  initial angle. The previous (broken) approach computed `delta = currentAngle
+  //  - initialAngle` and applied a single ±180° wrap fix, which works only for
+  //  rotations ≤ 180°. Past that threshold the math wrapped backward and the
+  //  map snapped — that's what made it feel "broken" before.
+  //
+  //  By comparing each frame to the previous frame and summing, the per-frame
+  //  delta is always tiny (< a few degrees), so the wrap fix always works and
+  //  total rotation accumulates without bound. Spin your fingers as much as
+  //  you want; the map tracks 1:1.
+  //
+  //  Listeners are passive so they don't fight Leaflet's pinch-zoom — you can
+  //  rotate AND zoom simultaneously, exactly like Google Maps.
+  // ════════════════════════════════════════════════════════════════════════
   useEffect(() => {
     const el = mapContainerRef.current;
     if (!el) return;
 
     const getAngleBetween = (t1: Touch, t2: Touch): number => {
-      // Returns angle in degrees, full 360° range
+      // atan2 returns angle in degrees, full -180 to 180 range
       return (Math.atan2(t2.clientY - t1.clientY, t2.clientX - t1.clientX) * 180) / Math.PI;
     };
 
@@ -407,12 +461,12 @@ export default function LiveTrackingMap() {
       if (e.touches.length === 2) {
         const t1 = e.touches[0];
         const t2 = e.touches[1];
+        const startAngle = getAngleBetween(t1, t2);
         gestureRef.current = {
           active: true,
-          initialAngle: getAngleBetween(t1, t2),
-          initialRotation: mapRotation,
-          pivotX: (t1.clientX + t2.clientX) / 2,
-          pivotY: (t1.clientY + t2.clientY) / 2,
+          startRotation: mapRotation,
+          prevAngle: startAngle,
+          accumulatedDelta: 0,
         };
         setIsUserGesturing(true);
         triggerManualRotationOverride();
@@ -423,22 +477,29 @@ export default function LiveTrackingMap() {
       if (e.touches.length === 2 && gestureRef.current.active) {
         const t1 = e.touches[0];
         const t2 = e.touches[1];
-        const currentAngle = getAngleBetween(t1, t2);
+        const angle = getAngleBetween(t1, t2);
 
-        // Compute shortest signed delta from initial angle (handles 180° wraparound)
-        let delta = currentAngle - gestureRef.current.initialAngle;
-        if (delta > 180) delta -= 360;
-        if (delta < -180) delta += 360;
+        // Per-frame delta (always small, so wraparound is bulletproof)
+        let frameDelta = angle - gestureRef.current.prevAngle;
+        if (frameDelta > 180) frameDelta -= 360;
+        if (frameDelta < -180) frameDelta += 360;
 
-        // Rotation handle — subtract because moving fingers clockwise rotates the map counterclockwise
-        // (i.e., the world appears to rotate opposite to your hand)
-        const newRot = (((gestureRef.current.initialRotation - delta) % 360) + 360) % 360;
-        setMapRotation(newRot);
+        gestureRef.current.accumulatedDelta += frameDelta;
+        gestureRef.current.prevAngle = angle;
+
+        // Subtract because turning fingers clockwise rotates the world CCW
+        // (the map appears to twist opposite to your hand direction)
+        const newRot = gestureRef.current.startRotation - gestureRef.current.accumulatedDelta;
+        setMapRotation(((newRot % 360) + 360) % 360);
+      } else if (e.touches.length < 2 && gestureRef.current.active) {
+        // One finger lifted mid-gesture — end rotation but keep current state
+        gestureRef.current.active = false;
+        setIsUserGesturing(false);
       }
     };
 
     const onTouchEnd = (e: TouchEvent) => {
-      if (e.touches.length < 2) {
+      if (e.touches.length < 2 && gestureRef.current.active) {
         gestureRef.current.active = false;
         setIsUserGesturing(false);
       }
