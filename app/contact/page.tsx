@@ -29,6 +29,7 @@ import {
   MessageSquare,
   CheckCircle,
 } from "lucide-react";
+import { serverURL } from "../server/fetch-beckend-services";
 
 // ============================================================
 // THIS IS THE FIX: dynamic import with ssr: false
@@ -142,17 +143,51 @@ export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setIsSubmitting(true);
+
+  try {
+    const response = await fetch(`${serverURL}/clientrequests/clientrequests`, {   // ← Change if your backend is on different port
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        service: formData.service,
+        subject: formData.subject,
+        message: formData.message,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.success) {
+      setIsSubmitted(true);
+      setTimeout(() => {
+        setIsSubmitted(false);
+        setFormData({ 
+          name: "", 
+          email: "", 
+          phone: "", 
+          service: "", 
+          subject: "", 
+          message: "" 
+        });
+      }, 3000);
+    } else {
+      alert(result.message || "Failed to send message. Please try again.");
+    }
+  } catch (error) {
+    console.error("Submit error:", error);
+    alert("Network error. Please check your connection and try again.");
+  } finally {
     setIsSubmitting(false);
-    setIsSubmitted(true);
-    setTimeout(() => {
-      setIsSubmitted(false);
-      setFormData({ name: "", email: "", phone: "", service: "", subject: "", message: "" });
-    }, 3000);
-  };
+  }
+};
 
   return (
     <div className="flex min-h-screen flex-col">

@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/accordion";
 import { Menu, X, GraduationCap, Phone, ChevronDown, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
-import CogniCodeLogo from "@/public/CogniCodeLogo.svg";
+import CogniCodeLogo from "@/public/CogniCode_Old.png";
 import Image from "next/image";
 import { SearchBar } from "../ui/SearchBar";
 
@@ -52,7 +52,7 @@ const writingServiceLinks = [
   { name: "PhD Thesis Writing Assistance", href: "/services/thesis-assistance" },
   { name: "Dissertation Consultation", href: "/services/dissertation-consultation" },
   { name: "PhD Topic Selection", href: "/services/topic-selection" },
-  { name: "PhD Scholar Guidance", href: "/services/scholar-guidance" },
+  // { name: "PhD Scholar Guidance", href: "/services/scholar-guidance" },
   { name: "PhD Consultation Services", href: "/services/phd-consultation" },
   { name: "Coding & Implementation", href: "/services/coding-implementation" },
   { name: "Research Paper Writing", href: "/services/research-paper-writing" },
@@ -143,13 +143,18 @@ export function Header() {
         {/* Logo */}
         <div className="flex lg:flex-1">
           <Link href="/" className="p-1.5 flex items-center gap-2">
-            <Image src={CogniCodeLogo} alt="CogniCode Logo" className="w-25" />
+            <Image
+      src={CogniCodeLogo}
+      alt="CogniCode Logo"
+      className="w-30 select-none"
+      draggable={false}
+    />
           </Link>
         </div>
 
         {/* ====================== DESKTOP NAV ====================== */}
         {!searchOpen ? (
-          <div className="hidden lg:flex lg:gap-x-6">
+          <div className="hidden lg:flex cursor-pointer lg:gap-x-6">
             {navigationConfig.map((item) => {
               if (item.type === "link") {
                 return (
@@ -157,9 +162,13 @@ export function Header() {
                     key={item.id}
                     href={item.href}
                     className={cn(
-                      "text-sm font-medium transition-colors hover:text-primary",
-                      isActive(item) ? "text-primary" : "text-muted-foreground"
-                    )}
+  "relative text-sm font-medium transition-colors hover:text-primary",
+  "after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-primary",
+  "after:transition-all after:duration-300 hover:after:w-full",
+  isActive(item)
+    ? "text-primary after:w-full"
+    : "text-muted-foreground"
+)}
                   >
                     {item.label}
                   </Link>
@@ -170,7 +179,7 @@ export function Header() {
                 <DropdownMenu key={item.id}>
                   <DropdownMenuTrigger
                     className={cn(
-                      "flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary outline-none",
+                      "flex cursor-pointer items-center gap-1 text-sm font-medium transition-colors hover:text-primary outline-none",
                       isActive(item) ? "text-primary" : "text-muted-foreground"
                     )}
                   >
@@ -229,7 +238,7 @@ export function Header() {
                 <Search className="h-5 w-5" />
               </Button>
               <Button variant="outline" size="sm" asChild>
-                <Link href="/contact" className="flex items-center gap-2">
+                <Link href="/contact" className="flex bg-white items-center gap-2">
                   <Phone className="h-4 w-4" />
                   Get a Quote
                 </Link>
@@ -241,7 +250,7 @@ export function Header() {
                 <X className="h-5 w-5" />
               </Button>
               <Button variant="outline" size="sm" asChild>
-                <Link href="/contact" className="flex items-center gap-2">
+                <Link href="/contact" className="flex bg-white items-center gap-2">
                   <Phone className="h-4 w-4" />
                   Get a Quote
                 </Link>
@@ -408,7 +417,7 @@ export function Header() {
                     asChild
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <Link href="/contact" className="flex items-center gap-2">
+                    <Link href="/contact" className="flex bg-white items-center gap-2">
                       <Phone className="h-4 w-4" />
                       Get a Quote
                     </Link>

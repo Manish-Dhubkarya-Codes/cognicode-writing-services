@@ -19,7 +19,13 @@ import {
 } from "lucide-react";
 
 import Thesis from "@/public/Services/Thesis.png"
-import Research_Paper from "@/public/Services/Research_Paper.jpg"
+import Research_Paper from "@/public/Services/Research_Paper.png"
+import Dissertation from "@/public/Services/Dissertation.png"
+import Litrature from "@/public/Services/Litrature.png"
+import Synopsis from "@/public/Services/Synopsis.png"
+import DataAnalysis from "@/public/Services/DataAnalysis.png"
+import PlagRemoval from "@/public/Services/PlagRemoval.png"
+import Editing from "@/public/Services/Editing.png"
 import Image from "next/image";
 
 export const metadata: Metadata = {
@@ -67,7 +73,7 @@ const mainServices = [
     description:
       "End-to-end dissertation support for doctoral candidates. We help you navigate the complex process of completing your doctoral research.",
     icon: GraduationCap,
-    image: Thesis,
+    image: Dissertation,
     features: [
       "Proposal development",
       "Research design consultation",
@@ -83,7 +89,7 @@ const mainServices = [
     description:
       "In-depth literature reviews that critically analyze existing research and identify gaps in your field of study. Essential for establishing your research foundation.",
     icon: Search,
-    image: Thesis,
+    image: Litrature,
     features: [
       "Comprehensive source identification",
       "Critical analysis and synthesis",
@@ -99,7 +105,7 @@ const mainServices = [
     description:
       "Well-structured research proposals and synopsis writing to get quick university approval for your research projects.",
     icon: PenTool,
-    image: Thesis,
+    image: Synopsis,
     features: [
       "Problem statement formulation",
       "Research objectives alignment",
@@ -115,7 +121,7 @@ const mainServices = [
     description:
       "Expert statistical analysis using SPSS, R, Python, and other tools. We help interpret your data meaningfully and present results effectively.",
     icon: BarChart3,
-    image: Thesis,
+    image: DataAnalysis,
     features: [
       "Statistical test selection",
       "SPSS, R, Python analysis",
@@ -131,7 +137,7 @@ const mainServices = [
     description:
       "Thorough plagiarism checking and removal services to ensure your work is 100% original and publication-ready.",
     icon: Shield,
-    image: Thesis,
+    image: PlagRemoval,
     features: [
       "Turnitin similarity check",
       "AI detection screening",
@@ -147,7 +153,7 @@ const mainServices = [
     description:
       "Professional academic editing and proofreading services to polish your work before submission.",
     icon: Edit3,
-    image: Thesis,
+    image: Editing,
     features: [
       "Grammar and spelling correction",
       "Style and clarity enhancement",
@@ -250,9 +256,10 @@ export default function ServicesPage() {
                     <div className="flex aspect-4/4 items-center justify-center rounded-lg bg-primary overflow-hidden">
   {service.image ? (
     <Image
+      draggable={false}
       src={service.image}
       alt={service.name}
-      className="h-full w-full object-contain"
+      className="h-full w-full select-none object-contain"
     />
   ) : (
     <service.icon className="h-6 w-6 text-primary-foreground" />
