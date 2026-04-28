@@ -223,22 +223,22 @@ export default function ContactPage() {
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                       <div>
                         <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">Full Name *</label>
-                        <Input id="name" type="text" required placeholder="John Doe" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+                        <Input className="bg-white" id="name" type="text" required placeholder="John Doe" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
                       </div>
                       <div>
                         <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">Email Address *</label>
-                        <Input id="email" type="email" required placeholder="john@example.com" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
+                        <Input className="bg-white" id="email" type="email" required placeholder="john@example.com" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
                       </div>
                     </div>
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                       <div>
                         <label htmlFor="phone" className="block text-sm font-medium text-foreground mb-2">Phone Number</label>
-                        <Input id="phone" type="tel" placeholder="+91 70005 15617" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
+                        <Input className="bg-white" id="phone" type="tel" placeholder="+91 70005 15617" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
                       </div>
                       <div>
                         <label htmlFor="service" className="block text-sm font-medium text-foreground mb-2">Service Required *</label>
                         <Select value={formData.service} onValueChange={(value) => setFormData({ ...formData, service: value })}>
-                          <SelectTrigger><SelectValue placeholder="Select a service" /></SelectTrigger>
+                          <SelectTrigger className="bg-white"><SelectValue placeholder="Select a service" /></SelectTrigger>
                           <SelectContent>
                             {serviceOptions.map((service) => (
                               <SelectItem key={service} value={service}>{service}</SelectItem>
@@ -249,11 +249,11 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <label htmlFor="subject" className="block text-sm font-medium text-foreground mb-2">Subject *</label>
-                      <Input id="subject" type="text" required placeholder="Brief description of your inquiry" value={formData.subject} onChange={(e) => setFormData({ ...formData, subject: e.target.value })} />
+                      <Input className="bg-white" id="subject" type="text" required placeholder="Brief description of your inquiry" value={formData.subject} onChange={(e) => setFormData({ ...formData, subject: e.target.value })} />
                     </div>
                     <div>
                       <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">Message *</label>
-                      <Textarea id="message" required rows={5} placeholder="Please provide details about your project requirements..." value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} />
+                      <Textarea className="bg-white" id="message" required rows={5} placeholder="Please provide details about your project requirements..." value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} />
                     </div>
                     <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
                       {isSubmitting ? "Sending..." : (<>Send Message <Send className="ml-2 h-4 w-4" /></>)}

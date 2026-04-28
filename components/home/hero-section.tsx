@@ -313,7 +313,7 @@ function ReviewCard({
 
   return (
     <div
-      className="relative flex flex-col gap-3 rounded-2xl border border-border bg-card p-5 shadow-sm"
+      className="relative flex flex-col gap-3 h-fit rounded-2xl border border-border bg-card p-5 shadow-sm"
       style={{
         animation: "heroReviewIn 0.4s ease both",
         animationDelay: `${delay}ms`,
@@ -331,7 +331,7 @@ function ReviewCard({
       <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3">
         {review.text}
       </p>
-      <div className="mt-auto flex justify-end">
+      <div className=" flex justify-end">
         <GoogleG size={14} />
       </div>
     </div>
