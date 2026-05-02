@@ -235,7 +235,7 @@ export default function WhyUsPage() {
         </section>
 
         {/* Testimonial Quote */}
-        <section className="py-16 md:py-24">
+        {/* <section className="py-16 md:py-24">
           <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
             <blockquote className="relative">
               <p className="font-serif text-2xl font-medium italic text-foreground md:text-3xl">
@@ -254,7 +254,7 @@ export default function WhyUsPage() {
               </footer>
             </blockquote>
           </div>
-        </section>
+        </section> */}
 
         {/* CTA Section */}
         <section className="bg-primary py-16">

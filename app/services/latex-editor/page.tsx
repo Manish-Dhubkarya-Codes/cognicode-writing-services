@@ -19,7 +19,6 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
-// 🔥 FIXED: Dynamic imports for react-pdf (fixes DOMMatrix error)
 import dynamic from "next/dynamic";
 import type { DocumentProps, PageProps } from "react-pdf";
 const Document = dynamic(
@@ -30,11 +29,8 @@ const Page = dynamic(
   () => import("react-pdf").then((mod) => ({ default: mod.Page })),
   { ssr: false }
 ) as React.FC<PageProps>;
-// Safe CSS imports
-// ✅ Correct imports for react-pdf (works with Next.js + Turbopack)
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
-// CodeMirror imports (yeh missing the isliye error aa raha tha)
 import { EditorView, basicSetup } from "codemirror";
 import { EditorState } from "@codemirror/state";
 import { StreamLanguage } from "@codemirror/language";
@@ -42,7 +38,7 @@ import { stex } from "@codemirror/legacy-modes/mode/stex";
 import { oneDark } from "@codemirror/theme-one-dark";
 import { undoDepth, redoDepth, undo, redo } from "@codemirror/commands";
 import LatexTemplate from "@/app/services/latex-editor/latex-templete";
-import { serverURL } from "@/app/server/fetch-beckend-services";
+import { postData } from "@/app/server/fetch-beckend-services";
 
 export default function LatexEditorPage() {
   const editorRef = useRef<HTMLDivElement>(null);
@@ -231,39 +227,37 @@ export default function LatexEditorPage() {
   }, [code]);
 
   // Compilation
-  const executeCompilation = async (latexCode: string) => {
-    setIsCompiling(true);
-    setErrorMessage("");
-    try {
-      const response = await fetch(`${serverURL}/users/compile-latex`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ latexCode, format: "pdf" }),
-      });
-      if (response.ok) {
-        const contentType = response.headers.get("Content-Type");
-        if (contentType?.includes("application/pdf")) {
-          const blob = await response.blob();
-          const url = URL.createObjectURL(blob);
-          setPdfUrl((prev) => {
-            if (prev) URL.revokeObjectURL(prev);
-            return url;
-          });
-          setLastCompiled({ pdf: latexCode });
-        } else {
-          const errorData = await response.json();
-          setErrorMessage(errorData.message || "Invalid response from server");
-        }
-      } else {
-        const errorData = await response.json();
-        setErrorMessage(errorData.message || "Compilation failed");
-      }
-    } catch (error: any) {
-      setErrorMessage(error.message || "Network error");
-    } finally {
-      setIsCompiling(false);
+const executeCompilation = async (latexCode: string) => {
+  setIsCompiling(true);
+  setErrorMessage("");
+
+  try {
+    const blob = await postData(
+      "users/compile-latex",
+      { latexCode, format: "pdf" },
+      "blob"
+    );
+
+    if (!blob) {
+      setErrorMessage("Compilation failed");
+      return;
     }
-  };
+
+    const url = URL.createObjectURL(blob);
+
+    setPdfUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return url;
+    });
+
+    setLastCompiled({ pdf: latexCode });
+
+  } catch (error: any) {
+    setErrorMessage(error.message || "Network error");
+  } finally {
+    setIsCompiling(false);
+  }
+};
 
   useEffect(() => {
     executeCompilation(code);

@@ -3,10 +3,18 @@ import axios from "axios";
 export const serverURL = process.env.NEXT_PUBLIC_API_URL;
 
 
-export const postData = async (url: string, body: any) => {
-    console.log("Using API URL:", serverURL);
+export const postData = async (
+  url: string,
+  body: any,
+  responseType: "json" | "blob" = "json"
+) => {
+  console.log("Using API URL:", serverURL);
+
   try {
-    const response = await axios.post(`${serverURL}/${url}`, body);
+    const response = await axios.post(`${serverURL}/${url}`, body, {
+      responseType,
+    });
+
     return response.data;
   } catch (e) {
     console.error(e);

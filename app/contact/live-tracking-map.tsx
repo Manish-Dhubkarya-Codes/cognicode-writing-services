@@ -273,7 +273,7 @@ function MapController({
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-const OFFICE_COORDS: [number, number] = [26.20986098994172, 78.1931633754292];
+const OFFICE_COORDS: [number, number] = [26.2097169, 78.1959066];
 const ARRIVAL_THRESHOLD_M = 100;
 const OFF_ROUTE_THRESHOLD_M = 50;
 const REROUTE_COOLDOWN_MS = 8000;
@@ -981,7 +981,9 @@ export default function LiveTrackingMap() {
               )}
 
               <button className="nav-btn btn-ghost"
-                onClick={() => window.open("https://www.google.com/maps/dir/?api=1&destination=26.20986098994172,78.1931633754292&travelmode=driving", "_blank")}
+                onClick={() => window.open("https://www.google.com/maps/dir/?api=1&destination=26.2097169,78.1959066&destination_place_id=ChIJA79LlZnHdDkRbo6OmkmKWK8&travelmode=driving",
+  "_blank"
+)}
                 style={{ flex: "1 1 120px" }}>
                 <ExternalLink size={16} /> Google Maps
               </button>

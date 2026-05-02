@@ -270,4 +270,259 @@ Our Mission: To empower scholars worldwide by providing expert academic writing 
     keywords: ["university", "amity", "delhi university", "srm"],
     content: `University Scholars Support. Specialized PhD research support tailored for scholars from specific universities.`,
   },
+
+  // ==================== ADDITIONAL GLOBAL PAGES ====================
+  {
+    title: "Australia Academic Support",
+    description: "PhD research, MBA dissertation, and publication support for Australian universities (Melbourne, Sydney, ANU, etc.).",
+    href: "/global/australia",
+    keywords: ["australia", "australian", "melbourne", "sydney", "anu", "monash", "queensland", "uwa", "adelaide", "rmit"],
+    content: `Academic Writing Support for Australian Scholars. Expert academic support tailored for Australian universities. CogniCode provides trusted research writing services across Australia with deep understanding of Australian academic requirements. PhD Research Support, MBA Dissertations, Research Publications, Academic Writing, Data Analysis with SPSS, R, NVivo, Proofreading & Editing. Knowledge of Australian Research Council (ARC) funding, support across all Australian time zones (AEST, AWST, ACST), and experience with Indigenous research methodologies. Nationwide support from Sydney to Perth.`,
+  },
+  {
+    title: "Canada Academic Support",
+    description: "PhD research and MBA dissertation help for Canadian universities (Toronto, UBC, McGill, McMaster, Waterloo).",
+    href: "/global/canada",
+    keywords: ["canada", "canadian", "toronto", "ubc", "mcgill", "mcmaster", "waterloo", "alberta", "montreal", "ottawa", "calgary"],
+    content: `Academic Writing Support for Canadian Scholars. Expert academic support tailored for Canadian universities from coast to coast. Bilingual support for English and French research. Knowledge of Tri-Council funding requirements (SSHRC, NSERC, CIHR). PhD Research Support, MBA Dissertations, Research Publications, Academic Writing, Data Analysis, Proofreading & Editing. Familiarity with specific Canadian university guidelines, support across all Canadian time zones (PST to AST), experience with Indigenous research methodologies, and Canadian innovation and sustainability research.`,
+  },
+  {
+    title: "Germany Academic Support",
+    description: "PhD research and dissertation support for German universities (TU Munich, LMU, Heidelberg, Humboldt, RWTH Aachen).",
+    href: "/global/germany",
+    keywords: ["germany", "german", "deutschland", "munich", "berlin", "heidelberg", "lmu", "tum", "rwth", "aachen", "freiburg", "hamburg", "frankfurt"],
+    content: `Academic Writing Support for German Scholars. Expert academic support tailored for German universities. CogniCode provides trusted research writing services across Germany with deep understanding of German academic requirements. PhD Research Support, MBA Dissertations, Research Publications, Academic Writing, Data Analysis, Proofreading & Editing. Bilingual support for English and German research. Knowledge of DFG (Deutsche Forschungsgemeinschaft) funding requirements, familiarity with German Promotionsordnungen, support for CET/CEST time zone, and deep knowledge of EU and German research ethics.`,
+  },
+
+  // ==================== SERVICES HUB ====================
+  {
+    title: "Our Services - All Academic Solutions",
+    description: "Comprehensive academic writing services hub: thesis, research papers, data analysis, AI/ML, NLP, statistics, and more.",
+    href: "/services",
+    keywords: ["services", "all services", "academic services", "research services", "writing services"],
+    content: `Our Services. Comprehensive academic writing support services tailored to your research needs. Explore our complete range including PhD Thesis Writing, Research Paper Writing, Topic Selection, Consultation, Coding & Implementation, Article Writing, Conference Papers, Proofreading & Editing, Publishing, Statistical Analysis, AI & Machine Learning, Computer Vision, Natural Language Processing, Data Science & Big Data, and Tools & Technologies training.`,
+  },
+
+  // ==================== AI & MACHINE LEARNING ====================
+  {
+    title: "AI & Machine Learning Research Support",
+    description: "Expert AI and ML research support — model development, deep learning, neural networks, predictive modeling, and optimization.",
+    href: "/services/ai-ml",
+    keywords: ["ai", "ml", "machine learning", "artificial intelligence", "deep learning", "neural networks"],
+    content: `AI & Machine Learning Research Support. From classical ML algorithms to state-of-the-art deep learning architectures, our AI experts turn your research ideas into production-grade, reproducible models with measurable impact. Services include ML Model Development, Deep Learning & Neural Networks, Predictive Modeling & Forecasting, and Model Evaluation & Optimization for PhD scholars and industry researchers.`,
+  },
+  {
+    title: "Machine Learning Model Development",
+    description: "End-to-end custom ML model development for PhD research — supervised, unsupervised, and reinforcement learning.",
+    href: "/services/ai-ml/ml-model",
+    keywords: ["ml model", "machine learning model", "supervised learning", "unsupervised learning", "reinforcement learning", "scikit-learn", "xgboost"],
+    content: `Custom Machine Learning Models for PhD Research. End-to-end ML model development covering supervised, unsupervised, and reinforcement learning with full reproducibility, documentation, and publication-ready deliverables. Includes feature engineering, model selection, training, validation, hyperparameter tuning, and academic-quality reporting.`,
+  },
+  {
+    title: "Deep Learning & Neural Networks",
+    description: "Advanced Deep Learning and Neural Networks — CNNs, RNNs, LSTMs, GANs, and Transformers for PhD research.",
+    href: "/services/ai-ml/dl-neural-network",
+    keywords: ["deep learning", "neural networks", "cnn", "rnn", "lstm", "gan", "transformer", "tensorflow", "pytorch", "keras"],
+    content: `Advanced Deep Learning and Neural Networks. Expert Deep Learning and Neural Network development for PhD research. Build CNNs, RNNs, LSTMs, GANs, and Transformer architectures with TensorFlow, PyTorch and Keras. Fully reproducible and publication-ready models with rigorous training pipelines, transfer learning, and explainable outputs.`,
+  },
+  {
+    title: "Predictive Modeling & Forecasting",
+    description: "Predictive modeling and time-series forecasting — ARIMA, Prophet, LSTM, XGBoost, and Transformer-based forecasting.",
+    href: "/services/ai-ml/predict-modelling-forecast",
+    keywords: ["predictive modeling", "forecasting", "time series", "arima", "prophet", "lstm forecasting", "xgboost"],
+    content: `Predictive Modeling & Forecasting. Expert predictive modeling and time-series forecasting for PhD research using ARIMA, Prophet, LSTM, XGBoost, and Transformer-based forecasting models. Includes statistical validation, residual diagnostics, confidence intervals, and publication-ready forecast results with full reproducibility.`,
+  },
+  {
+    title: "Model Evaluation & Optimization",
+    description: "Rigorous model evaluation, hyperparameter tuning, explainability (SHAP, LIME), and optimization with Optuna.",
+    href: "/services/ai-ml/model-eval-optim",
+    keywords: ["model evaluation", "hyperparameter tuning", "optuna", "shap", "lime", "explainability", "optimization", "ablation"],
+    content: `Model Evaluation & Optimization. Expert model evaluation, hyperparameter tuning, explainability analysis, and optimization for PhD research. Rigorous validation, ablation studies, and publication-ready performance reports using SHAP, LIME, Optuna, and more. Cross-validation strategies, fairness assessment, and benchmark comparisons included.`,
+  },
+
+  // ==================== COMPUTER VISION ====================
+  {
+    title: "Computer Vision Research Support",
+    description: "Expert Computer Vision research — image processing, object detection, medical imaging, and video analytics.",
+    href: "/services/computer-vision",
+    keywords: ["computer vision", "cv", "image", "vision", "opencv", "vision transformer"],
+    content: `Computer Vision Research Support. From classical image processing to cutting-edge Vision Transformers, our CV experts help you build, train, and deploy vision systems that deliver research-grade accuracy and reproducibility. Services include Image Processing & Analysis, Object Detection & Recognition, Medical Image Analysis, and Video Analytics.`,
+  },
+  {
+    title: "Image Processing & Analysis",
+    description: "Image enhancement, segmentation, feature extraction, and pattern recognition with OpenCV, scikit-image, and DL.",
+    href: "/services/computer-vision/image-processing",
+    keywords: ["image processing", "image analysis", "image segmentation", "opencv", "scikit-image", "morphological operations", "feature extraction"],
+    content: `Image Processing & Analysis. Expert image processing and analysis for PhD research including advanced enhancement, segmentation, feature extraction, morphological operations, and pattern recognition using OpenCV, scikit-image, and deep learning. Custom pipelines, noise reduction, edge detection, and academic-grade documentation.`,
+  },
+  {
+    title: "Object Detection & Recognition",
+    description: "Object detection with YOLO, Faster R-CNN, SSD, DETR, and transformer-based models for PhD research.",
+    href: "/services/computer-vision/object-detection",
+    keywords: ["object detection", "yolo", "faster r-cnn", "ssd", "detr", "object recognition", "real-time detection"],
+    content: `Object Detection & Recognition. Expert object detection and recognition for PhD research using YOLO, Faster R-CNN, SSD, DETR, and transformer-based models. Achieve state-of-the-art accuracy with real-time performance and full academic documentation. Custom dataset annotation, model training, and deployment-ready outputs included.`,
+  },
+  {
+    title: "Medical Image Analysis",
+    description: "MRI, CT, X-ray, histopathology, and ultrasound segmentation & classification with U-Net, nnU-Net, and transformers.",
+    href: "/services/computer-vision/medical-image-analysis",
+    keywords: ["medical image", "mri", "ct scan", "x-ray", "histopathology", "ultrasound", "u-net", "nnu-net", "medical ai", "clinical research"],
+    content: `Medical Image Analysis. Expert medical image analysis for PhD and clinical research. Specialized in MRI, CT, X-ray, histopathology, and ultrasound segmentation & classification using U-Net, nnU-Net, and transformer-based models. DICOM handling, ROI extraction, radiomics, and clinical-grade validation for healthcare research.`,
+  },
+  {
+    title: "Video Analytics & Understanding",
+    description: "Action recognition, activity detection, motion analysis, and surveillance with 3D CNNs, SlowFast, and Video Transformers.",
+    href: "/services/computer-vision/video-analytics",
+    keywords: ["video analytics", "action recognition", "activity detection", "motion analysis", "3d cnn", "slowfast", "video transformer", "surveillance"],
+    content: `Video Analytics & Understanding. Expert video analytics and understanding for PhD research covering action recognition, activity detection, motion analysis, and surveillance systems using 3D CNNs, SlowFast, Video Transformers, and temporal models. Optical flow, tracking, and temporal segmentation pipelines included.`,
+  },
+
+  // ==================== DATA SCIENCE & BIG DATA ====================
+  {
+    title: "Data Science & Big Data Research Support",
+    description: "Data cleaning, EDA, Big Data analytics with Spark/Hadoop, and interactive dashboards using Python, Tableau, Power BI.",
+    href: "/services/ds-big-data",
+    keywords: ["data science", "big data", "spark", "hadoop", "data analytics", "dashboards", "tableau", "power bi"],
+    content: `Data Science & Big Data Research Support. Expert support including data cleaning, Exploratory Data Analysis (EDA), Big Data Analytics with Spark/Hadoop, and interactive dashboards using Python, Tableau, Power BI for PhD and industry projects. 20+ Big Data Tools & Frameworks with 100% reproducible results.`,
+  },
+  {
+    title: "Data Cleaning & Preprocessing",
+    description: "Handling missing values, outliers, normalization, encoding, and automated pipelines using Pandas, NumPy, PySpark.",
+    href: "/services/ds-big-data/data-cleaning-preprocessing",
+    keywords: ["data cleaning", "preprocessing", "missing values", "outliers", "normalization", "feature scaling", "pandas", "numpy", "pyspark"],
+    content: `Data Cleaning & Preprocessing. Expert data cleaning and preprocessing for PhD research and big data projects. Handling missing values, outliers, duplicates, normalization, feature scaling, encoding, and automated pipelines using Pandas, NumPy, and PySpark. Production-grade ETL workflows for reproducible research.`,
+  },
+  {
+    title: "Exploratory Data Analysis (EDA)",
+    description: "In-depth statistical summaries, correlation analysis, distribution visualization, and pattern discovery with Python and R.",
+    href: "/services/ds-big-data/exploratory-data-analysis",
+    keywords: ["eda", "exploratory data analysis", "data exploration", "correlation analysis", "distribution analysis", "pattern discovery", "jupyter"],
+    content: `Exploratory Data Analysis (EDA). Expert Exploratory Data Analysis for PhD research and big data projects. In-depth statistical summaries, correlation analysis, distribution visualization, pattern discovery, and actionable insights using Python, R, and interactive notebooks. Hypothesis generation and feature selection groundwork included.`,
+  },
+  {
+    title: "Big Data Analytics",
+    description: "Scalable processing with Apache Spark, Hadoop, Hive, Kafka — real-time and batch analytics with distributed computing.",
+    href: "/services/ds-big-data/big-data-analytics",
+    keywords: ["big data", "apache spark", "hadoop", "hive", "kafka", "distributed computing", "real-time analytics", "batch processing"],
+    content: `Big Data Analytics. Expert Big Data Analytics for PhD research and large-scale projects. Scalable processing with Apache Spark, Hadoop, Hive, Kafka — real-time and batch analytics with distributed computing. Cluster deployment, MapReduce paradigms, streaming analytics, and petabyte-scale data handling.`,
+  },
+  {
+    title: "Data Visualization & Dashboarding",
+    description: "Interactive dashboards with Tableau, Power BI, Matplotlib, Seaborn, Plotly, Dash, and Streamlit.",
+    href: "/services/ds-big-data/data-visualization-dashboarding",
+    keywords: ["data visualization", "dashboard", "tableau", "power bi", "matplotlib", "seaborn", "plotly", "dash", "streamlit"],
+    content: `Data Visualization & Dashboarding. Expert data visualization and interactive dashboard development using Tableau, Power BI, Matplotlib, Seaborn, Plotly, Dash, and Streamlit for PhD research and publication-ready insights. Storytelling with data, KPI dashboards, and journal-quality figures included.`,
+  },
+
+  // ==================== NATURAL LANGUAGE PROCESSING ====================
+  {
+    title: "NLP Research & Development Support",
+    description: "Text mining, sentiment analysis, chatbot development, document classification, and topic modeling expertise.",
+    href: "/services/natural-language-processing",
+    keywords: ["nlp", "natural language processing", "text mining", "sentiment analysis", "llm", "language models"],
+    content: `NLP Research & Development Support. From classical text mining to state-of-the-art large language models, our NLP experts help you extract meaning from text, build conversational systems, and publish research-grade language understanding solutions. Services include Text Mining & Sentiment Analysis, Chatbot Development, Document Classification, and Topic Modeling.`,
+  },
+  {
+    title: "Text Mining & Sentiment Analysis",
+    description: "Sentiment scoring, aspect-based analysis, emotion detection, and opinion mining with BERT, RoBERTa, and VADER.",
+    href: "/services/natural-language-processing/text-mining-sentiment",
+    keywords: ["text mining", "sentiment analysis", "opinion mining", "emotion detection", "bert", "roberta", "vader", "aspect-based"],
+    content: `Text Mining & Sentiment Analysis. Expert text mining and sentiment analysis for PhD research with advanced sentiment scoring, aspect-based analysis, emotion detection, and opinion mining using BERT, RoBERTa, VADER, and custom NLP pipelines. Social media analytics, review mining, and multi-language support included.`,
+  },
+  {
+    title: "Intelligent Chatbot Development",
+    description: "Domain-specific chatbots, RAG systems, intent recognition, and dialogue management powered by LLMs.",
+    href: "/services/natural-language-processing/chatbot-development",
+    keywords: ["chatbot", "conversational ai", "rag", "intent recognition", "dialogue management", "llm chatbot", "virtual assistant"],
+    content: `Intelligent Chatbot Development. Expert chatbot development for PhD research including intelligent conversational agents, domain-specific chatbots, RAG systems, intent recognition, and dialogue management powered by LLMs. End-to-end design with NLU, dialogue policies, knowledge integration, and evaluation metrics.`,
+  },
+  {
+    title: "Document Classification",
+    description: "Automated categorization of research papers, legal, and medical documents using BERT, RoBERTa, and transformers.",
+    href: "/services/natural-language-processing/document-classification",
+    keywords: ["document classification", "text classification", "bert", "roberta", "multi-label", "hierarchical classification", "transformer"],
+    content: `Document Classification. Expert document classification for PhD research with automated categorization of research papers, legal documents, medical records, and large text corpora using BERT, RoBERTa, and transformer-based multi-label & hierarchical classifiers. Active learning and weakly-supervised approaches supported.`,
+  },
+  {
+    title: "Topic Modeling & Language Understanding",
+    description: "Uncover hidden themes with LDA, BERTopic, NMF, and embedding-based clustering using fine-tuned transformers.",
+    href: "/services/natural-language-processing/topic-modeling",
+    keywords: ["topic modeling", "lda", "bertopic", "nmf", "language understanding", "semantic analysis", "embedding clustering"],
+    content: `Topic Modeling & Language Understanding. Expert topic modeling and language understanding for PhD research. Uncover hidden themes using LDA, BERTopic, NMF, and embedding-based clustering with deep semantic analysis via fine-tuned transformers. Coherence scoring, topic visualization, and longitudinal trend analysis included.`,
+  },
+
+  // ==================== STATISTICAL ANALYSIS ====================
+  {
+    title: "Statistical Analysis & Data Analytics Research Support",
+    description: "Statistical analysis using SPSS, R, Python — hypothesis testing, regression, multivariate & factor analysis.",
+    href: "/services/statistical-analysis-data-analytics",
+    keywords: ["statistical analysis", "data analytics", "spss", "r", "python", "statistics", "phd statistics"],
+    content: `Statistical Analysis & Data Analytics Research Support. Expert statistical analysis and data analytics support using SPSS, R, Python — covering hypothesis testing, regression, multivariate & factor analysis for PhD research and academic publications. Includes SPSS/R/Python-based analysis, hypothesis testing, regression & correlation, and multivariate & factor analysis.`,
+  },
+  {
+    title: "SPSS / R / Python-Based Analysis",
+    description: "End-to-end statistical analysis using SPSS, R, and Python — data cleaning, scripting, and reproducible pipelines.",
+    href: "/services/statistical-analysis-data-analytics/spss-r-python",
+    keywords: ["spss analysis", "r programming", "python statistics", "statistical software", "scripting", "automation", "reproducible research"],
+    content: `SPSS, R & Python Statistical Analysis. Expert end-to-end statistical analysis using SPSS, R, and Python including data cleaning, visualization, scripting, automation, and reproducible research pipelines for PhD thesis and academic publications. Code documentation, syntax files, and journal-ready outputs.`,
+  },
+  {
+    title: "Hypothesis Testing",
+    description: "Parametric and non-parametric tests — t-tests, ANOVA, chi-square, Mann-Whitney, and Wilcoxon with full interpretation.",
+    href: "/services/statistical-analysis-data-analytics/hypothesis-testing",
+    keywords: ["hypothesis testing", "t-test", "anova", "chi-square", "mann-whitney", "wilcoxon", "p-value", "effect size", "non-parametric"],
+    content: `Hypothesis Testing. Expert hypothesis testing for PhD research covering parametric and non-parametric tests including t-tests, ANOVA, chi-square, Mann-Whitney, Wilcoxon, and more — with clear interpretation, p-values, effect sizes, and publication-ready reports. Assumption checking, post-hoc analysis, and power calculations included.`,
+  },
+  {
+    title: "Regression & Correlation Analysis",
+    description: "Linear, multiple, logistic, polynomial, and nonlinear regression with multicollinearity diagnostics.",
+    href: "/services/statistical-analysis-data-analytics/regression-correlation",
+    keywords: ["regression", "correlation", "linear regression", "logistic regression", "polynomial", "multicollinearity", "spss regression"],
+    content: `Regression & Correlation Analysis. Expert regression and correlation analysis for PhD research including linear, multiple, logistic, polynomial, and nonlinear regression models with correlation analysis, multicollinearity diagnostics, and publication-ready results using SPSS, R, and Python. Residual analysis and model fit reporting included.`,
+  },
+  {
+    title: "Multivariate & Factor Analysis",
+    description: "MANOVA, PCA, EFA/CFA, Cluster Analysis, Discriminant Analysis, and Structural Equation Modeling (SEM).",
+    href: "/services/statistical-analysis-data-analytics/multivariate-factor",
+    keywords: ["multivariate analysis", "factor analysis", "manova", "pca", "efa", "cfa", "cluster analysis", "discriminant analysis", "sem", "structural equation modeling"],
+    content: `Multivariate & Factor Analysis. Expert multivariate and factor analysis for PhD research including MANOVA, PCA, Exploratory & Confirmatory Factor Analysis, Cluster Analysis, Discriminant Analysis, and Structural Equation Modeling (SEM) using SPSS, R, and Python. AMOS and Lavaan-based SEM with model fit indices.`,
+  },
+
+  // ==================== TOOLS & TECHNOLOGIES ====================
+  {
+    title: "Tools & Technologies Research Support",
+    description: "Implementation and training in Python, R, MATLAB, SPSS, STATA, TensorFlow, PyTorch, Tableau, and Power BI.",
+    href: "/services/tools-technologies",
+    keywords: ["tools", "technologies", "programming", "software", "training", "research tools"],
+    content: `Tools & Technologies Research Support. Expert implementation and training in Python, R, MATLAB, SPSS, STATA, TensorFlow, PyTorch, Tableau, and Power BI — professional tool mastery for data science, statistical analysis, machine learning, and research projects. One-on-one mentoring and hands-on project support included.`,
+  },
+  {
+    title: "Python, R & MATLAB",
+    description: "Advanced programming and scripting in Python, R, and MATLAB for data analysis, modeling, and simulations.",
+    href: "/services/tools-technologies/python-r-matlab",
+    keywords: ["python", "r programming", "matlab", "scripting", "simulations", "algorithm development", "scientific computing"],
+    content: `Python, R & MATLAB. Expert advanced programming and scripting in Python, R, and MATLAB for PhD research. Data analysis, statistical modeling, simulations, algorithm development, and reproducible research workflows. Custom toolboxes, package development, and performance optimization included.`,
+  },
+  {
+    title: "SPSS & STATA",
+    description: "Professional statistical analysis using SPSS and STATA for PhD research, econometrics, and hypothesis testing.",
+    href: "/services/tools-technologies/spss-stata",
+    keywords: ["spss", "stata", "statistical software", "econometrics", "data management", "syntax files"],
+    content: `SPSS & STATA. Professional statistical analysis using SPSS and STATA for PhD research. From data management and descriptive statistics to complex econometric modeling, hypothesis testing, and publication-ready outputs. Panel data analysis, survey weights, and longitudinal modeling supported.`,
+  },
+  {
+    title: "Tableau & Power BI",
+    description: "Interactive data visualization and BI dashboards using Tableau and Power BI for publication-ready insights.",
+    href: "/services/tools-technologies/tableau-power-bi",
+    keywords: ["tableau", "power bi", "business intelligence", "dashboards", "data visualization", "bi reports", "interactive analytics"],
+    content: `Tableau & Power BI. Expert interactive data visualization and business intelligence dashboard development using Tableau and Power BI — creating publication-ready reports, real-time analytics, and compelling data storytelling for PhD research. DAX formulas, calculated fields, and live data connections included.`,
+  },
+  {
+    title: "TensorFlow & PyTorch",
+    description: "Deep learning model development with TensorFlow and PyTorch — custom architectures, training, and deployment.",
+    href: "/services/tools-technologies/tensorflow-pytorch",
+    keywords: ["tensorflow", "pytorch", "deep learning frameworks", "transfer learning", "model deployment", "training pipelines", "keras"],
+    content: `TensorFlow & PyTorch. Expert deep learning and machine learning model development with TensorFlow and PyTorch. Custom architectures, training pipelines, transfer learning, model optimization, and deployment for PhD research. ONNX export, GPU acceleration, and distributed training supported.`,
+  },
+
 ];

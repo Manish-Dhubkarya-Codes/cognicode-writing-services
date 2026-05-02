@@ -29,7 +29,7 @@ import {
   MessageSquare,
   CheckCircle,
 } from "lucide-react";
-import { serverURL } from "../server/fetch-beckend-services";
+import { postData } from "../server/fetch-beckend-services";
 
 // ============================================================
 // THIS IS THE FIX: dynamic import with ssr: false
@@ -148,42 +148,31 @@ const handleSubmit = async (e: React.FormEvent) => {
   setIsSubmitting(true);
 
   try {
-    const response = await fetch(`${serverURL}/clientrequests/clientrequests`, {   // ← Change if your backend is on different port
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        service: formData.service,
-        subject: formData.subject,
-        message: formData.message,
-      }),
-    });
+    const result = await postData(
+      "clientrequests/clientrequests",
+      formData
+    );
 
-    const result = await response.json();
-
-    if (response.ok && result.success) {
+    if (result?.success) {
       setIsSubmitted(true);
+
       setTimeout(() => {
         setIsSubmitted(false);
-        setFormData({ 
-          name: "", 
-          email: "", 
-          phone: "", 
-          service: "", 
-          subject: "", 
-          message: "" 
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          service: "",
+          subject: "",
+          message: "",
         });
       }, 3000);
     } else {
-      alert(result.message || "Failed to send message. Please try again.");
+      alert(result?.message || "Failed to send message.");
     }
   } catch (error) {
-    console.error("Submit error:", error);
-    alert("Network error. Please check your connection and try again.");
+    console.error(error);
+    alert("Network error.");
   } finally {
     setIsSubmitting(false);
   }
