@@ -13,28 +13,52 @@ export const metadata: Metadata = {
 
 const techniques = [
   { 
-    title: "Object Detection & Tracking", 
-    desc: "Real-time object detection using YOLOv8, YOLOv9, Detectron2, and Faster R-CNN with multi-object tracking capabilities." 
+    title: "CNN Model for MNIST & Fashion-MNIST", 
+    desc: "End-to-end CNN implementation for handwritten digit recognition and fashion item classification with high accuracy and visualization." 
   },
   { 
-    title: "Semantic & Instance Segmentation", 
-    desc: "Pixel-level segmentation with U-Net, Mask R-CNN, Segment Anything Model (SAM), and DeepLabv3 for medical and industrial use cases." 
+    title: "Fashion Image Classification & Visual Search", 
+    desc: "Advanced fashion product classification, attribute prediction, and visual similarity-based search systems." 
   },
   { 
-    title: "Image Classification & Recognition", 
-    desc: "Advanced classification using CNNs, Vision Transformers (ViT), and EfficientNet with transfer learning and fine-tuning." 
+    title: "Natural Image Classification (Data Augmentation)", 
+    desc: "High-performance image classification on natural images with robust data augmentation and transfer learning techniques." 
   },
   { 
-    title: "Facial Recognition & Analysis", 
-    desc: "Face detection, recognition, emotion analysis, age/gender estimation with high accuracy and privacy compliance." 
+    title: "Indoor-Outdoor Scene Classification", 
+    desc: "Accurate scene understanding models to classify indoor vs outdoor environments with contextual awareness." 
   },
   { 
-    title: "Video Analysis & Action Recognition", 
-    desc: "Action detection, anomaly detection, motion tracking, and temporal analysis in video streams." 
+    title: "Aerial Scene Classification (Deep Fusion)", 
+    desc: "Advanced aerial/satellite imagery classification using multi-scale deep fusion and attention mechanisms." 
   },
   { 
-    title: "OCR & Document Understanding", 
-    desc: "Intelligent document processing, scene text recognition, and table extraction using advanced deep learning models." 
+    title: "Multi-label Image Classification", 
+    desc: "Multi-label tagging systems capable of detecting multiple objects, attributes, or scenes in a single image." 
+  },
+  { 
+    title: "Fake Image Detection using CNN", 
+    desc: "Deep learning models for detecting deepfakes, GAN-generated, and manipulated images with high precision." 
+  },
+  { 
+    title: "Facial Expression Recognition", 
+    desc: "Real-time emotion detection (happy, sad, angry, surprise, etc.) using FER datasets and modern architectures." 
+  },
+  { 
+    title: "Age & Gender Prediction", 
+    desc: "Robust age estimation and gender classification from facial images with demographic analysis." 
+  },
+  { 
+    title: "Vehicle Detection (Vision + LiDAR)", 
+    desc: "Multi-modal vehicle detection and tracking combining camera vision with LiDAR data for autonomous systems." 
+  },
+  { 
+    title: "Crowd Monitoring / Social Distance Detection", 
+    desc: "Real-time crowd density analysis, people counting, and social distancing violation detection." 
+  },
+  { 
+    title: "Public Security Video Investigation System", 
+    desc: "Intelligent video surveillance system for anomaly detection, person re-identification, and forensic analysis." 
   },
 ];
 
@@ -145,12 +169,12 @@ export default function ComputerVisionPage() {
           </div>
         </section>
 
-        {/* Techniques */}
+        {/* Techniques - Updated with 12 new cards */}
         <section className="py-16 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="font-serif text-4xl font-bold">Computer Vision Techniques We Master</h2>
-              <p className="mt-3 text-muted-foreground">From classic CV to state-of-the-art deep learning models</p>
+              <h2 className="font-serif text-4xl font-bold">Computer Vision Projects We Deliver</h2>
+              <p className="mt-3 text-muted-foreground">From academic benchmarks to real-world applications</p>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {techniques.map((tech, i) => (
@@ -265,7 +289,7 @@ export default function ComputerVisionPage() {
               <Card className="bg-white text-foreground">
                 <CardContent className="p-8">
                   <h3 className="text-2xl font-semibold mb-2">Get Your Computer Vision Proposal</h3>
-                  <p className="text-muted-foreground mb-6">Share your project details and dataset : receive a technical proposal with timeline and cost within 24 hours.</p>
+                  <p className="text-muted-foreground mb-6">Share your project details and dataset — receive a technical proposal with timeline and cost within 24 hours.</p>
                   <form className="space-y-4">
                     <input type="text" placeholder="Your Name" className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
                     <input type="email" placeholder="University / Company Email" className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
@@ -282,7 +306,7 @@ export default function ComputerVisionPage() {
         <section className="py-20 border-t">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-4xl font-bold">Ready to Build Your Computer Vision Solution?</h2>
-            <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From research prototypes to production-grade vision systems : we deliver accurate, fast, and scalable solutions.</p>
+            <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From research prototypes to production-grade vision systems — we deliver accurate, fast, and scalable solutions.</p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
                 <Link href="/contact">Start Your Computer Vision Project</Link>

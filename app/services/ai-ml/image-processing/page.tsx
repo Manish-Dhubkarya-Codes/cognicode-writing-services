@@ -8,33 +8,33 @@ import { CheckCircle, Users, Clock, Shield, Award, Image, Palette, Filter, Zap, 
 
 export const metadata: Metadata = {
   title: "Image Processing Services | Enhancement, Restoration & Analysis",
-  description: "Expert Image Processing solutions using OpenCV, Pillow, scikit-image, and Deep Learning. Image enhancement, restoration, denoising, super-resolution, and automated pipelines.",
+  description: "Expert Image Processing solutions using OpenCV, Pillow, scikit-image, and Deep Learning. Medical imaging, fingerprint enhancement, X-ray processing, and automated pipelines.",
 };
 
 const techniques = [
   { 
-    title: "Image Enhancement & Restoration", 
-    desc: "Contrast adjustment, histogram equalization, denoising, deblurring, and inpainting for low-quality or damaged images." 
+    title: "Tissue Image Segmentation using DL", 
+    desc: "Advanced deep learning-based semantic segmentation for histopathological tissue images using U-Net, DeepLab, and custom architectures." 
   },
   { 
-    title: "Filtering & Transformation", 
-    desc: "Spatial & frequency domain filters, edge detection (Canny, Sobel), morphological operations, and geometric transformations." 
+    title: "X-ray Image Enhancement", 
+    desc: "Contrast enhancement, noise reduction, edge sharpening, and artifact removal for medical X-ray and radiographic images." 
   },
   { 
-    title: "Feature Extraction & Matching", 
-    desc: "SIFT, SURF, ORB, HOG features, template matching, and keypoint detection for computer vision tasks." 
+    title: "Latent Fingerprint Enhancement", 
+    desc: "Advanced techniques for enhancing poor-quality latent fingerprints using Gabor filters, frequency domain processing, and deep learning." 
   },
   { 
-    title: "Color Processing & Segmentation", 
-    desc: "Color space conversion, thresholding, watershed segmentation, and advanced deep learning-based segmentation." 
+    title: "Feature Extraction from Fingerprints", 
+    desc: "Robust minutiae extraction, ridge orientation, singular point detection, and quality assessment for biometric systems." 
   },
   { 
-    title: "Super-Resolution & Upscaling", 
-    desc: "AI-powered image upscaling using ESRGAN, Real-ESRGAN, and diffusion models for high-quality enlargement." 
+    title: "Fingerprint Matching (Latent-to-Rolled)", 
+    desc: "High-accuracy latent fingerprint matching against rolled/print databases using deep learning and traditional algorithms." 
   },
   { 
-    title: "Batch Processing & Automation", 
-    desc: "Automated pipelines for large-scale image datasets with parallel processing using OpenCV and Dask." 
+    title: "CNN Benchmarking for Fingerprints", 
+    desc: "Comprehensive benchmarking of CNN architectures for fingerprint classification, enhancement, and recognition tasks." 
   },
 ];
 
@@ -79,7 +79,7 @@ const steps = [
 const benefits = [
   "PhD-level image processing experts with 10+ years experience",
   "Deep expertise in OpenCV, scikit-image, Pillow & Deep Learning",
-  "Custom solutions for medical, satellite, industrial & research images",
+  "Custom solutions for medical, biometric, and forensic images",
   "High-performance pipelines for large-scale batch processing",
   "Publication-ready visualizations and methodology documentation",
   "100% reproducible and scalable workflows",
@@ -106,7 +106,7 @@ export default function ImageProcessingPage() {
                 </h1>
                 <p className="mt-6 text-xl text-muted-foreground max-w-lg">
                   Transform low-quality, noisy, or raw images into clear, analysis-ready visuals. 
-                  From basic enhancement to AI-powered restoration and super-resolution.
+                  Specialized in medical imaging, fingerprint enhancement, and forensic applications.
                 </p>
                 <div className="mt-10 flex flex-wrap gap-4">
                   <Button size="lg" asChild>
@@ -145,7 +145,7 @@ result = clahe.apply(cv2.cvtColor(enhanced, cv2.COLOR_BGR2GRAY))`}
                     </div>
 
                     <div className="flex items-center justify-between text-sm opacity-90">
-                      <div>OpenCV • Pillow • scikit-image • ESRGAN</div>
+                      <div>OpenCV • Pillow • scikit-image • Deep Learning</div>
                       <div className="text-amber-300 font-medium">Batch Ready</div>
                     </div>
                   </CardContent>
@@ -155,12 +155,12 @@ result = clahe.apply(cv2.cvtColor(enhanced, cv2.COLOR_BGR2GRAY))`}
           </div>
         </section>
 
-        {/* Techniques */}
+        {/* Techniques - Updated */}
         <section className="py-16 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="font-serif text-4xl font-bold">Image Processing Techniques We Master</h2>
-              <p className="mt-3 text-muted-foreground">From classical methods to modern AI-powered solutions</p>
+              <p className="mt-3 text-muted-foreground">Specialized in medical, biometric & forensic imaging</p>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {techniques.map((tech, i) => (
@@ -275,7 +275,7 @@ result = clahe.apply(cv2.cvtColor(enhanced, cv2.COLOR_BGR2GRAY))`}
               <Card className="bg-white text-foreground">
                 <CardContent className="p-8">
                   <h3 className="text-2xl font-semibold mb-2">Get Your Image Processing Proposal</h3>
-                  <p className="text-muted-foreground mb-6">Share your images and requirements : receive a detailed technical proposal within 24 hours.</p>
+                  <p className="text-muted-foreground mb-6">Share your images and requirements — receive a detailed technical proposal within 24 hours.</p>
                   <form className="space-y-4">
                     <input type="text" placeholder="Your Name" className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
                     <input type="email" placeholder="University / Company Email" className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
@@ -292,7 +292,7 @@ result = clahe.apply(cv2.cvtColor(enhanced, cv2.COLOR_BGR2GRAY))`}
         <section className="py-20 border-t">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-4xl font-bold">Ready to Transform Your Images?</h2>
-            <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From raw noisy images to publication-quality visuals : we deliver fast, accurate, and scalable image processing solutions.</p>
+            <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From raw noisy images to publication-quality visuals — we deliver fast, accurate, and scalable image processing solutions.</p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
                 <Link href="/contact">Start Your Image Processing Project</Link>

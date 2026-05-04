@@ -8,33 +8,41 @@ import { CheckCircle, Users, Clock, Shield, Award, MessageSquare, Bot, BookOpen,
 
 export const metadata: Metadata = {
   title: "Natural Language Processing (NLP) Services | LLM & Text AI",
-  description: "Expert Natural Language Processing solutions including sentiment analysis, text classification, NER, question answering, summarization, and LLM fine-tuning using Hugging Face, PyTorch, and LangChain.",
+  description: "Expert Natural Language Processing solutions including sentiment analysis, emotion detection, summarization, question answering, and domain-specific NLP using Hugging Face, PyTorch, and LangChain.",
 };
 
 const techniques = [
   { 
-    title: "Text Classification & Sentiment Analysis", 
-    desc: "Advanced sentiment analysis, emotion detection, topic classification, and intent recognition with BERT, RoBERTa, and custom models." 
+    title: "Sentiment Analysis using Ensemble Methods", 
+    desc: "High-accuracy sentiment classification using ensemble models (BERT + LSTM + CNN) with robust performance on complex and noisy text." 
   },
   { 
-    title: "Named Entity Recognition (NER)", 
-    desc: "High-accuracy entity extraction, custom entity recognition, and domain-specific NER for medical, legal, and financial texts." 
+    title: "Movie Review Summarization", 
+    desc: "Abstractive and extractive summarization of movie reviews with sentiment-aware key point extraction and opinion mining." 
   },
   { 
-    title: "Question Answering & Chatbots", 
-    desc: "Build intelligent QA systems, conversational agents, and RAG-based chatbots using Transformers and LangChain." 
+    title: "Answer Extraction from Web Forums", 
+    desc: "Intelligent question-answering system that extracts precise answers from forum threads, Reddit, and community discussions." 
   },
   { 
-    title: "Text Summarization & Generation", 
-    desc: "Abstractive and extractive summarization, content generation, and paraphrasing using T5, BART, and modern LLMs." 
+    title: "Emotion Classification (Multimodal)", 
+    desc: "Multimodal emotion detection combining text, emojis, and contextual cues for more accurate emotion recognition." 
   },
   { 
-    title: "Machine Translation & Multilingual NLP", 
-    desc: "Neural machine translation, cross-lingual understanding, and multilingual model fine-tuning." 
+    title: "Emotion Detection from Noisy Text", 
+    desc: "Robust emotion classification designed for informal, noisy, and social media text with spelling variations and slang." 
   },
   { 
-    title: "LLM Fine-tuning & Prompt Engineering", 
-    desc: "Fine-tune open-source LLMs (Llama, Mistral, Gemma), RAG implementation, and advanced prompt engineering." 
+    title: "Emotion Dynamics (Time-Series)", 
+    desc: "Temporal emotion analysis and emotion flow tracking across conversations, stories, or time-stamped text data." 
+  },
+  { 
+    title: "Domain Adaptation for Emotion Detection", 
+    desc: "Transfer learning and domain adaptation techniques to adapt emotion models across different domains and cultures." 
+  },
+  { 
+    title: "Ethical Analysis of Emotion Detection", 
+    desc: "Bias detection, fairness evaluation, privacy considerations, and ethical auditing of emotion AI systems." 
   },
 ];
 
@@ -105,7 +113,7 @@ export default function NaturalLanguageProcessingPage() {
                   Natural Language<br />Processing (NLP)
                 </h1>
                 <p className="mt-6 text-xl text-muted-foreground max-w-lg">
-                  Transform unstructured text into intelligence. We build advanced NLP systems : sentiment analysis, intelligent chatbots, document understanding, and custom LLMs.
+                  Transform unstructured text into intelligence. We build advanced NLP systems — sentiment analysis, emotion detection, summarization, and custom LLMs.
                 </p>
                 <div className="mt-10 flex flex-wrap gap-4">
                   <Button size="lg" asChild>
@@ -156,13 +164,12 @@ qa_chain = RetrievalQA.from_chain_type(
           </div>
         </section>
 
-        {/* Rest of the page remains the same (Techniques, Process, etc.) */}
-        {/* Techniques */}
+        {/* Techniques - Updated with new cards */}
         <section className="py-16 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="font-serif text-4xl font-bold">NLP Techniques We Master</h2>
-              <p className="mt-3 text-muted-foreground">From traditional NLP to cutting-edge Large Language Models</p>
+              <p className="mt-3 text-muted-foreground">Specialized in Sentiment, Emotion Detection & Advanced Text Understanding</p>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {techniques.map((tech, i) => (
@@ -277,7 +284,7 @@ qa_chain = RetrievalQA.from_chain_type(
               <Card className="bg-white text-foreground">
                 <CardContent className="p-8">
                   <h3 className="text-2xl font-semibold mb-2">Get Your NLP Project Proposal</h3>
-                  <p className="text-muted-foreground mb-6">Share your text data and project goals : receive a detailed technical proposal within 24 hours.</p>
+                  <p className="text-muted-foreground mb-6">Share your text data and project goals — receive a detailed technical proposal within 24 hours.</p>
                   <form className="space-y-4">
                     <input type="text" placeholder="Your Name" className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
                     <input type="email" placeholder="University / Company Email" className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
@@ -294,7 +301,7 @@ qa_chain = RetrievalQA.from_chain_type(
         <section className="py-20 border-t">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-4xl font-bold">Ready to Unlock Insights from Text?</h2>
-            <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From research papers to enterprise AI : we deliver powerful, accurate, and scalable NLP solutions.</p>
+            <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From research papers to enterprise AI — we deliver powerful, accurate, and scalable NLP solutions.</p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
                 <Link href="/contact">Start Your NLP Project</Link>

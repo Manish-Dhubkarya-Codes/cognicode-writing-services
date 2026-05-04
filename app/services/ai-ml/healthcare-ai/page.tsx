@@ -8,33 +8,49 @@ import { CheckCircle, Users, Clock, Shield, Award, Heart, Microscope, Activity, 
 
 export const metadata: Metadata = {
   title: "Healthcare AI & Biomedical Systems | Medical Imaging & Clinical AI",
-  description: "Expert Healthcare AI and Biomedical solutions including medical image analysis, disease prediction, drug discovery, clinical decision support, and biomedical signal processing with regulatory compliance.",
+  description: "Expert Healthcare AI solutions for brain tumor detection, lung disease prediction, glaucoma, skin lesions, heart disease, diabetes, and smart health monitoring using deep learning.",
 };
 
 const techniques = [
   { 
-    title: "Medical Image Analysis", 
-    desc: "Advanced analysis of MRI, CT, X-ray, Ultrasound, and Pathology slides using CNNs, U-Net, and Vision Transformers for tumor detection, segmentation, and diagnosis support." 
+    title: "Brain Tumor Detection (ML & DL)", 
+    desc: "Advanced MRI-based brain tumor detection and segmentation using CNNs, U-Net, and hybrid machine learning + deep learning approaches." 
   },
   { 
-    title: "Disease Prediction & Diagnostics", 
-    desc: "Predictive models for early detection of diseases like cancer, diabetes, cardiovascular conditions, and infectious diseases using multimodal clinical data." 
+    title: "MRI Tumor Detection (Wavelet + SVM)", 
+    desc: "Hybrid wavelet transform and SVM models for accurate brain tumor classification from MRI scans." 
   },
   { 
-    title: "Drug Discovery & Genomics", 
-    desc: "AI-powered drug repurposing, molecular property prediction, protein structure analysis, and genomic sequence modeling." 
+    title: "Fuzzy + SVM Tumor Detection", 
+    desc: "Fuzzy logic combined with Support Vector Machines for improved tumor boundary detection and classification." 
   },
   { 
-    title: "Clinical Decision Support Systems", 
-    desc: "Intelligent CDSS for treatment recommendations, risk assessment, and personalized medicine with explainable AI." 
+    title: "Lung Severity Prediction", 
+    desc: "Deep learning models for assessing lung disease severity from CT scans and X-rays (COVID-19, pneumonia, etc.)." 
   },
   { 
-    title: "Biomedical Signal Processing", 
-    desc: "ECG, EEG, EMG analysis, arrhythmia detection, brain-computer interfaces, and physiological signal interpretation." 
+    title: "Glaucoma Detection", 
+    desc: "AI-powered early glaucoma detection from retinal fundus images using CNNs and optic disc/cup segmentation." 
   },
   { 
-    title: "Remote Monitoring & Wearables", 
-    desc: "AI systems for continuous patient monitoring, anomaly detection, and predictive healthcare using wearable and IoT data." 
+    title: "Skin Lesion Classification", 
+    desc: "Melanoma and skin cancer detection using deep convolutional networks on dermoscopy images (HAM10000, ISIC dataset)." 
+  },
+  { 
+    title: "Heart Disease Prediction", 
+    desc: "Multimodal predictive models for cardiovascular disease risk assessment using clinical and imaging data." 
+  },
+  { 
+    title: "Diabetes Prediction", 
+    desc: "Machine learning and deep learning models for early diabetes prediction and complication risk assessment." 
+  },
+  { 
+    title: "Lung Cancer Risk Prediction", 
+    desc: "Low-dose CT-based lung cancer screening and risk prediction using advanced deep learning architectures." 
+  },
+  { 
+    title: "Smart Healthcare Monitoring (IoT + AI)", 
+    desc: "Real-time patient monitoring systems combining wearable IoT devices with AI for anomaly detection and predictive alerts." 
   },
 ];
 
@@ -105,8 +121,8 @@ export default function HealthcareAIPage() {
                   Healthcare AI &<br />Biomedical Systems
                 </h1>
                 <p className="mt-6 text-xl text-muted-foreground max-w-lg">
-                  AI solutions for medical imaging, disease prediction, drug discovery, and clinical decision support. 
-                  Improving patient outcomes with accurate, explainable, and regulatory-compliant AI.
+                  Specialized AI solutions for medical imaging, tumor detection, disease prediction, and smart healthcare monitoring. 
+                  Improving patient outcomes with accurate and explainable AI.
                 </p>
                 <div className="mt-10 flex flex-wrap gap-4">
                   <Button size="lg" asChild>
@@ -158,12 +174,12 @@ export default function HealthcareAIPage() {
           </div>
         </section>
 
-        {/* Techniques */}
+        {/* Techniques - Updated */}
         <section className="py-16 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="font-serif text-4xl font-bold">Healthcare AI Techniques We Master</h2>
-              <p className="mt-3 text-muted-foreground">From medical imaging to precision medicine</p>
+              <h2 className="font-serif text-4xl font-bold">Healthcare AI & Biomedical Projects We Deliver</h2>
+              <p className="mt-3 text-muted-foreground">Specialized in medical imaging, disease prediction & clinical AI</p>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {techniques.map((tech, i) => (
@@ -278,11 +294,11 @@ export default function HealthcareAIPage() {
               <Card className="bg-white text-foreground">
                 <CardContent className="p-8">
                   <h3 className="text-2xl font-semibold mb-2">Get Your Healthcare AI Proposal</h3>
-                  <p className="text-muted-foreground mb-6">Share your clinical challenge or dataset : receive a detailed technical & regulatory proposal within 24 hours.</p>
+                  <p className="text-muted-foreground mb-6">Share your clinical challenge or dataset — receive a detailed technical & regulatory proposal within 24 hours.</p>
                   <form className="space-y-4">
                     <input type="text" placeholder="Your Name" className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
                     <input type="email" placeholder="University / Hospital Email" className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
-                    <textarea placeholder="Describe your healthcare AI project (e.g., medical imaging, disease prediction, drug discovery) and key requirements" rows={4} className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
+                    <textarea placeholder="Describe your healthcare AI project (e.g., tumor detection, disease prediction, medical imaging) and key requirements" rows={4} className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
                     <Button className="w-full h-14 text-base" size="lg">Request Detailed Proposal</Button>
                   </form>
                 </CardContent>
@@ -295,7 +311,7 @@ export default function HealthcareAIPage() {
         <section className="py-20 border-t">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-4xl font-bold">Ready to Transform Healthcare with AI?</h2>
-            <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From research to clinical deployment : we deliver accurate, ethical, and impactful biomedical AI solutions.</p>
+            <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From research to clinical deployment — we deliver accurate, ethical, and impactful biomedical AI solutions.</p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
                 <Link href="/contact">Start Your Healthcare AI Project</Link>

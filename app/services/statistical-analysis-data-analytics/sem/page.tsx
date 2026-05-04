@@ -12,30 +12,46 @@ export const metadata: Metadata = {
 };
 
 const techniques = [
-  { 
-    title: "Full Structural Equation Modeling", 
-    desc: "Complete SEM model development, estimation, and validation including measurement and structural components." 
+  {
+    title: "Model Specification",
+    desc: "Translate theoretical framework into structural and measurement models with latent and observed variables."
   },
-  { 
-    title: "Mediation & Serial Mediation Analysis", 
-    desc: "Simple, parallel, and serial mediation with bootstrapping for robust indirect effect testing." 
+  {
+    title: "Measurement Model Validation (CFA)",
+    desc: "Validate constructs using CFA before SEM, ensuring reliability, convergent and discriminant validity."
   },
-  { 
-    title: "Moderation & Moderated Mediation", 
-    desc: "Interaction effects, conditional process analysis, and advanced moderated mediation models." 
+  {
+    title: "Structural Model Estimation",
+    desc: "Test hypothesized relationships using path coefficients, direct, indirect, and total effects."
   },
-  { 
-    title: "Multi-Group & Invariance Testing", 
-    desc: "Compare models across groups and test measurement and structural invariance." 
+  {
+    title: "Model Fit Evaluation",
+    desc: "Assess model using CFI, TLI, RMSEA, SRMR, and χ²/df with strict threshold criteria."
   },
-  { 
-    title: "Model Comparison & Theoretical Testing", 
-    desc: "Competing models comparison, nested models, and theory-driven model evaluation." 
+  {
+    title: "Mediation Analysis",
+    desc: "Bootstrapping-based indirect effect testing with confidence intervals and significance validation."
   },
-  { 
-    title: "Advanced SEM Techniques", 
-    desc: "Second-order models, interaction effects, latent growth modeling, and Bayesian SEM." 
+  {
+    title: "Moderation Analysis",
+    desc: "Interaction effects and conditional relationships using multi-group SEM and moderation techniques."
   },
+  {
+    title: "Multi-Group Analysis (MGA)",
+    desc: "Compare models across groups and test invariance (configural, metric, scalar)."
+  },
+  {
+    title: "Assumption Testing & Data Screening",
+    desc: "Check normality, multivariate outliers, multicollinearity, and sample adequacy before SEM."
+  },
+  {
+    title: "Model Modification & Validation",
+    desc: "Use modification indices and theory-driven adjustments to improve model fit and robustness."
+  },
+  {
+    title: "SEM Interpretation & Reporting",
+    desc: "Interpret path coefficients, hypothesis results, and deliver APA-formatted reports with diagrams."
+  }
 ];
 
 const deliverables = [

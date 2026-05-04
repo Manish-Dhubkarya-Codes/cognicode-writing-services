@@ -12,30 +12,43 @@ export const metadata: Metadata = {
 };
 
 const techniques = [
-  { 
-    title: "Descriptive & Inferential Statistics", 
-    desc: "Comprehensive statistical analysis including frequencies, cross-tabulations, t-tests, ANOVA, chi-square, and non-parametric tests." 
+  {
+    title: "Data Cleaning & Preparation",
+    desc: "Missing value handling, outlier detection, data transformation (recode/compute), normalization, and dataset structuring."
   },
-  { 
-    title: "Regression Analysis", 
-    desc: "Linear, multiple, logistic, ordinal, and hierarchical regression with assumption checks and model diagnostics." 
+  {
+    title: "Descriptive Statistics & EDA",
+    desc: "Mean, median, standard deviation, frequency analysis, distribution plots, and exploratory data analysis."
   },
-  { 
-    title: "Multivariate Analysis", 
-    desc: "MANOVA, factor analysis, cluster analysis, discriminant analysis, and principal component analysis (PCA)." 
+  {
+    title: "Hypothesis Testing",
+    desc: "t-test, ANOVA, chi-square, and non-parametric tests with proper p-value interpretation and significance validation."
   },
-  { 
-    title: "Reliability & Validity Testing", 
-    desc: "Cronbach's Alpha, test-retest reliability, construct validity, and scale development support." 
+  {
+    title: "Correlation & Regression Modeling",
+    desc: "Pearson correlation, linear & multiple regression, logistic regression, and model evaluation (R², assumptions)."
   },
-  { 
-    title: "Advanced SPSS Techniques", 
-    desc: "Syntax scripting, macro development, bootstrapping, missing data analysis, and complex survey data handling." 
+  {
+    title: "Factor Analysis & Reliability",
+    desc: "Exploratory Factor Analysis (EFA), KMO & Bartlett’s test, and Cronbach’s Alpha for scale validation."
   },
-  { 
-    title: "Publication & Thesis Support", 
-    desc: "APA/MLA/IEEE formatted tables, graphs, interpretation, and full methodology chapter writing." 
+  {
+    title: "Advanced Statistical Modeling",
+    desc: "Cluster analysis, discriminant analysis, PCA, and predictive statistical modeling using SPSS."
   },
+  {
+  title: "Statistical Interpretation & Reporting",
+  desc: "Clear explanation of outputs, hypothesis acceptance/rejection, APA-formatted tables, and business/research insights."
+},
+{
+  title: "Assumption Testing & Diagnostics",
+  desc: "Normality, multicollinearity (VIF), homoscedasticity, and model validation checks for accurate results."
+},
+{
+  title: "SPSS Syntax & Automation",
+  desc: "Reusable syntax scripts, macro automation, reproducible workflows, and efficient large-scale data analysis."
+},
+
 ];
 
 const deliverables = [

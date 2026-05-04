@@ -4,38 +4,30 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle, Users, Clock, Shield, Award, Lock, AlertTriangle, Radar, Zap, Sparkles, GitBranch, FileText, Eye, Database } from "lucide-react";
+import { CheckCircle, Users, Clock, Shield, Award, Lock, AlertTriangle, Radar, Zap, Sparkles, GitBranch, FileText, Eye, Database, TrendingUp } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Cybersecurity, Fraud Detection & Data Science | AI Security Solutions",
   description: "Expert AI-powered Cybersecurity, Fraud Detection, Anomaly Detection, and Advanced Data Science solutions. Threat intelligence, behavioral analytics, and secure ML systems.",
 };
 
-const techniques = [
-  { 
-    title: "Fraud Detection & Anomaly Detection", 
-    desc: "Real-time fraud prevention using isolation forests, autoencoders, graph neural networks, and ensemble models for transaction and user behavior monitoring." 
-  },
-  { 
-    title: "Intrusion Detection & Threat Intelligence", 
-    desc: "Network intrusion detection systems (NIDS), malware classification, zero-day attack detection, and automated threat intelligence platforms." 
-  },
-  { 
-    title: "Behavioral Analytics & User Risk Scoring", 
-    desc: "Advanced UEBA (User and Entity Behavior Analytics) using deep learning and time-series analysis to detect insider threats and account takeovers." 
-  },
-  { 
-    title: "Secure Data Science & Privacy-Preserving ML", 
-    desc: "Federated learning, differential privacy, homomorphic encryption, and secure multi-party computation for sensitive data environments." 
-  },
-  { 
-    title: "Network Security & Forensics", 
-    desc: "AI-driven network traffic analysis, ransomware detection, phishing URL classification, and digital forensics automation." 
-  },
-  { 
-    title: "Predictive Risk Modeling", 
-    desc: "Risk assessment models, vulnerability prediction, and proactive cybersecurity analytics using graph analytics and large-scale data science." 
-  },
+const fraudSecurity = [
+  { title: "Credit Card Fraud Detection", desc: "Real-time fraud prevention in financial transactions using ensemble models, autoencoders, and graph neural networks." },
+  { title: "Healthcare Fraud Detection", desc: "Detection of fraudulent claims, billing anomalies, and suspicious patterns in healthcare and insurance data." },
+  { title: "Authorship Verification (Account Hijacking)", desc: "Stylometric and behavioral analysis to detect account takeovers and impersonation." },
+  { title: "Crime Detection using ML", desc: "Predictive crime analysis and pattern recognition using machine learning on spatiotemporal data." },
+];
+
+const cybersecurity = [
+  { title: "Anomaly Traffic Detection", desc: "Network traffic anomaly detection for identifying intrusions and unusual behavior in real-time." },
+  { title: "DDoS Detection", desc: "Advanced deep learning models for early detection and mitigation of Distributed Denial of Service attacks." },
+  { title: "AI-based Cyber Defense Systems", desc: "Autonomous cyber defense platforms using reinforcement learning and adaptive threat response." },
+  { title: "Threat Intelligence using ML/DL", desc: "Automated threat intelligence, malware classification, and zero-day attack prediction." },
+];
+
+const predictiveAnalytics = [
+  { title: "Software Defect Prediction", desc: "Machine learning models to predict defective modules and optimize software testing efforts." },
+  { title: "Air Pollution Forecasting", desc: "Spatiotemporal deep learning models for accurate air quality and pollution level prediction." },
 ];
 
 const deliverables = [
@@ -92,7 +84,7 @@ export default function CybersecurityFraudDetectionPage() {
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1 mt-17">
-        {/* Hero - Unique Cybersecurity Design */}
+        {/* Hero */}
         <section className="bg-gradient-to-br from-slate-900 via-blue-950 to-background py-20 md:py-28 text-white">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -109,17 +101,16 @@ export default function CybersecurityFraudDetectionPage() {
                   and intelligent security analytics. Protect assets with proactive, 
                   high-precision machine learning solutions.
                 </p>
-                <div className="mt-10 flex flex-wrap text-black gap-4">
-                 <Button size="lg" asChild>
-                <Link href="/contact">Start Security Code</Link>
-              </Button>
-                   <Button size="lg" variant="outline" asChild>
+                <div className="mt-10 flex text-black flex-wrap gap-4">
+                  <Button size="lg" asChild className="bg-blue-600 text-white ">
+                    <Link href="/contact">Start Security Project</Link>
+                  </Button>
+                  <Button size="lg" variant="outline" className="border-primary hover:bg-primary  hover:text-white" asChild>
                     <Link href="/samples">View Security Samples</Link>
                   </Button>
                 </div>
               </div>
 
-              {/* Unique Hero Card for Cybersecurity */}
               <div className="relative">
                 <Card className="bg-gradient-to-br from-slate-800 via-blue-900 to-indigo-900 text-white shadow-2xl border-0 overflow-hidden">
                   <CardContent className="p-8">
@@ -157,27 +148,67 @@ anomalies = iso_forest.fit_predict(transaction_data)`}
           </div>
         </section>
 
-        {/* Techniques */}
+        {/* Grouped Techniques */}
         <section className="py-16 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="font-serif text-4xl font-bold">Cybersecurity & Data Science Techniques We Master</h2>
-              <p className="mt-3 text-muted-foreground">From fraud prevention to advanced threat intelligence</p>
+              <h2 className="font-serif text-4xl font-bold">Our Cybersecurity & Data Science Solutions</h2>
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {techniques.map((tech, i) => (
-                <Card key={i} className="hover:shadow-xl transition-all duration-300">
-                  <CardContent className="p-8">
-                    <h3 className="font-semibold text-xl mb-3">{tech.title}</h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed">{tech.desc}</p>
-                  </CardContent>
-                </Card>
-              ))}
+
+            {/* Fraud & Security */}
+            <div className="mb-16">
+              <h3 className="text-2xl font-semibold mb-6 flex items-center gap-3">
+                <Lock className="h-6 w-6 text-red-600" /> Fraud & Security
+              </h3>
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {fraudSecurity.map((tech, i) => (
+                  <Card key={i} className="hover:shadow-xl transition-all duration-300">
+                    <CardContent className="p-8">
+                      <h4 className="font-semibold text-lg mb-3">{tech.title}</h4>
+                      <p className="text-muted-foreground text-sm leading-relaxed">{tech.desc}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            {/* Cybersecurity */}
+            <div className="mb-16">
+              <h3 className="text-2xl font-semibold mb-6 flex items-center gap-3">
+                <Shield className="h-6 w-6 text-blue-600" /> Cybersecurity
+              </h3>
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {cybersecurity.map((tech, i) => (
+                  <Card key={i} className="hover:shadow-xl transition-all duration-300">
+                    <CardContent className="p-8">
+                      <h4 className="font-semibold text-lg mb-3">{tech.title}</h4>
+                      <p className="text-muted-foreground text-sm leading-relaxed">{tech.desc}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            {/* Predictive Analytics */}
+            <div>
+              <h3 className="text-2xl font-semibold mb-6 flex items-center gap-3">
+                <TrendingUp className="h-6 w-6 text-emerald-600" /> Predictive Analytics
+              </h3>
+              <div className="grid md:grid-cols-2 gap-6">
+                {predictiveAnalytics.map((tech, i) => (
+                  <Card key={i} className="hover:shadow-xl transition-all duration-300">
+                    <CardContent className="p-8">
+                      <h4 className="font-semibold text-lg mb-3">{tech.title}</h4>
+                      <p className="text-muted-foreground text-sm leading-relaxed">{tech.desc}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Process */}
+        {/* Process, Deliverables, Why Choose Us, Final CTA remain the same */}
         <section className="py-16 md:py-24 bg-muted/50">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center mb-16">
@@ -199,7 +230,7 @@ anomalies = iso_forest.fit_predict(transaction_data)`}
           </div>
         </section>
 
-        {/* Deliverables */}
+        {/* Deliverables, Why Choose Us, and Final CTA sections remain unchanged */}
         <section className="py-16 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-12 gap-16 items-center">
@@ -259,7 +290,6 @@ anomalies = iso_forest.fit_predict(transaction_data)`}
           </div>
         </section>
 
-        {/* Why Choose Us */}
         <section className="py-16 md:py-24 bg-primary text-primary-foreground">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-16">
@@ -277,7 +307,7 @@ anomalies = iso_forest.fit_predict(transaction_data)`}
               <Card className="bg-white text-foreground">
                 <CardContent className="p-8">
                   <h3 className="text-2xl font-semibold mb-2">Get Your Security AI Proposal</h3>
-                  <p className="text-muted-foreground mb-6">Share your security challenges or dataset : receive a detailed technical proposal within 24 hours.</p>
+                  <p className="text-muted-foreground mb-6">Share your security challenges or dataset — receive a detailed technical proposal within 24 hours.</p>
                   <form className="space-y-4">
                     <input type="text" placeholder="Your Name" className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
                     <input type="email" placeholder="Company / Organization Email" className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
@@ -290,11 +320,10 @@ anomalies = iso_forest.fit_predict(transaction_data)`}
           </div>
         </section>
 
-        {/* Final CTA */}
         <section className="py-20 border-t">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-4xl font-bold">Ready to Strengthen Your Security Posture?</h2>
-            <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From fraud prevention to advanced threat detection : we deliver intelligent, proactive, and scalable cybersecurity solutions.</p>
+            <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From fraud prevention to advanced threat detection — we deliver intelligent, proactive, and scalable cybersecurity solutions.</p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
                 <Link href="/contact">Start Your Security Project</Link>

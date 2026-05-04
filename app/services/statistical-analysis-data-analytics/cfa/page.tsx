@@ -12,30 +12,46 @@ export const metadata: Metadata = {
 };
 
 const techniques = [
-  { 
-    title: "Measurement Model Validation", 
-    desc: "Comprehensive CFA to validate latent constructs, factor loadings, and overall measurement model fit." 
+  {
+    title: "Model Specification",
+    desc: "Define latent constructs, observed indicators, and theoretical relationships before CFA modeling."
   },
-  { 
-    title: "Construct Validity & Reliability", 
-    desc: "Convergent validity (AVE), Composite Reliability (CR), Cronbach’s Alpha, and Discriminant Validity (Fornell-Larcker & HTMT)." 
+  {
+    title: "Measurement Model (CFA)",
+    desc: "Run CFA to evaluate factor loadings, ensuring indicators meet threshold criteria (≥ 0.5 or 0.7)."
   },
-  { 
-    title: "Multi-Group CFA (Measurement Invariance)", 
-    desc: "Configural, Metric, Scalar, and Strict invariance testing across groups (gender, culture, age, etc.)." 
+  {
+    title: "Model Fit Evaluation",
+    desc: "Assess fit indices including CFI, TLI, RMSEA, SRMR, and χ²/df to validate measurement model adequacy."
   },
-  { 
-    title: "Higher-Order & Bifactor CFA", 
-    desc: "Second-order factor models and bifactor CFA for complex psychological and social science constructs." 
+  {
+    title: "Convergent Validity",
+    desc: "Evaluate AVE (≥ 0.5), factor loadings, and Composite Reliability (CR) to ensure construct consistency."
   },
-  { 
-    title: "Model Comparison & Modification", 
-    desc: "Comparing competing models, theoretically justified modifications, and cross-validation." 
+  {
+    title: "Discriminant Validity",
+    desc: "Fornell-Larcker criterion and HTMT ratio to confirm constructs are distinct from each other."
   },
-  { 
-    title: "Scale Development & Validation", 
-    desc: "Full psychometric validation of new or adapted scales with CFA and EFA-CFA combination." 
+  {
+    title: "Reliability Testing",
+    desc: "Cronbach’s Alpha and Composite Reliability (CR ≥ 0.7) for internal consistency validation."
   },
+  {
+    title: "Item Reduction & Refinement",
+    desc: "Remove low-loading items, reduce cross-loadings, and improve model quality based on statistical thresholds."
+  },
+  {
+    title: "Measurement Invariance (Multi-Group CFA)",
+    desc: "Configural, metric, scalar, and strict invariance testing across groups."
+  },
+  {
+    title: "Model Modification & Validation",
+    desc: "Use modification indices with theoretical justification and validate model robustness."
+  },
+  {
+    title: "CFA Interpretation & Reporting",
+    desc: "Interpret loadings, validity results, and provide APA-formatted tables and publication-ready diagrams."
+  }
 ];
 
 const deliverables = [

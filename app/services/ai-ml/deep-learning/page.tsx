@@ -8,33 +8,29 @@ import { CheckCircle, Users, Clock, Shield, Award, Brain, Network, Zap, Sparkles
 
 export const metadata: Metadata = {
   title: "Deep Learning Services | Neural Networks, Transformers & Advanced AI",
-  description: "Expert Deep Learning solutions including CNNs, RNNs, Transformers, GANs, Diffusion Models, and custom architecture design using PyTorch and TensorFlow.",
+  description: "Expert Deep Learning solutions including CNNs, GANs, anomaly detection, time-series forecasting, and EEG classification using PyTorch and TensorFlow.",
 };
 
 const techniques = [
   { 
-    title: "Convolutional Neural Networks (CNNs)", 
-    desc: "Advanced CNN architectures for image classification, object detection, and medical image analysis using ResNet, EfficientNet, and custom designs." 
+    title: "CNN & GAN for Visual Perception", 
+    desc: "Advanced convolutional neural networks combined with Generative Adversarial Networks for high-quality image generation, enhancement, and visual understanding tasks." 
   },
   { 
-    title: "Recurrent Networks & Transformers", 
-    desc: "LSTM, GRU, and state-of-the-art Transformer models for sequence modeling, time-series forecasting, and natural language tasks." 
+    title: "Time-Aware CNN Recommender System", 
+    desc: "Temporal CNN-based recommendation engines that incorporate time dynamics for personalized and context-aware recommendations." 
   },
   { 
-    title: "Generative AI & GANs", 
-    desc: "Generative Adversarial Networks, Diffusion Models, and Variational Autoencoders for image generation, data augmentation, and synthetic data creation." 
+    title: "Deep Learning-based Anomaly Detection", 
+    desc: "Autoencoders, GANs, and hybrid deep models for robust anomaly detection in industrial, financial, and security applications." 
   },
   { 
-    title: "Transfer Learning & Fine-tuning", 
-    desc: "Leverage pre-trained models (ResNet, BERT, ViT, Llama) and efficiently fine-tune them for domain-specific applications." 
+    title: "Air Pollution Forecasting (CNN + BiGRU)", 
+    desc: "Hybrid deep learning models combining CNN and BiGRU for accurate spatiotemporal air quality and pollution level forecasting." 
   },
   { 
-    title: "Model Optimization & Deployment", 
-    desc: "Quantization, pruning, distillation, ONNX export, and optimization for edge devices and high-speed inference." 
-  },
-  { 
-    title: "Multi-Modal & Large Models", 
-    desc: "Vision-Language Models (CLIP, LLaVA), multimodal fusion, and training of large-scale deep learning systems." 
+    title: "EEG Classification using CNN", 
+    desc: "Deep CNN architectures for EEG signal classification, brain-computer interface (BCI), and neurological disorder detection." 
   },
 ];
 
@@ -105,8 +101,8 @@ export default function DeepLearningPage() {
                   Advanced Deep<br />Learning Solutions
                 </h1>
                 <p className="mt-6 text-xl text-muted-foreground max-w-lg">
-                  From custom neural architectures to large-scale model training and optimization. 
-                  We deliver cutting-edge deep learning systems that achieve state-of-the-art performance.
+                  From CNN-GAN architectures to time-series forecasting and EEG classification. 
+                  We deliver cutting-edge deep learning systems tailored to complex real-world problems.
                 </p>
                 <div className="mt-10 flex flex-wrap gap-4">
                   <Button size="lg" asChild>
@@ -148,7 +144,7 @@ export default function DeepLearningPage() {
                     </div>
 
                     <div className="flex items-center justify-between text-sm opacity-90">
-                      <div>PyTorch • TensorFlow • Transformers • Diffusion</div>
+                      <div>PyTorch • TensorFlow • CNN • GAN • BiGRU</div>
                       <div className="text-violet-300 font-medium">Research Grade</div>
                     </div>
                   </CardContent>
@@ -158,12 +154,12 @@ export default function DeepLearningPage() {
           </div>
         </section>
 
-        {/* Techniques */}
+        {/* Techniques - Updated */}
         <section className="py-16 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="font-serif text-4xl font-bold">Deep Learning Techniques We Master</h2>
-              <p className="mt-3 text-muted-foreground">From foundational architectures to the latest breakthroughs</p>
+              <h2 className="font-serif text-4xl font-bold">Deep Learning Projects We Deliver</h2>
+              <p className="mt-3 text-muted-foreground">From computer vision to time-series and biomedical applications</p>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {techniques.map((tech, i) => (
@@ -278,11 +274,11 @@ export default function DeepLearningPage() {
               <Card className="bg-white text-foreground">
                 <CardContent className="p-8">
                   <h3 className="text-2xl font-semibold mb-2">Get Your Deep Learning Proposal</h3>
-                  <p className="text-muted-foreground mb-6">Share your project requirements and data : receive a detailed technical proposal within 24 hours.</p>
+                  <p className="text-muted-foreground mb-6">Share your project requirements and data — receive a detailed technical proposal within 24 hours.</p>
                   <form className="space-y-4">
                     <input type="text" placeholder="Your Name" className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
                     <input type="email" placeholder="University / Company Email" className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
-                    <textarea placeholder="Describe your deep learning goal, dataset type, and expected outcomes (e.g., classification, generation, forecasting)" rows={4} className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
+                    <textarea placeholder="Describe your deep learning goal, dataset type, and expected outcomes" rows={4} className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
                     <Button className="w-full h-14 text-base" size="lg">Request Detailed Proposal</Button>
                   </form>
                 </CardContent>
@@ -295,7 +291,7 @@ export default function DeepLearningPage() {
         <section className="py-20 border-t">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-4xl font-bold">Ready to Build State-of-the-Art Deep Learning Models?</h2>
-            <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From research prototypes to production-grade systems : we deliver high-performance, reproducible deep learning solutions.</p>
+            <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From research prototypes to production-grade systems — we deliver high-performance, reproducible deep learning solutions.</p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
                 <Link href="/contact">Start Your Deep Learning Project</Link>

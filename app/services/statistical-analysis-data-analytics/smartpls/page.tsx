@@ -12,30 +12,46 @@ export const metadata: Metadata = {
 };
 
 const techniques = [
-  { 
-    title: "PLS-SEM Model Development", 
-    desc: "Complete PLS-SEM model building, estimation, and evaluation using SmartPLS 4 for complex theoretical frameworks." 
+  {
+    title: "Model Specification",
+    desc: "Define constructs, indicators, and relationships for reflective and formative measurement models."
   },
-  { 
-    title: "Mediation & Moderation Analysis", 
-    desc: "Advanced mediation (specific, parallel, serial), moderation, and moderated mediation with bootstrapping." 
+  {
+    title: "Measurement Model Evaluation",
+    desc: "Assess reliability and validity using outer loadings, Cronbach’s Alpha, Composite Reliability, and AVE."
   },
-  { 
-    title: "Higher-Order & Hierarchical Models", 
-    desc: "Reflective-formative, reflective-reflective, and formative-formative higher-order constructs." 
+  {
+    title: "Discriminant Validity Testing",
+    desc: "Fornell-Larcker criterion, cross-loadings, and HTMT ratio to ensure construct distinctiveness."
   },
-  { 
-    title: "Importance-Performance Map Analysis (IPMA)", 
-    desc: "IPMA for identifying key drivers and prioritizing actionable insights from PLS-SEM results." 
+  {
+    title: "Structural Model Evaluation",
+    desc: "Evaluate path coefficients, significance (bootstrapping), and hypothesis testing."
   },
-  { 
-    title: "Predictive Relevance & Model Comparison", 
-    desc: "Blindfolding, PLSpredict, model comparison, and out-of-sample predictive power assessment." 
+  {
+    title: "Collinearity & Model Diagnostics",
+    desc: "Check VIF values, detect multicollinearity issues, and ensure model stability."
   },
-  { 
-    title: "Advanced SmartPLS Techniques", 
-    desc: "Multi-group analysis, longitudinal data, unobserved heterogeneity (FIMIX-PLS), and robustness checks." 
+  {
+    title: "Effect Size & Predictive Power",
+    desc: "Assess R², f² effect size, and Q² predictive relevance for model strength."
   },
+  {
+    title: "Bootstrapping & Significance Testing",
+    desc: "Run bootstrapping to evaluate significance of paths, indirect effects, and confidence intervals."
+  },
+  {
+    title: "Mediation & Moderation Analysis",
+    desc: "Test indirect effects, interaction effects, and moderated relationships using PLS-SEM."
+  },
+  {
+    title: "Advanced Modeling (HCM & IPMA)",
+    desc: "Higher-order constructs (reflective/formative) and Importance-Performance Map Analysis for insights."
+  },
+  {
+    title: "PLS Interpretation & Reporting",
+    desc: "Interpret path results, predictive metrics, and deliver APA-formatted tables and actionable insights."
+  }
 ];
 
 const deliverables = [
