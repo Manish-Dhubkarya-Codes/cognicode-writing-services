@@ -8,7 +8,7 @@ import { CheckCircle, Users, Clock, Shield, Award, Server, Zap, Database, BarCha
 
 export const metadata: Metadata = {
   title: "Big Data Analytics | CogniCode",
-  description: "Expert Big Data Analytics for PhD research and large-scale projects. Scalable processing with Apache Spark, Hadoop, Hive, Kafka — real-time and batch analytics with distributed computing.",
+  description: "Expert Big Data Analytics for PhD research and large-scale projects. Scalable processing with Apache Spark, Hadoop, Hive, Kafka : real-time and batch analytics with distributed computing.",
 };
 
 const techniques = [
@@ -242,7 +242,7 @@ export default function BigDataAnalyticsPage() {
               <Card className="bg-white text-foreground">
                 <CardContent className="p-8">
                   <h3 className="text-2xl font-semibold mb-2">Get Your Big Data Analytics Proposal</h3>
-                  <p className="text-muted-foreground mb-6">Share your data volume and analytics goals — receive a detailed technical proposal within 24 hours.</p>
+                  <p className="text-muted-foreground mb-6">Share your data volume and analytics goals : receive a detailed technical proposal within 24 hours.</p>
                   <form className="space-y-4">
                     <input type="text" placeholder="Your Name" className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
                     <input type="email" placeholder="University Email" className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
@@ -259,7 +259,7 @@ export default function BigDataAnalyticsPage() {
         <section className="py-20 border-t">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-4xl font-bold">Ready for Scalable Big Data Analytics?</h2>
-            <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From petabyte-scale batch processing to real-time streaming analytics — we deliver production-grade big data solutions.</p>
+            <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From petabyte-scale batch processing to real-time streaming analytics : we deliver production-grade big data solutions.</p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
                 <Link href="/contact">Start Your Big Data Project</Link>

@@ -415,7 +415,7 @@ export default function LiveTrackingMap() {
     const onMouseMove = (e: MouseEvent) => {
       if (!isRotating) return;
       e.preventDefault();
-      // 0.5 deg per pixel — comfortable rotation feel
+      // 0.5 deg per pixel : comfortable rotation feel
       const delta = (e.clientX - startX) * 0.5;
       setMapRotation((((startRot + delta) % 360) + 360) % 360);
     };
@@ -615,7 +615,7 @@ export default function LiveTrackingMap() {
     });
   }, []);
 
-  // ── Recenter handler — used by the always-visible FAB
+  // ── Recenter handler : used by the always-visible FAB
   // Re-engages follow, resets rotation in normal mode, clears manual override in drive mode.
   const handleRecenter = useCallback(() => {
     setFollowUser(true);
@@ -930,7 +930,7 @@ export default function LiveTrackingMap() {
               <div style={{ display: "flex", alignItems: "center", gap: 10, background: "#FFFBEB", border: "1.5px solid #FCD34D", borderRadius: 12, padding: "10px 14px", marginBottom: 14 }}>
                 <AlertTriangle size={16} color="#D97706" style={{ flexShrink: 0 }} />
                 <div>
-                  <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: "#B45309" }}>Off route — recalculating…</p>
+                  <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: "#B45309" }}>Off route : recalculating…</p>
                   <p style={{ margin: 0, fontSize: 11, color: "#92400E", marginTop: 2 }}>Drive back to the blue route or a new one will be calculated</p>
                 </div>
               </div>
@@ -1170,7 +1170,7 @@ export default function LiveTrackingMap() {
                 {isOffRoute && (
                   <div className="off-route-banner" style={{ position: "absolute", top: 0, left: 0, right: 0 }}>
                     <AlertTriangle size={15} style={{ flexShrink: 0 }} />
-                    Off route — recalculating…
+                    Off route : recalculating…
                   </div>
                 )}
 
@@ -1220,7 +1220,7 @@ export default function LiveTrackingMap() {
                   </button>
                   {/* Indicator that auto-rotation is paused (drive mode only) */}
                   {manualRotationActive && (
-                    <div className="float-btn" style={{ background: "#FEF3C7", borderColor: "#FCD34D", cursor: "default" }} title="Auto-rotate paused — tap recenter to resume">
+                    <div className="float-btn" style={{ background: "#FEF3C7", borderColor: "#FCD34D", cursor: "default" }} title="Auto-rotate paused : tap recenter to resume">
                       <RotateCw size={16} color="#B45309" />
                     </div>
                   )}

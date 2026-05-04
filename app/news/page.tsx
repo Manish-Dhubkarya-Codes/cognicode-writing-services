@@ -51,7 +51,7 @@ export default async function NewsPage() {
         query
       )}&language=en&sortBy=publishedAt&pageSize=10&apiKey=${apiKey}`,
       {
-        next: { revalidate: 3600 }, // ISR — refresh every hour (real-time feel without hitting rate limits)
+        next: { revalidate: 3600 }, // ISR : refresh every hour (real-time feel without hitting rate limits)
       }
     );
 

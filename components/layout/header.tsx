@@ -39,9 +39,9 @@ const aboutLinks = [
 ] as const;
 
 const dataDrivenLinks = [
-  { name: "Artificial Intelligence & Machine Learning", href: "/services/ai-ml" },
-  { name: "Computer Vision", href: "/services/computer-vision" },
-  { name: "Natural Language Processing (NLP)", href: "/services/natural-language-processing" },
+  { name: "Artificial Intelligence, Machine Learning & Deep Learning", href: "/services/ai-ml" },
+  // { name: "Computer Vision", href: "/services/computer-vision" },
+  // { name: "Natural Language Processing (NLP)", href: "/services/natural-language-processing" },
   { name: "Statistical Analysis & Data Analytics", href: "/services/statistical-analysis-data-analytics" },
   { name: "Data Science & Big Data", href: "/services/ds-big-data" },
   { name: "Tools & Technologies", href: "/services/tools-technologies" },

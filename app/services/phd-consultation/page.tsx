@@ -24,7 +24,7 @@ const steps = [
   { step: "04", title: "Ongoing Support", description: "Access follow-up sessions and email support to stay on track and overcome research challenges." },
 ];
 
-const benefits = ["Personalized expert advice tailored to your needs", "Flexible scheduling — weekdays, weekends, evenings", "Domain-specific consultants with PhD credentials", "Actionable takeaways from every session", "Confidential and secure consultations", "Affordable session and package pricing", "Support at any stage of your PhD journey", "Follow-up email support after every session"];
+const benefits = ["Personalized expert advice tailored to your needs", "Flexible scheduling : weekdays, weekends, evenings", "Domain-specific consultants with PhD credentials", "Actionable takeaways from every session", "Confidential and secure consultations", "Affordable session and package pricing", "Support at any stage of your PhD journey", "Follow-up email support after every session"];
 
 export default function PhDConsultationPage() {
   return (

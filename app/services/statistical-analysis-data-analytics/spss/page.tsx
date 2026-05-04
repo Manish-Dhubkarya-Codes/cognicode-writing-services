@@ -4,115 +4,150 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle, Users, Clock, Shield, Award, Layers, Network, Target, BarChart3, Eye, GitBranch, FileText, Zap } from "lucide-react";
+import { CheckCircle, Users, Clock, Shield, Award, BarChart3, Calculator, TrendingUp, Layers, Zap, Sparkles, GitBranch, FileText, Eye } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Multivariate & Factor Analysis | CogniCode",
-  description: "Expert multivariate and factor analysis for PhD research. MANOVA, PCA, Exploratory & Confirmatory Factor Analysis, Cluster Analysis, Discriminant Analysis, and Structural Equation Modeling (SEM) using SPSS, R, and Python.",
+  title: "SPSS Analysis Services | Statistical Package for the Social Sciences",
+  description: "Expert SPSS data analysis for PhD research, theses, and publications. Descriptive statistics, hypothesis testing, regression, multivariate analysis, and publication-ready output.",
 };
 
 const techniques = [
-  { title: "Multivariate Analysis of Variance (MANOVA)", desc: "Simultaneous analysis of multiple dependent variables across groups with post-hoc tests" },
-  { title: "Principal Component Analysis (PCA)", desc: "Dimensionality reduction, data compression, and identification of underlying patterns" },
-  { title: "Factor Analysis (EFA & CFA)", desc: "Exploratory and Confirmatory Factor Analysis for scale development and construct validation" },
-  { title: "Cluster & Discriminant Analysis", desc: "Grouping similar cases and predictive classification using advanced multivariate techniques" },
+  { 
+    title: "Descriptive & Inferential Statistics", 
+    desc: "Comprehensive statistical analysis including frequencies, cross-tabulations, t-tests, ANOVA, chi-square, and non-parametric tests." 
+  },
+  { 
+    title: "Regression Analysis", 
+    desc: "Linear, multiple, logistic, ordinal, and hierarchical regression with assumption checks and model diagnostics." 
+  },
+  { 
+    title: "Multivariate Analysis", 
+    desc: "MANOVA, factor analysis, cluster analysis, discriminant analysis, and principal component analysis (PCA)." 
+  },
+  { 
+    title: "Reliability & Validity Testing", 
+    desc: "Cronbach's Alpha, test-retest reliability, construct validity, and scale development support." 
+  },
+  { 
+    title: "Advanced SPSS Techniques", 
+    desc: "Syntax scripting, macro development, bootstrapping, missing data analysis, and complex survey data handling." 
+  },
+  { 
+    title: "Publication & Thesis Support", 
+    desc: "APA/MLA/IEEE formatted tables, graphs, interpretation, and full methodology chapter writing." 
+  },
 ];
 
 const deliverables = [
-  "Fully reproducible multivariate and factor analysis scripts (SPSS, R, Python)",
-  "Detailed factor loadings, communalities, eigenvalues, and scree plots",
-  "MANOVA results with Wilks’ Lambda, Pillai’s Trace, and effect sizes",
-  "Structural Equation Modeling (SEM) output with model fit indices",
-  "Publication-ready tables, path diagrams, and visualization reports",
-  "Complete methodology chapter ready for thesis and journal submission",
-  "Git repository with clean, well-documented code and experiment logs",
-  "One-to-one interpretation session + 6 months of free revisions and updates",
+  "Cleaned dataset and fully reproducible SPSS output files",
+  "Complete SPSS syntax files with detailed comments",
+  "Publication-ready tables and high-quality charts/graphs",
+  "Comprehensive statistical interpretation report",
+  "Assumption checks and diagnostic test results",
+  "APA 7th edition formatted results section",
+  "One-to-one explanation session via Zoom",
+  "6 months of free post-delivery support & revisions",
 ];
 
 const steps = [
   {
     step: "01",
-    title: "Data Suitability Assessment",
-    desc: "Check multivariate normality, multicollinearity, sample size adequacy, and factorability (KMO, Bartlett’s test).",
-    icon: BarChart3,
+    title: "Research Objective Review",
+    desc: "Understand your hypotheses, variables, and research questions to recommend the best statistical approach.",
+    icon: Eye,
   },
   {
     step: "02",
-    title: "Exploratory Analysis",
-    desc: "Perform PCA, EFA, and initial factor extraction with rotation methods (Varimax, Oblimin, etc.).",
-    icon: Layers,
+    title: "Data Preparation",
+    desc: "Data cleaning, coding, transformation, handling missing values, and creating analysis-ready files.",
+    icon: Calculator,
   },
   {
     step: "03",
-    title: "Advanced Modeling",
-    desc: "Run MANOVA, CFA, SEM, Cluster Analysis, and Discriminant Analysis with model validation.",
-    icon: Network,
+    title: "Statistical Analysis",
+    desc: "Run all required tests using SPSS with syntax and detailed output interpretation.",
+    icon: BarChart3,
   },
   {
     step: "04",
-    title: "Interpretation & Reporting",
-    desc: "Provide clear statistical interpretation, path diagrams, and publication-ready results.",
-    icon: Eye,
+    title: "Results & Delivery",
+    desc: "Deliver publication-ready outputs, interpretation, and methodology documentation.",
+    icon: Zap,
   },
 ];
 
 const benefits = [
-  "PhD-level statisticians with 10+ years experience in multivariate methods",
-  "Expertise in SPSS, R (lavaan, psych), AMOS, and Python (factor_analyzer)",
-  "Full support for Exploratory and Confirmatory Factor Analysis",
-  "Structural Equation Modeling (SEM) and path analysis",
-  "Rigorous assumption checking and model diagnostics",
-  "Publication-ready tables, figures, and path diagrams",
-  "Confidentiality and academic integrity guaranteed",
-  "Free revisions until your thesis committee or journal approves",
+  "PhD-level statisticians with 10+ years SPSS expertise",
+  "Full support for theses, dissertations, and journal publications",
+  "Expertise in SPSS, AMOS, and SmartPLS integration",
+  "APA 7th edition & journal-specific formatting",
+  "Clear interpretation and defense-ready explanations",
+  "100% reproducible analysis with syntax files",
+  "Fast turnaround with strict quality control",
+  "Free revisions until supervisor approval",
 ];
 
-export default function MultivariateFactorPage() {
+export default function SPSSAnalysisPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1 mt-17">
-        {/* Hero */}
-        <section className="bg-gradient-to-br from-indigo-50 via-purple-50 to-background py-20 md:py-28">
+        {/* Hero - Unique SPSS Design */}
+        <section className="bg-gradient-to-br from-blue-50 via-indigo-50 to-background py-20 md:py-28">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div>
                 <div className="inline-flex items-center gap-2 rounded-full bg-indigo-600/10 px-4 py-2 text-sm font-medium text-indigo-700 mb-6">
-                  <Layers className="h-4 w-4" />
-                  MULTIVARIATE &amp; FACTOR ANALYSIS
+                  <BarChart3 className="h-4 w-4" />
+                  SPSS ANALYSIS
                 </div>
                 <h1 className="text-5xl md:text-6xl font-bold tracking-tighter leading-none">
-                  Multivariate &amp;<br />Factor Analysis
+                  Expert SPSS<br />Statistical Analysis
                 </h1>
                 <p className="mt-6 text-xl text-muted-foreground max-w-lg">
-                  Advanced multivariate techniques including MANOVA, PCA, Factor Analysis, Cluster Analysis, and Structural Equation Modeling for complex PhD research.
+                  Professional data analysis using SPSS for PhD research, theses, dissertations, 
+                  and academic publications. From basic tests to advanced multivariate modeling.
                 </p>
                 <div className="mt-10 flex flex-wrap gap-4">
                   <Button size="lg" asChild>
-                    <Link href="/contact">Start Multivariate Project</Link>
+                    <Link href="/contact">Start SPSS Project</Link>
                   </Button>
                   <Button size="lg" variant="outline" asChild>
-                    <Link href="/samples">View Multivariate Samples</Link>
+                    <Link href="/samples">View SPSS Samples</Link>
                   </Button>
                 </div>
               </div>
 
+              {/* Unique Hero Card */}
               <div className="relative">
-                <Card className="bg-gradient-to-br from-indigo-600 to-purple-600 text-white shadow-2xl border-0">
+                <Card className="bg-gradient-to-br from-indigo-700 via-blue-700 to-cyan-700 text-white shadow-2xl border-0 overflow-hidden">
                   <CardContent className="p-8">
                     <div className="flex justify-between items-start mb-8">
-                      <Network className="h-12 w-12" />
-                      <div className="text-right">
-                        <p className="text-5xl font-bold">KMO = 0.89</p>
-                        <p className="text-sm opacity-75">Excellent Factorability</p>
+                      <div className="flex items-center gap-3">
+                        <div className="p-3 bg-white/10 rounded-2xl">
+                          <Calculator className="h-10 w-10" />
+                        </div>
+                        <div>
+                          <p className="text-sm opacity-75">Analysis Accuracy</p>
+                          <p className="text-5xl font-bold tracking-tighter">100%</p>
+                        </div>
                       </div>
                     </div>
-                    <div className="font-mono text-xs bg-black/30 p-5 rounded-2xl mb-6">
-                      <pre className="text-indigo-200">
-{`fa_model <- fa(data, nfactors=4, rotate="varimax")`}
+
+                    <div className="bg-black/30 rounded-2xl p-6 mb-6 font-mono text-sm">
+                      <div className="text-cyan-300 mb-2">SPSS Syntax Example</div>
+                      <pre className="text-white/90 text-xs leading-relaxed overflow-auto">
+{`REGRESSION
+  /DEPENDENT outcome
+  /METHOD=ENTER predictor1 predictor2
+  /STATISTICS=COEFF R ANOVA.`}
                       </pre>
                     </div>
-                    <p className="text-sm opacity-90">PCA • EFA • CFA • SEM • Ready for thesis &amp; publication</p>
+
+                    <div className="flex items-center justify-between text-sm opacity-90">
+                      <div>SPSS • AMOS • Syntax • APA Ready</div>
+                      <div className="text-cyan-300 font-medium">Publication Grade</div>
+                    </div>
                   </CardContent>
                 </Card>
               </div>
@@ -124,10 +159,10 @@ export default function MultivariateFactorPage() {
         <section className="py-16 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="font-serif text-4xl font-bold">Multivariate Techniques We Master</h2>
-              <p className="mt-3 text-muted-foreground">From dimensionality reduction to complex causal modeling</p>
+              <h2 className="font-serif text-4xl font-bold">SPSS Analysis Services We Provide</h2>
+              <p className="mt-3 text-muted-foreground">From basic statistics to advanced multivariate techniques</p>
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {techniques.map((tech, i) => (
                 <Card key={i} className="hover:shadow-xl transition-all duration-300">
                   <CardContent className="p-8">
@@ -144,8 +179,8 @@ export default function MultivariateFactorPage() {
         <section className="py-16 md:py-24 bg-muted/50">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center mb-16">
-              <h2 className="font-serif text-4xl font-bold">Our Multivariate &amp; Factor Analysis Workflow</h2>
-              <p className="mt-4 text-lg text-muted-foreground">Rigorous academic-standard process for complex data structures</p>
+              <h2 className="font-serif text-4xl font-bold">Our SPSS Analysis Workflow</h2>
+              <p className="mt-4 text-lg text-muted-foreground">Structured, transparent, and publication-focused process</p>
             </div>
             <div className="grid md:grid-cols-4 gap-8">
               {steps.map((s, i) => (
@@ -168,7 +203,7 @@ export default function MultivariateFactorPage() {
             <div className="grid lg:grid-cols-12 gap-16 items-center">
               <div className="lg:col-span-5">
                 <h2 className="font-serif text-4xl font-bold">Everything You Receive</h2>
-                <p className="mt-4 text-lg text-muted-foreground">Complete, publication-ready multivariate analysis package.</p>
+                <p className="mt-4 text-lg text-muted-foreground">Complete, ready-to-submit SPSS analysis package.</p>
                 <ul className="mt-10 space-y-6">
                   {deliverables.map((item, i) => (
                     <li key={i} className="flex gap-4">
@@ -186,15 +221,15 @@ export default function MultivariateFactorPage() {
                         <div className="flex gap-4">
                           <GitBranch className="h-6 w-6 text-primary mt-1" />
                           <div>
-                            <p className="font-semibold">Reproducible Pipeline</p>
-                            <p className="text-sm text-muted-foreground">Full code in SPSS/R/Python</p>
+                            <p className="font-semibold">SPSS Syntax Files</p>
+                            <p className="text-sm text-muted-foreground">Fully commented & reproducible</p>
                           </div>
                         </div>
                         <div className="flex gap-4">
                           <FileText className="h-6 w-6 text-primary mt-1" />
                           <div>
-                            <p className="font-semibold">Thesis-Ready Report</p>
-                            <p className="text-sm text-muted-foreground">Methodology + results chapter</p>
+                            <p className="font-semibold">APA Formatted Output</p>
+                            <p className="text-sm text-muted-foreground">Tables & interpretation</p>
                           </div>
                         </div>
                       </div>
@@ -202,15 +237,15 @@ export default function MultivariateFactorPage() {
                         <div className="flex gap-4">
                           <Eye className="h-6 w-6 text-primary mt-1" />
                           <div>
-                            <p className="font-semibold">Path Diagrams &amp; Visuals</p>
-                            <p className="text-sm text-muted-foreground">Factor loadings &amp; SEM diagrams</p>
+                            <p className="font-semibold">Visual Reports</p>
+                            <p className="text-sm text-muted-foreground">Charts & diagnostics</p>
                           </div>
                         </div>
                         <div className="flex gap-4">
                           <Award className="h-6 w-6 text-primary mt-1" />
                           <div>
-                            <p className="font-semibold">Publication Support</p>
-                            <p className="text-sm text-muted-foreground">Tables, scree plots &amp; LaTeX ready</p>
+                            <p className="font-semibold">Defense Ready</p>
+                            <p className="text-sm text-muted-foreground">Clear explanations</p>
                           </div>
                         </div>
                       </div>
@@ -227,7 +262,7 @@ export default function MultivariateFactorPage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-16">
               <div>
-                <h2 className="text-4xl font-bold">Why Researchers Choose Our Multivariate Service</h2>
+                <h2 className="text-4xl font-bold">Why Researchers Choose Our SPSS Service</h2>
                 <ul className="mt-10 space-y-6">
                   {benefits.map((benefit, i) => (
                     <li key={i} className="flex gap-4">
@@ -239,12 +274,12 @@ export default function MultivariateFactorPage() {
               </div>
               <Card className="bg-white text-foreground">
                 <CardContent className="p-8">
-                  <h3 className="text-2xl font-semibold mb-2">Get Your Multivariate Analysis Proposal</h3>
-                  <p className="text-muted-foreground mb-6">Share your research variables and objectives — receive a detailed proposal within 24 hours.</p>
+                  <h3 className="text-2xl font-semibold mb-2">Get Your SPSS Analysis Proposal</h3>
+                  <p className="text-muted-foreground mb-6">Share your research topic and dataset : receive a detailed proposal within 24 hours.</p>
                   <form className="space-y-4">
                     <input type="text" placeholder="Your Name" className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
                     <input type="email" placeholder="University Email" className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
-                    <textarea placeholder="Describe your multivariate / factor analysis requirements" rows={4} className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
+                    <textarea placeholder="Describe your research area, variables, hypotheses, and required statistical tests" rows={4} className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
                     <Button className="w-full h-14 text-base" size="lg">Request Detailed Proposal</Button>
                   </form>
                 </CardContent>
@@ -256,14 +291,14 @@ export default function MultivariateFactorPage() {
         {/* Final CTA */}
         <section className="py-20 border-t">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-4xl font-bold">Ready for Advanced Multivariate Analysis?</h2>
-            <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From PCA to SEM — we deliver rigorous, publication-ready multivariate solutions for complex research questions.</p>
+            <h2 className="text-4xl font-bold">Ready for Professional SPSS Analysis?</h2>
+            <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">Get accurate, publication-ready statistical results with full academic support.</p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
-                <Link href="/contact">Start Your Multivariate Project</Link>
+                <Link href="/contact">Start Your SPSS Project</Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
-                <Link href="/services/data-driven/statistical-analysis-data-analytics">Back to Statistical Services</Link>
+                <Link href="/services/statistical-analysis-data-analytics">Back to Statistical Services</Link>
               </Button>
             </div>
           </div>

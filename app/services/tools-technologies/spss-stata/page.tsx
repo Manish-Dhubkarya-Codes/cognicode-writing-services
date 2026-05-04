@@ -85,7 +85,7 @@ export default function SpssStataPage() {
                   SPSS &amp; STATA
                 </h1>
                 <p className="mt-6 text-xl text-muted-foreground max-w-lg">
-                  Professional statistical analysis using SPSS and STATA — from data management and descriptive statistics to complex econometric modeling and hypothesis testing.
+                  Professional statistical analysis using SPSS and STATA : from data management and descriptive statistics to complex econometric modeling and hypothesis testing.
                 </p>
                 <div className="mt-10 flex flex-wrap gap-4">
                   <Button size="lg" asChild>
@@ -257,7 +257,7 @@ export default function SpssStataPage() {
         <section className="py-20 border-t">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-4xl font-bold">Ready for Professional SPSS &amp; STATA Analysis?</h2>
-            <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From data management to complex econometric modeling — we deliver publication-ready results using SPSS and STATA.</p>
+            <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From data management to complex econometric modeling : we deliver publication-ready results using SPSS and STATA.</p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
                 <Link href="/contact">Start Your SPSS/STATA Project</Link>

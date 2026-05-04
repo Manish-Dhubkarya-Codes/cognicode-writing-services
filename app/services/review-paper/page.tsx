@@ -16,7 +16,7 @@ const features = [
   { icon: FileText, title: "Journal-Ready Format", description: "Manuscript prepared in the exact format of your target journal with all required sections." },
 ];
 const steps = [
-  { step: "01", title: "Domain Scoping", description: "Define the scope, objectives, and type of review — systematic, scoping, or narrative." },
+  { step: "01", title: "Domain Scoping", description: "Define the scope, objectives, and type of review : systematic, scoping, or narrative." },
   { step: "02", title: "Paper Collection", description: "Collect and screen hundreds of papers using inclusion and exclusion criteria." },
   { step: "03", title: "Critical Analysis", description: "Analyze, compare, and synthesize papers into meaningful categories and insights." },
   { step: "04", title: "Manuscript Writing", description: "Write the review paper with proper structure, tables, and journal formatting." },

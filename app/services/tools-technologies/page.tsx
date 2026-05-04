@@ -8,7 +8,7 @@ import { CheckCircle, Users, Clock, Shield, Award, Code, BarChart3, Brain, Monit
 
 export const metadata: Metadata = {
   title: "Tools & Technologies | CogniCode",
-  description: "Expert implementation and training in Python, R, MATLAB, SPSS, STATA, TensorFlow, PyTorch, Tableau, and Power BI — professional tool mastery for data science, statistical analysis, machine learning, and research projects.",
+  description: "Expert implementation and training in Python, R, MATLAB, SPSS, STATA, TensorFlow, PyTorch, Tableau, and Power BI : professional tool mastery for data science, statistical analysis, machine learning, and research projects.",
 };
 
 const features = [
@@ -21,19 +21,19 @@ const features = [
   {
     icon: BarChart3,
     title: "SPSS, STATA",
-    description: "Professional statistical analysis using SPSS and STATA — from data management and descriptive statistics to complex econometric modeling and hypothesis testing.",
+    description: "Professional statistical analysis using SPSS and STATA : from data management and descriptive statistics to complex econometric modeling and hypothesis testing.",
     href: "/services/tools-technologies/spss-stata"
   },
   {
     icon: Brain,
     title: "TensorFlow, PyTorch",
-    description: "Deep learning and machine learning model development with TensorFlow and PyTorch — including custom architectures, training pipelines, transfer learning, and model optimization.",
+    description: "Deep learning and machine learning model development with TensorFlow and PyTorch : including custom architectures, training pipelines, transfer learning, and model optimization.",
     href: "/services/tools-technologies/tensorflow-pytorch"
   },
   {
     icon: Monitor,
     title: "Tableau, Power BI",
-    description: "Interactive data visualization and business intelligence dashboards using Tableau and Power BI — creating publication-ready reports, real-time analytics, and compelling data storytelling.",
+    description: "Interactive data visualization and business intelligence dashboards using Tableau and Power BI : creating publication-ready reports, real-time analytics, and compelling data storytelling.",
     href: "/services/tools-technologies/tableau-power-bi"
   },
 ];
@@ -87,7 +87,7 @@ export default function ServicePage() {
                   Tools & Technologies Research Support
                 </h1>
                 <p className="mt-6 text-lg leading-8 text-muted-foreground">
-                  Master every essential tool in the data science and research ecosystem — from Python &amp; R to TensorFlow, PyTorch, Tableau, and Power BI.
+                  Master every essential tool in the data science and research ecosystem : from Python &amp; R to TensorFlow, PyTorch, Tableau, and Power BI.
                 </p>
                 <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                   <Button size="lg" asChild>
@@ -187,7 +187,7 @@ export default function ServicePage() {
                 Our Tools &amp; Technologies Workflow
               </h2>
               <p className="mt-4 text-lg text-muted-foreground">
-                From tool selection to final delivery — a structured approach ensuring maximum efficiency and quality.
+                From tool selection to final delivery : a structured approach ensuring maximum efficiency and quality.
               </p>
             </div>
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
@@ -213,7 +213,7 @@ export default function ServicePage() {
                   Why Choose Our Tools &amp; Technologies Service?
                 </h2>
                 <p className="mt-4 text-lg text-muted-foreground">
-                  We don’t just use these tools — we master them and teach you how to leverage them for successful research outcomes.
+                  We don’t just use these tools : we master them and teach you how to leverage them for successful research outcomes.
                 </p>
                 <ul className="mt-8 grid gap-3 sm:grid-cols-2">
                   {benefits.map((b, i) => (
@@ -270,7 +270,7 @@ export default function ServicePage() {
               Need Expert Tools &amp; Technologies Support?
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-primary-foreground/90">
-              From Python to Power BI — our specialists help you master every tool required for cutting-edge research.
+              From Python to Power BI : our specialists help you master every tool required for cutting-edge research.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Button size="lg" variant="secondary" asChild>

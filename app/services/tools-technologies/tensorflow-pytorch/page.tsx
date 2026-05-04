@@ -85,7 +85,7 @@ export default function TensorFlowPyTorchPage() {
                   TensorFlow &amp; PyTorch
                 </h1>
                 <p className="mt-6 text-xl text-muted-foreground max-w-lg">
-                  Deep learning and machine learning model development with TensorFlow and PyTorch — custom architectures, training pipelines, transfer learning, and model optimization.
+                  Deep learning and machine learning model development with TensorFlow and PyTorch : custom architectures, training pipelines, transfer learning, and model optimization.
                 </p>
                 <div className="mt-10 flex flex-wrap gap-4">
                   <Button size="lg" asChild>
@@ -260,7 +260,7 @@ export default function TensorFlowPyTorchPage() {
         <section className="py-20 border-t">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-4xl font-bold">Ready to Build Cutting-Edge Deep Learning Models?</h2>
-            <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From TensorFlow to PyTorch — we deliver state-of-the-art models with full reproducibility and academic rigor.</p>
+            <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From TensorFlow to PyTorch : we deliver state-of-the-art models with full reproducibility and academic rigor.</p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
                 <Link href="/contact">Start Your Deep Learning Project</Link>

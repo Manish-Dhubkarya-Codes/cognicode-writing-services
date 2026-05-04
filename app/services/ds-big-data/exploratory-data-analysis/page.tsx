@@ -85,7 +85,7 @@ export default function ExploratoryDataAnalysisPage() {
                   Exploratory Data Analysis
                 </h1>
                 <p className="mt-6 text-xl text-muted-foreground max-w-lg">
-                  In-depth EDA to uncover patterns, relationships, and insights from your data — using Python, R, and interactive visualizations for PhD research and data-driven decisions.
+                  In-depth EDA to uncover patterns, relationships, and insights from your data : using Python, R, and interactive visualizations for PhD research and data-driven decisions.
                 </p>
                 <div className="mt-10 flex flex-wrap gap-4">
                   <Button size="lg" asChild>
@@ -241,7 +241,7 @@ plt.show()`}
               <Card className="bg-white text-foreground">
                 <CardContent className="p-8">
                   <h3 className="text-2xl font-semibold mb-2">Get Your EDA Proposal</h3>
-                  <p className="text-muted-foreground mb-6">Share your dataset and research goals — receive a detailed technical proposal within 24 hours.</p>
+                  <p className="text-muted-foreground mb-6">Share your dataset and research goals : receive a detailed technical proposal within 24 hours.</p>
                   <form className="space-y-4">
                     <input type="text" placeholder="Your Name" className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
                     <input type="email" placeholder="University Email" className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
@@ -258,7 +258,7 @@ plt.show()`}
         <section className="py-20 border-t">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-4xl font-bold">Ready to Discover Hidden Insights in Your Data?</h2>
-            <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From raw data to deep understanding — we deliver comprehensive, publication-ready Exploratory Data Analysis.</p>
+            <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From raw data to deep understanding : we deliver comprehensive, publication-ready Exploratory Data Analysis.</p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
                 <Link href="/contact">Start Your EDA Project</Link>

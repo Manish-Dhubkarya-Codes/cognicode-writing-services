@@ -7,45 +7,69 @@ import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle, Users, Clock, Shield, Award, Brain, Network, TrendingUp, Target, Cpu } from "lucide-react";
 
 export const metadata: Metadata = { 
-  title: "Artificial Intelligence & Machine Learning | CogniCode", 
-  description: "Expert AI and Machine Learning research support — ML model development, deep learning, neural networks, predictive modeling, and model optimization." 
+  title: "Computer Vision, NLP, Deep Learning & AI Solutions | CogniCode", 
+  description: "Expert AI solutions including Computer Vision, Natural Language Processing, Image Processing, Healthcare AI, Cybersecurity, Fraud Detection and advanced Deep Learning systems." 
 };
 
 const features = [
   { 
     icon: Cpu, 
-    title: "Machine Learning Model Development", 
-    description: "End-to-end development of supervised, unsupervised, and reinforcement learning models — from data preprocessing to deployment-ready solutions tailored to your research objectives.",
-    href: "/services/ai-ml/ml-model"
+    title: "Computer Vision", 
+    description: "Advanced computer vision solutions including object detection, image segmentation, facial recognition, and video analysis using YOLO, Detectron2, and custom CNN architectures.",
+    href: "/services/ai-ml/computer-vision"
+  },
+  { 
+    icon: Brain, 
+    title: "Natural Language Processing (NLP)", 
+    description: "Build powerful NLP systems for text classification, sentiment analysis, named entity recognition, question answering, and large language model fine-tuning with Transformers.",
+    href: "/services/ai-ml/nlp"
   },
   { 
     icon: Network, 
-    title: "Deep Learning & Neural Networks", 
-    description: "Design and train advanced architectures including CNNs, RNNs, LSTMs, GANs, and Transformers using TensorFlow, PyTorch, and Keras for cutting-edge research applications.",
-    href: "/services/ai-ml/dl-neural-network"
+    title: "Image Processing", 
+    description: "Professional image enhancement, restoration, feature extraction, and preprocessing pipelines using OpenCV, Pillow, and deep learning-based techniques.",
+    href: "/services/ai-ml/image-processing"
   },
   { 
     icon: TrendingUp, 
-    title: "Predictive Modeling & Forecasting", 
-    description: "Build robust predictive systems for time-series forecasting, classification, regression, and trend analysis with high accuracy and statistical reliability.",
-    href: "/services/ai-ml/predict-modelling-forecast"
+    title: "Deep Learning", 
+    description: "End-to-end deep learning solutions with modern architectures (CNNs, RNNs, Transformers, Diffusion Models) using PyTorch and TensorFlow for complex research problems.",
+    href: "/services/ai-ml/deep-learning"
+  },
+  { 
+    icon: Shield, 
+    title: "Healthcare AI & Biomedical Systems", 
+    description: "Specialized AI for medical imaging, disease prediction, drug discovery, genomics analysis, and clinical decision support systems with regulatory compliance focus.",
+    href: "/services/ai-ml/healthcare-ai"
   },
   { 
     icon: Target, 
-    title: "Model Evaluation & Optimization", 
-    description: "Rigorous evaluation through cross-validation, hyperparameter tuning, and performance benchmarking to deliver optimized, publication-ready models.",
-    href: "/services/ai-ml/model-eval-optim"
+    title: "Cybersecurity, Fraud Detection & Data Science", 
+    description: "AI-powered fraud detection, anomaly detection, threat intelligence, and advanced data science solutions to secure systems and extract actionable insights from complex data.",
+    href: "/services/ai-ml/cybersecurity-fraud-detection"
   },
 ];
 
 const steps = [
-  { step: "01", title: "Problem Definition", description: "We understand your research problem, dataset, and target outcomes to frame it as a well-defined ML task with measurable goals." },
+  { step: "01", title: "Problem Definition", description: "We understand your research problem, dataset, and target outcomes to frame it as a well-defined AI task with measurable goals." },
   { step: "02", title: "Data Preparation", description: "Clean, preprocess, and engineer features from your dataset to maximize model performance, reproducibility, and reliability." },
-  { step: "03", title: "Model Building & Training", description: "Develop, train, and iterate on appropriate ML/DL architectures with rigorous experimentation, validation, and tracking." },
+  { step: "03", title: "Model Building & Training", description: "Develop, train, and iterate on appropriate AI architectures with rigorous experimentation, validation, and tracking." },
   { step: "04", title: "Evaluation & Delivery", description: "Evaluate against benchmarks, optimize hyperparameters, and deliver the model with full documentation and code walkthrough." },
 ];
 
-const benefits = ["Expert AI/ML researchers and engineers", "TensorFlow, PyTorch, Keras, Scikit-learn expertise", "Custom architecture design for your problem", "Hyperparameter tuning & model optimization", "Reproducible experiments and clean codebases", "GPU-accelerated training support", "Publication-ready results and visualizations", "Post-delivery support and consultations"];
+const benefits = [
+  "Expert researchers in Computer Vision & NLP",
+  "Deep Learning & Transformer model specialists",
+  "Healthcare AI and Biomedical domain expertise",
+  "Cybersecurity & Fraud Detection solutions",
+  "TensorFlow, PyTorch, OpenCV & Hugging Face expertise",
+  "Custom architecture design for your specific use case",
+  "Hyperparameter tuning & model optimization",
+  "Reproducible experiments and clean codebases",
+  "GPU-accelerated training support",
+  "Publication-ready results and visualizations",
+  "Post-delivery support and consultations"
+];
 
 export default function ServicePage() {
   return (
@@ -56,9 +80,9 @@ export default function ServicePage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-wider text-primary">Artificial Intelligence & Machine Learning</p>
-                <h1 className="mt-2 font-serif text-4xl font-bold tracking-tight text-foreground sm:text-5xl">AI & Machine Learning Research Support</h1>
-                <p className="mt-6 text-lg leading-8 text-muted-foreground">From classical ML algorithms to state-of-the-art deep learning architectures, our AI experts turn your research ideas into production-grade, reproducible models with measurable impact.</p>
+                <p className="text-sm font-semibold uppercase tracking-wider text-primary">Artificial Intelligence, Machine Learning & Deep Learning</p>
+                <h1 className="mt-2 font-serif text-4xl font-bold tracking-tight text-foreground sm:text-5xl">AI, Machine Learning & DL Research Support</h1>
+                <p className="mt-6 text-lg leading-8 text-muted-foreground">From Computer Vision and Natural Language Processing to Healthcare AI, Cybersecurity, and advanced Deep Learning : we deliver specialized AI systems tailored to your research and business needs.</p>
                 <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                   <Button size="lg" asChild>
                     <Link href="/contact">Get Started</Link>
@@ -75,7 +99,7 @@ export default function ServicePage() {
                       <Brain className="h-12 w-12" />
                       <div>
                         <p className="text-3xl font-bold">500+</p>
-                        <p className="text-sm text-primary-foreground/80">AI/ML Models Delivered</p>
+                        <p className="text-sm text-primary-foreground/80">AI Projects Delivered</p>
                       </div>
                     </div>
                   </CardContent>
@@ -83,8 +107,8 @@ export default function ServicePage() {
                 <div className="grid grid-cols-2 gap-4">
                   <Card>
                     <CardContent className="p-6 text-center">
-                      <p className="text-2xl font-bold text-primary">20+</p>
-                      <p className="text-sm text-muted-foreground">ML Frameworks</p>
+                      <p className="text-2xl font-bold text-primary">25+</p>
+                      <p className="text-sm text-muted-foreground">AI Specializations</p>
                     </CardContent>
                   </Card>
                   <Card>
@@ -105,7 +129,7 @@ export default function ServicePage() {
               {[
                 { icon: Shield, text: "Original Research" },
                 { icon: Clock, text: "On-Time Delivery" },
-                { icon: Users, text: "Expert AI Engineers" },
+                { icon: Users, text: "Domain Experts" },
                 { icon: Award, text: "Fully Documented" }
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-2 text-primary-foreground">
@@ -120,10 +144,10 @@ export default function ServicePage() {
         <section className="py-16 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
-              <h2 className="font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl">What We Deliver in AI & ML</h2>
+              <h2 className="font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl">Our AI Specializations</h2>
               <p className="mt-4 text-lg text-muted-foreground">Click on any service below to explore detailed offerings</p>
             </div>
-            <div className="mt-16 grid gap-8 md:grid-cols-2">
+            <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {features.map((f, i) => (
                 <Link key={i} href={f.href} className="block group">
                   <Card className="border-none shadow-lg hover:shadow-2xl transition-all duration-300 h-full group-hover:-translate-y-1">
@@ -144,7 +168,7 @@ export default function ServicePage() {
         <section className="bg-muted/50 py-16 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center mb-16">
-              <h2 className="font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl">Our AI/ML Development Process</h2>
+              <h2 className="font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl">Our AI Development Process</h2>
               <p className="mt-4 text-lg text-muted-foreground">A structured, research-grade workflow from problem definition to model delivery with full knowledge transfer.</p>
             </div>
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
@@ -165,8 +189,8 @@ export default function ServicePage() {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
               <div>
-                <h2 className="font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl">Why Choose Our AI/ML Service?</h2>
-                <p className="mt-4 text-lg text-muted-foreground">We deliver research-grade AI solutions with complete reproducibility and full documentation.</p>
+                <h2 className="font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl">Why Choose Our AI Solutions?</h2>
+                <p className="mt-4 text-lg text-muted-foreground">We deliver production-ready, research-grade AI systems across multiple domains with complete reproducibility and documentation.</p>
                 <ul className="mt-8 grid gap-3 sm:grid-cols-2">
                   {benefits.map((b, i) => (
                     <li key={i} className="flex items-start gap-2">
@@ -178,19 +202,20 @@ export default function ServicePage() {
               </div>
               <Card>
                 <CardContent className="p-8">
-                  <h3 className="text-xl font-semibold text-foreground">Get a Free AI/ML Project Estimate</h3>
-                  <p className="mt-2 text-muted-foreground">Share your AI/ML requirements and get a detailed estimate.</p>
+                  <h3 className="text-xl font-semibold text-foreground">Get a Free AI Project Estimate</h3>
+                  <p className="mt-2 text-muted-foreground">Share your requirements and receive a detailed proposal within 24 hours.</p>
                   <form className="mt-6 space-y-4">
                     <input type="text" placeholder="Your Name" className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary" />
                     <input type="email" placeholder="Email Address" className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary" />
                     <input type="tel" placeholder="Phone Number" className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary" />
                     <select className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary">
-                      <option value="">Select AI/ML Area</option>
-                      <option value="ml-development">Machine Learning Model Development</option>
-                      <option value="deep-learning">Deep Learning & Neural Networks</option>
-                      <option value="predictive">Predictive Modeling & Forecasting</option>
-                      <option value="optimization">Model Evaluation & Optimization</option>
-                      <option value="tensorflow">TensorFlow / PyTorch</option>
+                      <option value="">Select AI Specialization</option>
+                      <option value="computer-vision">Computer Vision</option>
+                      <option value="nlp">Natural Language Processing (NLP)</option>
+                      <option value="image-processing">Image Processing</option>
+                      <option value="deep-learning">Deep Learning</option>
+                      <option value="healthcare-ai">Healthcare AI & Biomedical</option>
+                      <option value="cybersecurity">Cybersecurity & Fraud Detection</option>
                       <option value="other">Other</option>
                     </select>
                     <Button className="w-full" size="lg">Get Free Consultation</Button>
@@ -203,8 +228,8 @@ export default function ServicePage() {
 
         <section className="bg-primary py-16">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="font-serif text-3xl font-bold text-black sm:text-4xl">Need AI & Machine Learning Support?</h2>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-primary-foreground/90">From classical ML to cutting-edge deep learning — our AI experts turn ideas into research-grade models.</p>
+            <h2 className="font-serif text-3xl font-bold text-black sm:text-4xl">Ready to Build Your AI Solution?</h2>
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-primary-foreground/90">From Computer Vision and NLP to Healthcare AI and Cybersecurity : our experts deliver cutting-edge AI systems tailored to your needs.</p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Button size="lg" variant="secondary" asChild>
                 <Link href="/contact">Get Started</Link>

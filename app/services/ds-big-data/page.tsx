@@ -8,14 +8,14 @@ import { CheckCircle, Users, Clock, Shield, Award, Database, Search, Server, Bar
 
 export const metadata: Metadata = {
   title: "Data Science & Big Data | CogniCode",
-  description: "Expert Data Science and Big Data research support — data cleaning, Exploratory Data Analysis (EDA), Big Data Analytics with Spark/Hadoop, and interactive dashboards using Python, Tableau, Power BI for PhD and industry projects.",
+  description: "Expert Data Science and Big Data research support : data cleaning, Exploratory Data Analysis (EDA), Big Data Analytics with Spark/Hadoop, and interactive dashboards using Python, Tableau, Power BI for PhD and industry projects.",
 };
 
 const features = [
   {
     icon: Database,
     title: "Data Cleaning & Preprocessing",
-    description: "Comprehensive data wrangling — handling missing values, outliers, duplicates, normalization, feature scaling, encoding, and pipeline automation using Pandas, NumPy, and PySpark.",
+    description: "Comprehensive data wrangling : handling missing values, outliers, duplicates, normalization, feature scaling, encoding, and pipeline automation using Pandas, NumPy, and PySpark.",
     href: "/services/ds-big-data/data-cleaning-preprocessing"
   },
   {
@@ -87,7 +87,7 @@ export default function ServicePage() {
                   Data Science & Big Data Research Support
                 </h1>
                 <p className="mt-6 text-lg leading-8 text-muted-foreground">
-                  From raw data to actionable insights — expert data cleaning, EDA, big data analytics, and stunning interactive dashboards for PhD research and industry applications.
+                  From raw data to actionable insights : expert data cleaning, EDA, big data analytics, and stunning interactive dashboards for PhD research and industry applications.
                 </p>
                 <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                   <Button size="lg" asChild>
@@ -270,7 +270,7 @@ export default function ServicePage() {
               Need Expert Data Science & Big Data Support?
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-primary-foreground/90">
-              From raw data to interactive dashboards — our experts turn complex datasets into powerful insights.
+              From raw data to interactive dashboards : our experts turn complex datasets into powerful insights.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Button size="lg" variant="secondary" asChild>

@@ -306,28 +306,28 @@ Our Mission: To empower scholars worldwide by providing expert academic writing 
   // ==================== AI & MACHINE LEARNING ====================
   {
     title: "AI & Machine Learning Research Support",
-    description: "Expert AI and ML research support — model development, deep learning, neural networks, predictive modeling, and optimization.",
+    description: "Expert AI and ML research support : model development, deep learning, neural networks, predictive modeling, and optimization.",
     href: "/services/ai-ml",
     keywords: ["ai", "ml", "machine learning", "artificial intelligence", "deep learning", "neural networks"],
     content: `AI & Machine Learning Research Support. From classical ML algorithms to state-of-the-art deep learning architectures, our AI experts turn your research ideas into production-grade, reproducible models with measurable impact. Services include ML Model Development, Deep Learning & Neural Networks, Predictive Modeling & Forecasting, and Model Evaluation & Optimization for PhD scholars and industry researchers.`,
   },
   {
     title: "Machine Learning Model Development",
-    description: "End-to-end custom ML model development for PhD research — supervised, unsupervised, and reinforcement learning.",
+    description: "End-to-end custom ML model development for PhD research : supervised, unsupervised, and reinforcement learning.",
     href: "/services/ai-ml/ml-model",
     keywords: ["ml model", "machine learning model", "supervised learning", "unsupervised learning", "reinforcement learning", "scikit-learn", "xgboost"],
     content: `Custom Machine Learning Models for PhD Research. End-to-end ML model development covering supervised, unsupervised, and reinforcement learning with full reproducibility, documentation, and publication-ready deliverables. Includes feature engineering, model selection, training, validation, hyperparameter tuning, and academic-quality reporting.`,
   },
   {
     title: "Deep Learning & Neural Networks",
-    description: "Advanced Deep Learning and Neural Networks — CNNs, RNNs, LSTMs, GANs, and Transformers for PhD research.",
+    description: "Advanced Deep Learning and Neural Networks : CNNs, RNNs, LSTMs, GANs, and Transformers for PhD research.",
     href: "/services/ai-ml/dl-neural-network",
     keywords: ["deep learning", "neural networks", "cnn", "rnn", "lstm", "gan", "transformer", "tensorflow", "pytorch", "keras"],
     content: `Advanced Deep Learning and Neural Networks. Expert Deep Learning and Neural Network development for PhD research. Build CNNs, RNNs, LSTMs, GANs, and Transformer architectures with TensorFlow, PyTorch and Keras. Fully reproducible and publication-ready models with rigorous training pipelines, transfer learning, and explainable outputs.`,
   },
   {
     title: "Predictive Modeling & Forecasting",
-    description: "Predictive modeling and time-series forecasting — ARIMA, Prophet, LSTM, XGBoost, and Transformer-based forecasting.",
+    description: "Predictive modeling and time-series forecasting : ARIMA, Prophet, LSTM, XGBoost, and Transformer-based forecasting.",
     href: "/services/ai-ml/predict-modelling-forecast",
     keywords: ["predictive modeling", "forecasting", "time series", "arima", "prophet", "lstm forecasting", "xgboost"],
     content: `Predictive Modeling & Forecasting. Expert predictive modeling and time-series forecasting for PhD research using ARIMA, Prophet, LSTM, XGBoost, and Transformer-based forecasting models. Includes statistical validation, residual diagnostics, confidence intervals, and publication-ready forecast results with full reproducibility.`,
@@ -343,7 +343,7 @@ Our Mission: To empower scholars worldwide by providing expert academic writing 
   // ==================== COMPUTER VISION ====================
   {
     title: "Computer Vision Research Support",
-    description: "Expert Computer Vision research — image processing, object detection, medical imaging, and video analytics.",
+    description: "Expert Computer Vision research : image processing, object detection, medical imaging, and video analytics.",
     href: "/services/computer-vision",
     keywords: ["computer vision", "cv", "image", "vision", "opencv", "vision transformer"],
     content: `Computer Vision Research Support. From classical image processing to cutting-edge Vision Transformers, our CV experts help you build, train, and deploy vision systems that deliver research-grade accuracy and reproducibility. Services include Image Processing & Analysis, Object Detection & Recognition, Medical Image Analysis, and Video Analytics.`,
@@ -401,10 +401,10 @@ Our Mission: To empower scholars worldwide by providing expert academic writing 
   },
   {
     title: "Big Data Analytics",
-    description: "Scalable processing with Apache Spark, Hadoop, Hive, Kafka — real-time and batch analytics with distributed computing.",
+    description: "Scalable processing with Apache Spark, Hadoop, Hive, Kafka : real-time and batch analytics with distributed computing.",
     href: "/services/ds-big-data/big-data-analytics",
     keywords: ["big data", "apache spark", "hadoop", "hive", "kafka", "distributed computing", "real-time analytics", "batch processing"],
-    content: `Big Data Analytics. Expert Big Data Analytics for PhD research and large-scale projects. Scalable processing with Apache Spark, Hadoop, Hive, Kafka — real-time and batch analytics with distributed computing. Cluster deployment, MapReduce paradigms, streaming analytics, and petabyte-scale data handling.`,
+    content: `Big Data Analytics. Expert Big Data Analytics for PhD research and large-scale projects. Scalable processing with Apache Spark, Hadoop, Hive, Kafka : real-time and batch analytics with distributed computing. Cluster deployment, MapReduce paradigms, streaming analytics, and petabyte-scale data handling.`,
   },
   {
     title: "Data Visualization & Dashboarding",
@@ -454,24 +454,24 @@ Our Mission: To empower scholars worldwide by providing expert academic writing 
   // ==================== STATISTICAL ANALYSIS ====================
   {
     title: "Statistical Analysis & Data Analytics Research Support",
-    description: "Statistical analysis using SPSS, R, Python — hypothesis testing, regression, multivariate & factor analysis.",
+    description: "Statistical analysis using SPSS, R, Python : hypothesis testing, regression, multivariate & factor analysis.",
     href: "/services/statistical-analysis-data-analytics",
     keywords: ["statistical analysis", "data analytics", "spss", "r", "python", "statistics", "phd statistics"],
-    content: `Statistical Analysis & Data Analytics Research Support. Expert statistical analysis and data analytics support using SPSS, R, Python — covering hypothesis testing, regression, multivariate & factor analysis for PhD research and academic publications. Includes SPSS/R/Python-based analysis, hypothesis testing, regression & correlation, and multivariate & factor analysis.`,
+    content: `Statistical Analysis & Data Analytics Research Support. Expert statistical analysis and data analytics support using SPSS, R, Python : covering hypothesis testing, regression, multivariate & factor analysis for PhD research and academic publications. Includes SPSS/R/Python-based analysis, hypothesis testing, regression & correlation, and multivariate & factor analysis.`,
   },
   {
     title: "SPSS / R / Python-Based Analysis",
-    description: "End-to-end statistical analysis using SPSS, R, and Python — data cleaning, scripting, and reproducible pipelines.",
+    description: "End-to-end statistical analysis using SPSS, R, and Python : data cleaning, scripting, and reproducible pipelines.",
     href: "/services/statistical-analysis-data-analytics/spss-r-python",
     keywords: ["spss analysis", "r programming", "python statistics", "statistical software", "scripting", "automation", "reproducible research"],
     content: `SPSS, R & Python Statistical Analysis. Expert end-to-end statistical analysis using SPSS, R, and Python including data cleaning, visualization, scripting, automation, and reproducible research pipelines for PhD thesis and academic publications. Code documentation, syntax files, and journal-ready outputs.`,
   },
   {
     title: "Hypothesis Testing",
-    description: "Parametric and non-parametric tests — t-tests, ANOVA, chi-square, Mann-Whitney, and Wilcoxon with full interpretation.",
+    description: "Parametric and non-parametric tests : t-tests, ANOVA, chi-square, Mann-Whitney, and Wilcoxon with full interpretation.",
     href: "/services/statistical-analysis-data-analytics/hypothesis-testing",
     keywords: ["hypothesis testing", "t-test", "anova", "chi-square", "mann-whitney", "wilcoxon", "p-value", "effect size", "non-parametric"],
-    content: `Hypothesis Testing. Expert hypothesis testing for PhD research covering parametric and non-parametric tests including t-tests, ANOVA, chi-square, Mann-Whitney, Wilcoxon, and more — with clear interpretation, p-values, effect sizes, and publication-ready reports. Assumption checking, post-hoc analysis, and power calculations included.`,
+    content: `Hypothesis Testing. Expert hypothesis testing for PhD research covering parametric and non-parametric tests including t-tests, ANOVA, chi-square, Mann-Whitney, Wilcoxon, and more : with clear interpretation, p-values, effect sizes, and publication-ready reports. Assumption checking, post-hoc analysis, and power calculations included.`,
   },
   {
     title: "Regression & Correlation Analysis",
@@ -494,7 +494,7 @@ Our Mission: To empower scholars worldwide by providing expert academic writing 
     description: "Implementation and training in Python, R, MATLAB, SPSS, STATA, TensorFlow, PyTorch, Tableau, and Power BI.",
     href: "/services/tools-technologies",
     keywords: ["tools", "technologies", "programming", "software", "training", "research tools"],
-    content: `Tools & Technologies Research Support. Expert implementation and training in Python, R, MATLAB, SPSS, STATA, TensorFlow, PyTorch, Tableau, and Power BI — professional tool mastery for data science, statistical analysis, machine learning, and research projects. One-on-one mentoring and hands-on project support included.`,
+    content: `Tools & Technologies Research Support. Expert implementation and training in Python, R, MATLAB, SPSS, STATA, TensorFlow, PyTorch, Tableau, and Power BI : professional tool mastery for data science, statistical analysis, machine learning, and research projects. One-on-one mentoring and hands-on project support included.`,
   },
   {
     title: "Python, R & MATLAB",
@@ -515,11 +515,11 @@ Our Mission: To empower scholars worldwide by providing expert academic writing 
     description: "Interactive data visualization and BI dashboards using Tableau and Power BI for publication-ready insights.",
     href: "/services/tools-technologies/tableau-power-bi",
     keywords: ["tableau", "power bi", "business intelligence", "dashboards", "data visualization", "bi reports", "interactive analytics"],
-    content: `Tableau & Power BI. Expert interactive data visualization and business intelligence dashboard development using Tableau and Power BI — creating publication-ready reports, real-time analytics, and compelling data storytelling for PhD research. DAX formulas, calculated fields, and live data connections included.`,
+    content: `Tableau & Power BI. Expert interactive data visualization and business intelligence dashboard development using Tableau and Power BI : creating publication-ready reports, real-time analytics, and compelling data storytelling for PhD research. DAX formulas, calculated fields, and live data connections included.`,
   },
   {
     title: "TensorFlow & PyTorch",
-    description: "Deep learning model development with TensorFlow and PyTorch — custom architectures, training, and deployment.",
+    description: "Deep learning model development with TensorFlow and PyTorch : custom architectures, training, and deployment.",
     href: "/services/tools-technologies/tensorflow-pytorch",
     keywords: ["tensorflow", "pytorch", "deep learning frameworks", "transfer learning", "model deployment", "training pipelines", "keras"],
     content: `TensorFlow & PyTorch. Expert deep learning and machine learning model development with TensorFlow and PyTorch. Custom architectures, training pipelines, transfer learning, model optimization, and deployment for PhD research. ONNX export, GPU acceleration, and distributed training supported.`,

@@ -85,7 +85,7 @@ export default function DataCleaningPreprocessingPage() {
                   Data Cleaning &amp;<br />Preprocessing
                 </h1>
                 <p className="mt-6 text-xl text-muted-foreground max-w-lg">
-                  Professional data wrangling and preprocessing services — handling missing values, outliers, feature engineering, and building automated pipelines for reliable downstream analysis.
+                  Professional data wrangling and preprocessing services: handling missing values, outliers, feature engineering, and building automated pipelines for reliable downstream analysis.
                 </p>
                 <div className="mt-10 flex flex-wrap gap-4">
                   <Button size="lg" asChild>
@@ -243,7 +243,7 @@ export default function DataCleaningPreprocessingPage() {
               <Card className="bg-white text-foreground">
                 <CardContent className="p-8">
                   <h3 className="text-2xl font-semibold mb-2">Get Your Data Cleaning Proposal</h3>
-                  <p className="text-muted-foreground mb-6">Share your dataset and challenges — receive a detailed technical proposal within 24 hours.</p>
+                  <p className="text-muted-foreground mb-6">Share your dataset and challenges : receive a detailed technical proposal within 24 hours.</p>
                   <form className="space-y-4">
                     <input type="text" placeholder="Your Name" className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
                     <input type="email" placeholder="University Email" className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
@@ -260,7 +260,7 @@ export default function DataCleaningPreprocessingPage() {
         <section className="py-20 border-t">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-4xl font-bold">Ready for Clean, Analysis-Ready Data?</h2>
-            <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From messy raw data to production-ready datasets — we deliver high-quality, reproducible preprocessing solutions.</p>
+            <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From messy raw data to production-ready datasets : we deliver high-quality, reproducible preprocessing solutions.</p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
                 <Link href="/contact">Start Your Data Cleaning Project</Link>

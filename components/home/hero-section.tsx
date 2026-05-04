@@ -297,7 +297,7 @@ function GoogleG({ size = 16 }: { size?: number }) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// Review card — one place that renders a review.
+// Review card : one place that renders a review.
 // reviewIndex = its real index in REVIEWS (so avatar is correct).
 // ─────────────────────────────────────────────────────────────
 function ReviewCard({

@@ -4,70 +4,90 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle, Users, Clock, Shield, Award, MessageSquareHeart, Languages, TrendingUp, Smile, Eye, GitBranch, FileText, Sparkles } from "lucide-react";
+import { CheckCircle, Users, Clock, Shield, Award, Layers, Target, TrendingUp, Zap, Sparkles, GitBranch, FileText, Eye } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Text Mining & Sentiment Analysis | CogniCode",
-  description: "Expert text mining and sentiment analysis for PhD research. Advanced sentiment scoring, aspect-based analysis, emotion detection, and opinion mining using BERT, RoBERTa, VADER, and custom NLP pipelines.",
+  title: "AMOS Analysis Services | Analysis of Moment Structures (SEM)",
+  description: "Expert AMOS Structural Equation Modeling (SEM) for PhD research. Path analysis, CFA, mediation, moderation, model fit evaluation, and publication-ready diagrams.",
 };
 
 const techniques = [
-  { title: "Sentiment Analysis", desc: "Binary, multi-class, and fine-grained sentiment classification with VADER, TextBlob, and transformer-based models" },
-  { title: "Aspect-Based Sentiment Analysis", desc: "Identify specific aspects and their associated sentiment in reviews, feedback, and research documents" },
-  { title: "Emotion Detection & Opinion Mining", desc: "Detect joy, anger, sadness, fear, and nuanced opinions from large text corpora" },
-  { title: "Advanced Text Mining", desc: "Keyword extraction, topic modeling, named entity recognition (NER), and semantic pattern discovery" },
+  { 
+    title: "Structural Equation Modeling (SEM)", 
+    desc: "Comprehensive SEM model development, estimation, and validation using maximum likelihood and other estimation methods." 
+  },
+  { 
+    title: "Confirmatory Factor Analysis (CFA)", 
+    desc: "Validate measurement models, assess construct validity, reliability (CR, AVE), and discriminant validity." 
+  },
+  { 
+    title: "Path Analysis & Causal Modeling", 
+    desc: "Test complex theoretical models with direct, indirect, and total effects." 
+  },
+  { 
+    title: "Mediation & Moderation Analysis", 
+    desc: "Advanced mediation, moderation, and moderated mediation analysis with bootstrapping." 
+  },
+  { 
+    title: "Multi-Group Analysis (MGA)", 
+    desc: "Compare models across different groups (gender, age, country, etc.) for invariance testing." 
+  },
+  { 
+    title: "Model Fit & Modification", 
+    desc: "Rigorous model fit assessment (CMIN/DF, CFI, TLI, RMSEA, SRMR) and theoretically justified modifications." 
+  },
 ];
 
 const deliverables = [
-  "Fully reproducible Jupyter notebooks and Python scripts",
-  "Trained sentiment and text mining models with inference pipelines",
-  "Comprehensive sentiment reports with visualizations and statistical analysis",
-  "Aspect-based and emotion detection results with confidence scores",
-  "Detailed methodology chapter ready for thesis and journal submission",
-  "Git repository with clean, version-controlled, and well-documented code",
-  "Publication-ready charts, word clouds, confusion matrices, and tables",
-  "One-to-one training session + 6 months of free model improvements",
+  "Complete AMOS project file (.amw) with all models",
+  "High-quality model diagrams (publication-ready)",
+  "Detailed output with all fit indices and parameter estimates",
+  "Bootstrapping results and confidence intervals",
+  "Comprehensive interpretation report with APA formatting",
+  "Syntax and Excel export of results",
+  "Power analysis and sample size justification (if required)",
+  "One-to-one Zoom explanation session + 6 months support",
 ];
 
 const steps = [
   {
     step: "01",
-    title: "Corpus Analysis & Preprocessing",
-    desc: "Clean, tokenize, lemmatize, and prepare text data with domain-specific handling for multilingual and noisy content.",
-    icon: Languages,
+    title: "Model Specification",
+    desc: "Translate your theoretical framework into AMOS measurement and structural models.",
+    icon: Target,
   },
   {
     step: "02",
-    title: "Feature Engineering & Modeling",
-    desc: "Build classical (VADER, TF-IDF) and modern transformer-based (BERT, RoBERTa) models for sentiment and text mining.",
-    icon: Sparkles,
+    title: "Data Preparation",
+    desc: "Import data, handle missing values, check normality, and prepare covariance matrix.",
+    icon: Eye,
   },
   {
     step: "03",
-    title: "Aspect & Emotion Analysis",
-    desc: "Implement aspect-based sentiment analysis and multi-label emotion detection with rigorous validation.",
-    icon: Smile,
+    title: "Model Estimation & Testing",
+    desc: "Run CFA, SEM, mediation, moderation with multiple estimation methods.",
+    icon: Layers,
   },
   {
     step: "04",
-    title: "Evaluation & Academic Delivery",
-    desc: "Benchmark with F1-score, accuracy, ROUGE, and deliver complete documentation for thesis and publication.",
-    icon: Eye,
+    title: "Results & Reporting",
+    desc: "Deliver publication-ready diagrams, tables, interpretation, and methodology.",
+    icon: Zap,
   },
 ];
 
 const benefits = [
-  "PhD-level NLP researchers with publications in ACL, EMNLP, and COLING",
-  "Expertise in Hugging Face, spaCy, NLTK, TextBlob, and LangChain",
-  "Multilingual and domain-specific sentiment analysis",
-  "Custom dataset annotation and augmentation support",
-  "Reproducible experiments with full experiment tracking",
-  "Confidentiality and academic integrity guaranteed",
-  "Free revisions until your thesis committee approves",
-  "Lifetime access to models and future improvements",
+  "PhD-level experts with extensive AMOS & SEM experience",
+  "Specialized in social sciences, management, psychology & education research",
+  "Publication in high-impact SSCI/Scopus journals",
+  "Clear visual diagrams using AMOS Graphics",
+  "Advanced techniques: Bootstrapping, Bayesian SEM",
+  "APA 7th edition & journal-specific formatting",
+  "Defense-ready explanations and viva support",
+  "Free revisions until supervisor/journal approval",
 ];
 
-export default function TextMiningSentimentPage() {
+export default function AMOSAnalysisPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
@@ -78,42 +98,57 @@ export default function TextMiningSentimentPage() {
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div>
                 <div className="inline-flex items-center gap-2 rounded-full bg-violet-600/10 px-4 py-2 text-sm font-medium text-violet-700 mb-6">
-                  <MessageSquareHeart className="h-4 w-4" />
-                  TEXT MINING &amp; SENTIMENT ANALYSIS
+                  <Layers className="h-4 w-4" />
+                  AMOS ANALYSIS
                 </div>
                 <h1 className="text-5xl md:text-6xl font-bold tracking-tighter leading-none">
-                  Text Mining &amp;<br />Sentiment Analysis
+                  Analysis of Moment<br />Structures (AMOS)
                 </h1>
                 <p className="mt-6 text-xl text-muted-foreground max-w-lg">
-                  Extract deep insights from text using advanced sentiment analysis, aspect-based mining, emotion detection, and opinion mining — fully reproducible and publication-ready.
+                  Professional Structural Equation Modeling using AMOS. 
+                  Expert support for CFA, SEM, mediation, moderation, and complex path models for theses and publications.
                 </p>
                 <div className="mt-10 flex flex-wrap gap-4">
                   <Button size="lg" asChild>
-                    <Link href="/contact">Start Text Mining Project</Link>
+                    <Link href="/contact">Start AMOS Project</Link>
                   </Button>
                   <Button size="lg" variant="outline" asChild>
-                    <Link href="/samples">View Sentiment Analysis Samples</Link>
+                    <Link href="/samples">View AMOS Samples</Link>
                   </Button>
                 </div>
               </div>
 
+              {/* Unique Hero Card */}
               <div className="relative">
-                <Card className="bg-gradient-to-br from-violet-600 to-purple-600 text-white shadow-2xl border-0">
+                <Card className="bg-gradient-to-br from-violet-700 via-purple-700 to-fuchsia-700 text-white shadow-2xl border-0 overflow-hidden">
                   <CardContent className="p-8">
                     <div className="flex justify-between items-start mb-8">
-                      <TrendingUp className="h-12 w-12" />
-                      <div className="text-right">
-                        <p className="text-5xl font-bold">92%</p>
-                        <p className="text-sm opacity-75">Sentiment Accuracy</p>
+                      <div className="flex items-center gap-3">
+                        <div className="p-3 bg-white/10 rounded-2xl">
+                          <Target className="h-10 w-10" />
+                        </div>
+                        <div>
+                          <p className="text-sm opacity-75">Model Fit</p>
+                          <p className="text-5xl font-bold tracking-tighter">Excellent</p>
+                        </div>
                       </div>
                     </div>
-                    <div className="font-mono text-xs bg-black/30 p-5 rounded-2xl mb-6">
-                      <pre className="text-violet-200">
-{`sentiment = pipeline("sentiment-analysis")
-result = sentiment("The paper presents groundbreaking results!")`}
+
+                    <div className="bg-black/30 rounded-2xl p-6 mb-6 font-mono text-sm">
+                      <div className="text-fuchsia-300 mb-2">AMOS Model Fit</div>
+                      <pre className="text-white/90 text-xs leading-relaxed overflow-auto">
+{`CMIN/DF = 1.87
+CFI = 0.96
+TLI = 0.95
+RMSEA = 0.042
+SRMR = 0.031`}
                       </pre>
                     </div>
-                    <p className="text-sm opacity-90">BERT • RoBERTa • VADER • Ready for thesis &amp; publication</p>
+
+                    <div className="flex items-center justify-between text-sm opacity-90">
+                      <div>SEM • CFA • Mediation • Multi-Group</div>
+                      <div className="text-fuchsia-300 font-medium">Publication Ready</div>
+                    </div>
                   </CardContent>
                 </Card>
               </div>
@@ -125,10 +160,10 @@ result = sentiment("The paper presents groundbreaking results!")`}
         <section className="py-16 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="font-serif text-4xl font-bold">Text Mining &amp; Sentiment Techniques We Master</h2>
-              <p className="mt-3 text-muted-foreground">From classical methods to state-of-the-art transformers</p>
+              <h2 className="font-serif text-4xl font-bold">AMOS Services We Provide</h2>
+              <p className="mt-3 text-muted-foreground">Advanced Structural Equation Modeling solutions</p>
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {techniques.map((tech, i) => (
                 <Card key={i} className="hover:shadow-xl transition-all duration-300">
                   <CardContent className="p-8">
@@ -145,8 +180,8 @@ result = sentiment("The paper presents groundbreaking results!")`}
         <section className="py-16 md:py-24 bg-muted/50">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center mb-16">
-              <h2 className="font-serif text-4xl font-bold">Our Text Mining &amp; Sentiment Workflow</h2>
-              <p className="mt-4 text-lg text-muted-foreground">Academic-grade pipeline for reproducible NLP research</p>
+              <h2 className="font-serif text-4xl font-bold">Our AMOS Analysis Workflow</h2>
+              <p className="mt-4 text-lg text-muted-foreground">Rigorous, transparent, and academically robust process</p>
             </div>
             <div className="grid md:grid-cols-4 gap-8">
               {steps.map((s, i) => (
@@ -169,7 +204,7 @@ result = sentiment("The paper presents groundbreaking results!")`}
             <div className="grid lg:grid-cols-12 gap-16 items-center">
               <div className="lg:col-span-5">
                 <h2 className="font-serif text-4xl font-bold">Everything You Receive</h2>
-                <p className="mt-4 text-lg text-muted-foreground">Complete academic-ready package for thesis and publication.</p>
+                <p className="mt-4 text-lg text-muted-foreground">Complete, submission-ready AMOS analysis package.</p>
                 <ul className="mt-10 space-y-6">
                   {deliverables.map((item, i) => (
                     <li key={i} className="flex gap-4">
@@ -187,15 +222,15 @@ result = sentiment("The paper presents groundbreaking results!")`}
                         <div className="flex gap-4">
                           <GitBranch className="h-6 w-6 text-primary mt-1" />
                           <div>
-                            <p className="font-semibold">Reproducible Pipeline</p>
-                            <p className="text-sm text-muted-foreground">Full code + experiment tracking</p>
+                            <p className="font-semibold">AMOS Project Files</p>
+                            <p className="text-sm text-muted-foreground">.amw + diagrams</p>
                           </div>
                         </div>
                         <div className="flex gap-4">
                           <FileText className="h-6 w-6 text-primary mt-1" />
                           <div>
-                            <p className="font-semibold">Thesis-Ready Report</p>
-                            <p className="text-sm text-muted-foreground">Methodology + results chapter</p>
+                            <p className="font-semibold">APA Formatted Report</p>
+                            <p className="text-sm text-muted-foreground">Full interpretation</p>
                           </div>
                         </div>
                       </div>
@@ -203,15 +238,15 @@ result = sentiment("The paper presents groundbreaking results!")`}
                         <div className="flex gap-4">
                           <Eye className="h-6 w-6 text-primary mt-1" />
                           <div>
-                            <p className="font-semibold">Sentiment Visualizations</p>
-                            <p className="text-sm text-muted-foreground">Word clouds, sentiment timelines &amp; heatmaps</p>
+                            <p className="font-semibold">High-Quality Diagrams</p>
+                            <p className="text-sm text-muted-foreground">Publication standard</p>
                           </div>
                         </div>
                         <div className="flex gap-4">
                           <Award className="h-6 w-6 text-primary mt-1" />
                           <div>
-                            <p className="font-semibold">Publication Support</p>
-                            <p className="text-sm text-muted-foreground">F1-scores, confusion matrices &amp; LaTeX figures</p>
+                            <p className="font-semibold">Model Fit Expert</p>
+                            <p className="text-sm text-muted-foreground">Bootstrapping included</p>
                           </div>
                         </div>
                       </div>
@@ -228,7 +263,7 @@ result = sentiment("The paper presents groundbreaking results!")`}
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-16">
               <div>
-                <h2 className="text-4xl font-bold">Why Researchers Trust Us for Text Mining</h2>
+                <h2 className="text-4xl font-bold">Why Researchers Trust Our AMOS Service</h2>
                 <ul className="mt-10 space-y-6">
                   {benefits.map((benefit, i) => (
                     <li key={i} className="flex gap-4">
@@ -240,12 +275,12 @@ result = sentiment("The paper presents groundbreaking results!")`}
               </div>
               <Card className="bg-white text-foreground">
                 <CardContent className="p-8">
-                  <h3 className="text-2xl font-semibold mb-2">Get Your Text Mining Proposal</h3>
-                  <p className="text-muted-foreground mb-6">Share your text corpus and research goals — receive a detailed technical proposal within 24 hours.</p>
+                  <h3 className="text-2xl font-semibold mb-2">Get Your AMOS Analysis Proposal</h3>
+                  <p className="text-muted-foreground mb-6">Share your theoretical model and data : receive a detailed proposal within 24 hours.</p>
                   <form className="space-y-4">
                     <input type="text" placeholder="Your Name" className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
                     <input type="email" placeholder="University Email" className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
-                    <textarea placeholder="Describe your text mining or sentiment analysis requirements" rows={4} className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
+                    <textarea placeholder="Describe your research model, variables, hypotheses, and specific AMOS requirements (CFA, SEM, mediation, etc.)" rows={4} className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
                     <Button className="w-full h-14 text-base" size="lg">Request Detailed Proposal</Button>
                   </form>
                 </CardContent>
@@ -257,14 +292,14 @@ result = sentiment("The paper presents groundbreaking results!")`}
         {/* Final CTA */}
         <section className="py-20 border-t">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-4xl font-bold">Ready to Unlock Insights from Text?</h2>
-            <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From sentiment analysis to deep opinion mining — we turn unstructured text into publication-ready insights.</p>
+            <h2 className="text-4xl font-bold">Ready for Professional AMOS Analysis?</h2>
+            <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">Get expert Structural Equation Modeling support with publication-quality results and diagrams.</p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
-                <Link href="/contact">Start Your Text Mining Project</Link>
+                <Link href="/contact">Start Your AMOS Project</Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
-                <Link href="/services/data-driven/natural-language-processing">Back to NLP Services</Link>
+                <Link href="/services/statistical-analysis-data-analytics">Back to Statistical Services</Link>
               </Button>
             </div>
           </div>

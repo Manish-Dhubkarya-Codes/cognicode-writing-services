@@ -26,7 +26,7 @@ const plans = [
     name: "Basic",
     subtitle: "Free Starter Consultation",
     description:
-      "Get started at no cost. Discuss your project, explore topics, and understand how we can help — completely free.",
+      "Get started at no cost. Discuss your project, explore topics, and understand how we can help : completely free.",
     price: "Free",
     priceNote: "no commitment",
     featured: false,
@@ -140,7 +140,7 @@ const faqs = [
   {
     question: "Is the Basic plan really free?",
     answer:
-      "Yes, completely free with no obligation. The Basic plan is our way of helping you get started — we'll discuss your project, help you shape your topic, and recommend the best path forward. You only pay if you decide to move ahead with Standard or Premium.",
+      "Yes, completely free with no obligation. The Basic plan is our way of helping you get started : we'll discuss your project, help you shape your topic, and recommend the best path forward. You only pay if you decide to move ahead with Standard or Premium.",
   },
   {
     question: "How is the pricing determined?",
