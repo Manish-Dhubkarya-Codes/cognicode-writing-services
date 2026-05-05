@@ -1,4 +1,5 @@
-import { Metadata } from "next";
+'use client';
+
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
@@ -18,21 +19,44 @@ import {
   Globe,
 } from "lucide-react";
 
-import Thesis from "@/public/Services/Thesis.png"
-import Research_Paper from "@/public/Services/Research_Paper.png"
-import Dissertation from "@/public/Services/Dissertation.png"
-import Litrature from "@/public/Services/Litrature.png"
-import Synopsis from "@/public/Services/Synopsis.png"
-import DataAnalysis from "@/public/Services/DataAnalysis.png"
-import PlagRemoval from "@/public/Services/PlagRemoval.png"
-import Editing from "@/public/Services/Editing.png"
-import Image from "next/image";
+import Thesis from "@/public/Services/Thesis.png";
+import Research_Paper from "@/public/Services/Research_Paper.png";
+import Dissertation from "@/public/Services/Dissertation.png";
+import Litrature from "@/public/Services/Litrature.png";
+import Synopsis from "@/public/Services/Synopsis.png";
+import DataAnalysis from "@/public/Services/DataAnalysis.png";
+import PlagRemoval from "@/public/Services/PlagRemoval.png";
+import Editing from "@/public/Services/Editing.png";
 
-export const metadata: Metadata = {
-  title: "Services | CogniCode",
-  description:
-    "Explore our comprehensive academic writing services including thesis writing, research papers, data analysis, and more.",
-};
+import Image from "next/image";
+import { useState } from "react";
+
+const Shimmer = () => (
+  <div className="absolute inset-0 overflow-hidden bg-muted">
+    <div
+      className="absolute inset-0"
+      style={{
+        backgroundImage:
+          "linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(255,255,255,0.15) 20%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0.15) 80%, rgba(0,0,0,0) 100%)",
+        backgroundSize: "200% 100%",
+        animation: "shimmer 1.2s ease-in-out infinite",
+      }}
+    />
+
+    <style>
+      {`
+        @keyframes shimmer {
+          0% {
+            background-position: -200% 0;
+          }
+          100% {
+            background-position: 200% 0;
+          }
+        }
+      `}
+    </style>
+  </div>
+);
 
 const mainServices = [
   {
@@ -189,11 +213,16 @@ const additionalServices = [
 ];
 
 export default function ServicesPage() {
+  const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
+
+  const handleImageLoad = (id: string) => {
+    setLoadedImages((prev) => ({ ...prev, [id]: true }));
+  };
+
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1 mt-17">
-        {/* Hero Section */}
         <section className="bg-foreground py-24 sm:py-32">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
@@ -209,7 +238,6 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        {/* Main Services */}
         <section className="bg-background py-24 sm:py-32">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="space-y-24">
@@ -252,19 +280,27 @@ export default function ServicesPage() {
                       </Button>
                     </div>
                   </div>
-                  <div className="flex-1">
-                    <div className="flex aspect-4/4 items-center justify-center rounded-lg bg-primary overflow-hidden">
-  {service.image ? (
-    <Image
-      draggable={false}
-      src={service.image}
-      alt={service.name}
-      className="h-full w-full select-none object-contain"
-    />
-  ) : (
-    <service.icon className="h-6 w-6 text-primary-foreground" />
-  )}
-</div>
+
+                  <div className="flex-1 relative">
+                    <div className="aspect-4/4 rounded-lg bg-muted overflow-hidden relative">
+                      {!loadedImages[service.id] && (
+                        <div className="absolute inset-0 bg-gradient-to-br from-muted via-muted/80 to-muted animate-pulse" />
+                      )}
+
+                      <Image
+                        draggable={false}
+                        src={service.image}
+                        alt={service.name}
+                        fill
+                        className={`h-full w-full select-none object-contain transition-opacity duration-700 ${
+                          loadedImages[service.id] ? "opacity-100" : "opacity-0"
+                        }`}
+                        onLoad={() => handleImageLoad(service.id)}
+                        priority={index === 0}
+                      />
+
+                      {!loadedImages[service.id] && <Shimmer />}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -272,7 +308,6 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        {/* Additional Services */}
         <section className="bg-muted py-24 sm:py-32">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
@@ -305,7 +340,6 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        {/* CTA */}
         <section className="bg-primary py-16 sm:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">

@@ -129,7 +129,14 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 }
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
+}
 
+.animate-shimmer {
+  animation: shimmer 1.5s infinite linear;
+}
 @layer base {
   * {
     @apply border-border outline-ring/50;

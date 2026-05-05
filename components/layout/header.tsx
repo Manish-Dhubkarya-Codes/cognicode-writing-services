@@ -139,10 +139,10 @@ export function Header() {
 
   return (
     <header className="fixed top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <nav className={`mx-auto flex max-w-7xl items-center justify-between px-4 ${searchOpen ? "py-[4px]" : "py-0"} sm:px-6 lg:px-8`}>
+      <nav className={`mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8`}>
         {/* Logo */}
         <div className="flex lg:flex-1">
-          <Link href="/" className="p-1.5 flex items-center gap-2">
+          <Link href="/" className="py-1 flex items-center gap-2">
             <Image
       src={CogniCodeLogo}
       alt="CogniCode Logo"
@@ -413,11 +413,11 @@ export function Header() {
                 {/* Sticky CTA */}
                 <div className="sticky bottom-0 z-10 shrink-0 border-t border-border/50 bg-background/95 px-4 py-6 sm:px-6 backdrop-blur-sm">
                   <Button
-                    className="w-full h-12 rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 text-sm font-semibold"
+                    className="w-full h-12 rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 text-black text-sm font-semibold"
                     asChild
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <Link href="/contact" className="flex bg-white items-center gap-2">
+                    <Link href="/contact" className="flex bg-white  items-center gap-2">
                       <Phone className="h-4 w-4" />
                       Get a Quote
                     </Link>
