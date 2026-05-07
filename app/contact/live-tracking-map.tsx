@@ -947,11 +947,55 @@ export default function LiveTrackingMap() {
             )}
 
             {trackingStatus === "arrived" && (
-              <div style={{ background: "#F0FDF4", border: "1.5px solid #86EFAC", borderRadius: 14, padding: "18px 20px", marginBottom: 14, textAlign: "center" }}>
-                <CheckCircle size={36} color="#16A34A" style={{ marginBottom: 8 }} />
-                <h3 style={{ margin: 0, fontSize: 17, fontWeight: 700, color: "#15803D" }}>You've Arrived!</h3>
-                <p style={{ margin: "4px 0 0", fontSize: 13, color: "#166534" }}>Welcome to CogniCode IT Solutions</p>
-              </div>
+             <div
+  style={{
+    background: "#F0FDF4",
+    border: "1px solid #BBF7D0",
+    borderRadius: 12,
+    padding: "10px 12px",
+    marginBottom: 14,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+
+    textAlign: "left",
+  }}
+>
+  <CheckCircle
+    size={20}
+    color="#16A34A"
+    style={{
+      flexShrink: 0,
+      display: "block",
+    }}
+  />
+
+  <div>
+    <h3
+      style={{
+        margin: 0,
+        fontSize: 14,
+        fontWeight: 600,
+        color: "#166534",
+        lineHeight: 1.1,
+      }}
+    >
+      You've Arrived
+    </h3>
+
+    <p
+      style={{
+        margin: "2px 0 0",
+        fontSize: 12,
+        color: "#4B5563",
+        lineHeight: 1.2,
+      }}
+    >
+      Welcome to CogniCode IT Solutions
+    </p>
+  </div>
+</div>
             )}
 
             <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 16 }}>
