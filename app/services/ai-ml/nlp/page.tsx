@@ -14,35 +14,43 @@ export const metadata: Metadata = {
 const techniques = [
   { 
     title: "Sentiment Analysis using Ensemble Methods", 
-    desc: "High-accuracy sentiment classification using ensemble models (BERT + LSTM + CNN) with robust performance on complex and noisy text." 
+    desc: "High-accuracy sentiment classification using ensemble models (BERT + LSTM + CNN) with robust performance on complex and noisy text.",
+    img: "/data-driven-services/ai-ml/nlp/sentiment-analysis.png", 
   },
   { 
     title: "Movie Review Summarization", 
-    desc: "Abstractive and extractive summarization of movie reviews with sentiment-aware key point extraction and opinion mining." 
+    desc: "Abstractive and extractive summarization of movie reviews with sentiment-aware key point extraction and opinion mining.",
+    img: "/data-driven-services/ai-ml/nlp/movie-review-summarization.png", 
   },
   { 
     title: "Answer Extraction from Web Forums", 
-    desc: "Intelligent question-answering system that extracts precise answers from forum threads, Reddit, and community discussions." 
+    desc: "Intelligent question-answering system that extracts precise answers from forum threads, Reddit, and community discussions.",
+    img: "/data-driven-services/ai-ml/nlp/answer-extraction.png", 
   },
   { 
     title: "Emotion Classification (Multimodal)", 
-    desc: "Multimodal emotion detection combining text, emojis, and contextual cues for more accurate emotion recognition." 
+    desc: "Multimodal emotion detection combining text, emojis, and contextual cues for more accurate emotion recognition.",
+    img: "/data-driven-services/ai-ml/nlp/emotion-classification.png", 
   },
   { 
     title: "Emotion Detection from Noisy Text", 
-    desc: "Robust emotion classification designed for informal, noisy, and social media text with spelling variations and slang." 
+    desc: "Robust emotion classification designed for informal, noisy, and social media text with spelling variations and slang.",
+    img: "/data-driven-services/ai-ml/nlp/emotion-detection-noisy-text.png", 
   },
   { 
     title: "Emotion Dynamics (Time-Series)", 
-    desc: "Temporal emotion analysis and emotion flow tracking across conversations, stories, or time-stamped text data." 
+    desc: "Temporal emotion analysis and emotion flow tracking across conversations, stories, or time-stamped text data.",
+    img: "/data-driven-services/ai-ml/nlp/emotion-dynamics-time-series.png", 
   },
   { 
     title: "Domain Adaptation for Emotion Detection", 
-    desc: "Transfer learning and domain adaptation techniques to adapt emotion models across different domains and cultures." 
+    desc: "Transfer learning and domain adaptation techniques to adapt emotion models across different domains and cultures.",
+    img: "/data-driven-services/ai-ml/nlp/domain-adaptation-emotion-detection.png", 
   },
   { 
     title: "Ethical Analysis of Emotion Detection", 
-    desc: "Bias detection, fairness evaluation, privacy considerations, and ethical auditing of emotion AI systems." 
+    desc: "Bias detection, fairness evaluation, privacy considerations, and ethical auditing of emotion AI systems.",
+    img: "/data-driven-services/ai-ml/nlp/ethical-analysis-emotion-detection.png", 
   },
 ];
 
@@ -100,7 +108,7 @@ export default function NaturalLanguageProcessingPage() {
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1 mt-17">
-        {/* Hero - NEW & DIFFERENT DESIGN */}
+        {/* Hero - unchanged */}
         <section className="bg-gradient-to-br from-emerald-50 via-teal-50 to-background py-20 md:py-28">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -125,7 +133,7 @@ export default function NaturalLanguageProcessingPage() {
                 </div>
               </div>
 
-              {/* New Hero Card Design */}
+              {/* New Hero Card Design - unchanged */}
               <div className="relative">
                 <Card className="bg-gradient-to-br from-emerald-700 via-teal-700 to-cyan-700 text-white shadow-2xl border-0 overflow-hidden">
                   <CardContent className="p-8">
@@ -164,7 +172,7 @@ qa_chain = RetrievalQA.from_chain_type(
           </div>
         </section>
 
-        {/* Techniques - Updated with new cards */}
+        {/* === FUTURISTIC HIGH-TECH CARDS (Same design as Computer Vision page) === */}
         <section className="py-16 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
@@ -172,19 +180,76 @@ qa_chain = RetrievalQA.from_chain_type(
               <p className="mt-3 text-muted-foreground">Specialized in Sentiment, Emotion Detection & Advanced Text Understanding</p>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {techniques.map((tech, i) => (
-                <Card key={i} className="hover:shadow-xl transition-all duration-300">
-                  <CardContent className="p-8">
-                    <h3 className="font-semibold text-xl mb-3">{tech.title}</h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed">{tech.desc}</p>
-                  </CardContent>
-                </Card>
-              ))}
+              {techniques.map((tech, i) => {
+                // High-Tech "Lab" Color Palettes (exactly same as CV page)
+                const techThemes = [
+                  { bg: "bg-slate-100", accent: "text-cyan-500", border: "hover:border-cyan-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(6,182,212,0.3)]", bar: "bg-cyan-400" },
+                  { bg: "bg-zinc-100", accent: "text-indigo-500", border: "hover:border-indigo-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(99,102,241,0.3)]", bar: "bg-indigo-500" },
+                  { bg: "bg-neutral-100", accent: "text-emerald-500", border: "hover:border-emerald-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(16,185,129,0.3)]", bar: "bg-emerald-400" },
+                  { bg: "bg-gray-100", accent: "text-violet-500", border: "hover:border-violet-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(139,92,246,0.3)]", bar: "bg-violet-500" },
+                ];
+                
+                const theme = techThemes[i % techThemes.length];
+
+                return (
+                  <Card
+                    key={i}
+                    className={`group relative ${theme.bg} border border-gray-200 ${theme.border} ${theme.glow} rounded-none p-6 cursor-pointer transition-all duration-300 overflow-hidden font-sans`}
+                  >
+                    {/* 1. FUTURISTIC UI ACCENTS */}
+                    {/* Top Left Tech Corner */}
+                    <div className={`absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-gray-300 group-hover:border-transparent transition-colors duration-300 m-2`} />
+                    <div className={`absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-transparent group-hover:${theme.border.replace('hover:', '')} transition-colors duration-300 m-2`} />
+                    
+                    {/* Animated Data Bar on the left */}
+                    <div className={`absolute left-0 top-0 w-1 h-0 ${theme.bar} group-hover:h-full transition-all duration-500 ease-out`} />
+
+                    {/* 2. TEXT SECTION */}
+                    <div className="relative z-10 flex flex-col gap-2 pl-4">
+                      {/* Tech Subheading/Index */}
+                      <span className={`text-[10px] font-mono font-bold tracking-[0.2em] ${theme.accent} uppercase`}>
+                        SYS.MODULE_0{i + 1}
+                      </span>
+
+                      <h3 className="font-bold text-xl text-gray-800 tracking-tight flex items-center gap-2 group-hover:translate-x-2 transition-transform duration-300 ease-out">
+                        {tech.title}
+                      </h3>
+
+                      <p className="text-gray-500 text-sm leading-relaxed group-hover:text-gray-900 transition-colors duration-300">
+                        {tech.desc}
+                      </p>
+                    </div>
+
+                    {/* 3. VERTICAL UNFOLD ANIMATION (adapted for NLP - large icon reveal) */}
+                    <div className="pl-4 grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out mt-0 group-hover:mt-5">
+                      <div className="overflow-hidden relative bg-gray-900 group-hover:bg-transparent transition-colors duration-500">
+                        
+                        {tech.img?
+          <img
+            src={tech.img}
+            alt={tech.title}
+            className="w-full h-auto object-cover origin-top scale-y-0 opacity-0 group-hover:scale-y-100 group-hover:opacity-100 transition-all duration-500 ease-out"
+          />:
+          <Brain className="w-full h-52 text-gray-700 opacity-50" />}
+
+                        {/* Futuristic Overlays (same as CV page) */}
+                        <div className="absolute inset-0 border border-white/20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-300 m-2" />
+                        
+                        {/* Holographic Scanning Laser */}
+                        <div className="absolute left-0 w-full h-[2px] bg-white shadow-[0_0_10px_#fff] top-0 opacity-0 group-hover:opacity-100 group-hover:top-[100%] transition-all duration-[1500ms] ease-linear pointer-events-none z-20" />
+                        
+                        {/* Data Grid Overlay */}
+                        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200" />
+                      </div>
+                    </div>
+                  </Card>
+                );
+              })}
             </div>
           </div>
         </section>
 
-        {/* Process */}
+        {/* Process, Deliverables, Why Choose Us, Final CTA - unchanged */}
         <section className="py-16 md:py-24 bg-muted/50">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center mb-16">
@@ -206,7 +271,6 @@ qa_chain = RetrievalQA.from_chain_type(
           </div>
         </section>
 
-        {/* Deliverables */}
         <section className="py-16 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-12 gap-16 items-center">
@@ -266,7 +330,6 @@ qa_chain = RetrievalQA.from_chain_type(
           </div>
         </section>
 
-        {/* Why Choose Us */}
         <section className="py-16 md:py-24 bg-primary text-primary-foreground">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-16">
@@ -297,7 +360,6 @@ qa_chain = RetrievalQA.from_chain_type(
           </div>
         </section>
 
-        {/* Final CTA */}
         <section className="py-20 border-t">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-4xl font-bold">Ready to Unlock Insights from Text?</h2>

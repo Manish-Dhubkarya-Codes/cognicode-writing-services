@@ -5,6 +5,7 @@ import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle, Users, Clock, Shield, Award, Camera, Eye, Image, Video, Zap, Sparkles, GitBranch, FileText } from "lucide-react";
+import cnn from "@/public/data-driven-services/ai-ml/computer-vision/cnn-model.png";
 
 export const metadata: Metadata = {
   title: "Computer Vision Services | Object Detection, Segmentation & AI Vision",
@@ -14,51 +15,64 @@ export const metadata: Metadata = {
 const techniques = [
   { 
     title: "CNN Model for MNIST & Fashion-MNIST", 
-    desc: "End-to-end CNN implementation for handwritten digit recognition and fashion item classification with high accuracy and visualization." 
+    desc: "End-to-end CNN implementation for handwritten digit recognition and fashion item classification with high accuracy and visualization.",
+    img: "/data-driven-services/ai-ml/computer-vision/cnn-model.png", 
   },
   { 
     title: "Fashion Image Classification & Visual Search", 
-    desc: "Advanced fashion product classification, attribute prediction, and visual similarity-based search systems." 
+    desc: "Advanced fashion product classification, attribute prediction, and visual similarity-based search systems." ,
+    img: "/data-driven-services/ai-ml/computer-vision/fashion-image.png",
+
   },
   { 
     title: "Natural Image Classification (Data Augmentation)", 
-    desc: "High-performance image classification on natural images with robust data augmentation and transfer learning techniques." 
+    desc: "High-performance image classification on natural images with robust data augmentation and transfer learning techniques." ,
+    img: "/data-driven-services/ai-ml/computer-vision/natural-image.png",
   },
   { 
     title: "Indoor-Outdoor Scene Classification", 
-    desc: "Accurate scene understanding models to classify indoor vs outdoor environments with contextual awareness." 
+    desc: "Accurate scene understanding models to classify indoor vs outdoor environments with contextual awareness.",
+    img: "/data-driven-services/ai-ml/computer-vision/indoor-outdoor.png", 
   },
   { 
     title: "Aerial Scene Classification (Deep Fusion)", 
-    desc: "Advanced aerial/satellite imagery classification using multi-scale deep fusion and attention mechanisms." 
+    desc: "Advanced aerial/satellite imagery classification using multi-scale deep fusion and attention mechanisms.",
+    img: "/data-driven-services/ai-ml/computer-vision/aerial-scene.png", 
   },
   { 
     title: "Multi-label Image Classification", 
-    desc: "Multi-label tagging systems capable of detecting multiple objects, attributes, or scenes in a single image." 
+    desc: "Multi-label tagging systems capable of detecting multiple objects, attributes, or scenes in a single image.",
+    img: "/data-driven-services/ai-ml/computer-vision/multi-label.png", 
   },
   { 
     title: "Fake Image Detection using CNN", 
-    desc: "Deep learning models for detecting deepfakes, GAN-generated, and manipulated images with high precision." 
+    desc: "Deep learning models for detecting deepfakes, GAN-generated, and manipulated images with high precision.",
+    img: "/data-driven-services/ai-ml/computer-vision/fake-image.png", 
   },
   { 
     title: "Facial Expression Recognition", 
-    desc: "Real-time emotion detection (happy, sad, angry, surprise, etc.) using FER datasets and modern architectures." 
+    desc: "Real-time emotion detection (happy, sad, angry, surprise, etc.) using FER datasets and modern architectures.",
+    img: "/data-driven-services/ai-ml/computer-vision/facial-expression.png", 
   },
   { 
     title: "Age & Gender Prediction", 
-    desc: "Robust age estimation and gender classification from facial images with demographic analysis." 
+    desc: "Robust age estimation and gender classification from facial images with demographic analysis.",
+    img: "/data-driven-services/ai-ml/computer-vision/age-gender.png", 
   },
   { 
     title: "Vehicle Detection (Vision + LiDAR)", 
-    desc: "Multi-modal vehicle detection and tracking combining camera vision with LiDAR data for autonomous systems." 
+    desc: "Multi-modal vehicle detection and tracking combining camera vision with LiDAR data for autonomous systems.",
+    img: "/data-driven-services/ai-ml/computer-vision/vehicle-detection.png", 
   },
   { 
     title: "Crowd Monitoring / Social Distance Detection", 
-    desc: "Real-time crowd density analysis, people counting, and social distancing violation detection." 
+    desc: "Real-time crowd density analysis, people counting, and social distancing violation detection.",
+    img: "/data-driven-services/ai-ml/computer-vision/crowd-monitoring.png", 
   },
   { 
     title: "Public Security Video Investigation System", 
-    desc: "Intelligent video surveillance system for anomaly detection, person re-identification, and forensic analysis." 
+    desc: "Intelligent video surveillance system for anomaly detection, person re-identification, and forensic analysis.",
+    img: "/data-driven-services/ai-ml/computer-vision/public-security.png", 
   },
 ];
 
@@ -177,14 +191,81 @@ export default function ComputerVisionPage() {
               <p className="mt-3 text-muted-foreground">From academic benchmarks to real-world applications</p>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {techniques.map((tech, i) => (
-                <Card key={i} className="hover:shadow-xl transition-all duration-300">
-                  <CardContent className="p-8">
-                    <h3 className="font-semibold text-xl mb-3">{tech.title}</h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed">{tech.desc}</p>
-                  </CardContent>
-                </Card>
-              ))}
+{techniques.map((tech, i) => {
+  // High-Tech "Lab" Color Palettes (Icy, sterile light backgrounds with sharp neon accents)
+  const techThemes = [
+    { bg: "bg-slate-100", accent: "text-cyan-500", border: "hover:border-cyan-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(6,182,212,0.3)]", bar: "bg-cyan-400" },
+    { bg: "bg-zinc-100", accent: "text-indigo-500", border: "hover:border-indigo-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(99,102,241,0.3)]", bar: "bg-indigo-500" },
+    { bg: "bg-neutral-100", accent: "text-emerald-500", border: "hover:border-emerald-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(16,185,129,0.3)]", bar: "bg-emerald-400" },
+    { bg: "bg-gray-100", accent: "text-violet-500", border: "hover:border-violet-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(139,92,246,0.3)]", bar: "bg-violet-500" },
+  ];
+  
+  const theme = techThemes[i % techThemes.length];
+
+  return (
+    <Card
+      key={i}
+      className={`group relative ${theme.bg} border border-gray-200 ${theme.border} ${theme.glow} rounded-none p-6 cursor-pointer transition-all duration-300 overflow-hidden font-sans`}
+    >
+      {/* 1. FUTURISTIC UI ACCENTS (Always visible) */}
+      {/* Top Left Tech Corner */}
+      <div className={`absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-gray-300 group-hover:border-transparent transition-colors duration-300 m-2`} />
+      <div className={`absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-transparent group-hover:${theme.border.replace('hover:', '')} transition-colors duration-300 m-2`} />
+      
+      {/* Animated Data Bar on the left */}
+      <div className={`absolute left-0 top-0 w-1 h-0 ${theme.bar} group-hover:h-full transition-all duration-500 ease-out`} />
+
+      {/* 2. TEXT SECTION */}
+      <div className="relative z-10 flex flex-col gap-2 pl-4">
+        
+        {/* Tech Subheading/Index */}
+        <span className={`text-[10px] font-mono font-bold tracking-[0.2em] ${theme.accent} uppercase`}>
+          SYS.MODULE_0{i + 1}
+        </span>
+
+        <h3 className="font-bold text-xl text-gray-800 tracking-tight flex items-center gap-2 group-hover:translate-x-2 transition-transform duration-300 ease-out">
+          {tech.title}
+        </h3>
+
+        <p className="text-gray-500 text-sm leading-relaxed group-hover:text-gray-900 transition-colors duration-300">
+          {tech.desc}
+        </p>
+      </div>
+
+      {/* 3. NEW ANIMATION: VERTICAL DATA-UNFOLD & SCANNER */}
+      <div className="pl-4 grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out mt-0 group-hover:mt-5">
+        
+        {/* Image Container with Structural Unfold */}
+        <div className="overflow-hidden relative bg-gray-900 group-hover:bg-transparent transition-colors duration-500">
+          
+          {/* 
+            The Reveal: The image scales down vertically (scale-y-0) with the origin at the top.
+            On hover, it snaps down like a physical projector screen (scale-y-100).
+          */}
+          {tech.img?
+          <img
+            src={tech.img}
+            alt={tech.title}
+            className="w-full h-auto object-cover origin-top scale-y-0 opacity-0 group-hover:scale-y-100 group-hover:opacity-100 transition-all duration-500 ease-out"
+          />:
+          <Camera className="w-full h-52 text-gray-700 opacity-50" />}
+
+          {/* Futuristic Image Overlays (Triggered on hover) */}
+          
+          {/* UI Corner Brackets inside the image */}
+          <div className="absolute inset-0 border border-white/20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-300 m-2" />
+          
+          {/* Holographic Scanning Laser (Sweeps down the image once) */}
+          <div className="absolute left-0 w-full h-[2px] bg-white shadow-[0_0_10px_#fff] top-0 opacity-0 group-hover:opacity-100 group-hover:top-[100%] transition-all duration-[1500ms] ease-linear pointer-events-none z-20" />
+          
+          {/* Data Grid Overlay */}
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200" />
+        
+        </div>
+      </div>
+    </Card>
+  );
+})}
             </div>
           </div>
         </section>

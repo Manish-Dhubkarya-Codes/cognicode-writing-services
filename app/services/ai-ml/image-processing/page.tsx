@@ -14,27 +14,33 @@ export const metadata: Metadata = {
 const techniques = [
   { 
     title: "Tissue Image Segmentation using DL", 
-    desc: "Advanced deep learning-based semantic segmentation for histopathological tissue images using U-Net, DeepLab, and custom architectures." 
+    desc: "Advanced deep learning-based semantic segmentation for histopathological tissue images using U-Net, DeepLab, and custom architectures.",
+    img: "/data-driven-services/ai-ml/ip/tissue-image-segmentation.png", 
   },
   { 
     title: "X-ray Image Enhancement", 
-    desc: "Contrast enhancement, noise reduction, edge sharpening, and artifact removal for medical X-ray and radiographic images." 
+    desc: "Contrast enhancement, noise reduction, edge sharpening, and artifact removal for medical X-ray and radiographic images.",
+    img: "/data-driven-services/ai-ml/ip/xray-image-enhancement.png", 
   },
   { 
     title: "Latent Fingerprint Enhancement", 
-    desc: "Advanced techniques for enhancing poor-quality latent fingerprints using Gabor filters, frequency domain processing, and deep learning." 
+    desc: "Advanced techniques for enhancing poor-quality latent fingerprints using Gabor filters, frequency domain processing, and deep learning.",
+    img: "/data-driven-services/ai-ml/ip/latent-fingerprint-enhancement.png", 
   },
   { 
     title: "Feature Extraction from Fingerprints", 
-    desc: "Robust minutiae extraction, ridge orientation, singular point detection, and quality assessment for biometric systems." 
+    desc: "Robust minutiae extraction, ridge orientation, singular point detection, and quality assessment for biometric systems.",
+    img: "/data-driven-services/ai-ml/ip/fingerprint-feature-extraction.png", 
   },
   { 
     title: "Fingerprint Matching (Latent-to-Rolled)", 
-    desc: "High-accuracy latent fingerprint matching against rolled/print databases using deep learning and traditional algorithms." 
+    desc: "High-accuracy latent fingerprint matching against rolled/print databases using deep learning and traditional algorithms.",
+    img: "/data-driven-services/ai-ml/ip/fingerprint-matching.png", 
   },
   { 
     title: "CNN Benchmarking for Fingerprints", 
-    desc: "Comprehensive benchmarking of CNN architectures for fingerprint classification, enhancement, and recognition tasks." 
+    desc: "Comprehensive benchmarking of CNN architectures for fingerprint classification, enhancement, and recognition tasks.",
+    img: "/data-driven-services/ai-ml/ip/cnn-benchmarking-fingerprints.png", 
   },
 ];
 
@@ -92,7 +98,7 @@ export default function ImageProcessingPage() {
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1 mt-17">
-        {/* Hero - Unique Design */}
+        {/* Hero - Unique Design (unchanged) */}
         <section className="bg-gradient-to-br from-amber-50 via-orange-50 to-background py-20 md:py-28">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -155,7 +161,7 @@ result = clahe.apply(cv2.cvtColor(enhanced, cv2.COLOR_BGR2GRAY))`}
           </div>
         </section>
 
-        {/* Techniques - Updated */}
+        {/* === FUTURISTIC HIGH-TECH CARDS (Same design as NLP & Computer Vision) === */}
         <section className="py-16 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
@@ -163,19 +169,75 @@ result = clahe.apply(cv2.cvtColor(enhanced, cv2.COLOR_BGR2GRAY))`}
               <p className="mt-3 text-muted-foreground">Specialized in medical, biometric & forensic imaging</p>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {techniques.map((tech, i) => (
-                <Card key={i} className="hover:shadow-xl transition-all duration-300">
-                  <CardContent className="p-8">
-                    <h3 className="font-semibold text-xl mb-3">{tech.title}</h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed">{tech.desc}</p>
-                  </CardContent>
-                </Card>
-              ))}
+              {techniques.map((tech, i) => {
+                // High-Tech "Lab" Color Palettes (exactly same as CV & NLP)
+                const techThemes = [
+                  { bg: "bg-slate-100", accent: "text-cyan-500", border: "hover:border-cyan-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(6,182,212,0.3)]", bar: "bg-cyan-400" },
+                  { bg: "bg-zinc-100", accent: "text-indigo-500", border: "hover:border-indigo-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(99,102,241,0.3)]", bar: "bg-indigo-500" },
+                  { bg: "bg-neutral-100", accent: "text-emerald-500", border: "hover:border-emerald-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(16,185,129,0.3)]", bar: "bg-emerald-400" },
+                  { bg: "bg-gray-100", accent: "text-violet-500", border: "hover:border-violet-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(139,92,246,0.3)]", bar: "bg-violet-500" },
+                ];
+                
+                const theme = techThemes[i % techThemes.length];
+
+                return (
+                  <Card
+                    key={i}
+                    className={`group relative ${theme.bg} border border-gray-200 ${theme.border} ${theme.glow} rounded-none p-6 cursor-pointer transition-all duration-300 overflow-hidden font-sans`}
+                  >
+                    {/* 1. FUTURISTIC UI ACCENTS */}
+                    {/* Top Left Tech Corner */}
+                    <div className={`absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-gray-300 group-hover:border-transparent transition-colors duration-300 m-2`} />
+                    <div className={`absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-transparent group-hover:${theme.border.replace('hover:', '')} transition-colors duration-300 m-2`} />
+                    
+                    {/* Animated Data Bar on the left */}
+                    <div className={`absolute left-0 top-0 w-1 h-0 ${theme.bar} group-hover:h-full transition-all duration-500 ease-out`} />
+
+                    {/* 2. TEXT SECTION */}
+                    <div className="relative z-10 flex flex-col gap-2 pl-4">
+                      {/* Tech Subheading/Index */}
+                      <span className={`text-[10px] font-mono font-bold tracking-[0.2em] ${theme.accent} uppercase`}>
+                        SYS.MODULE_0{i + 1}
+                      </span>
+
+                      <h3 className="font-bold text-xl text-gray-800 tracking-tight flex items-center gap-2 group-hover:translate-x-2 transition-transform duration-300 ease-out">
+                        {tech.title}
+                      </h3>
+
+                      <p className="text-gray-500 text-sm leading-relaxed group-hover:text-gray-900 transition-colors duration-300">
+                        {tech.desc}
+                      </p>
+                    </div>
+
+                    {/* 3. VERTICAL UNFOLD ANIMATION WITH IMAGE */}
+                    <div className="pl-4 grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out mt-0 group-hover:mt-5">
+                      <div className="overflow-hidden relative bg-gray-900 group-hover:bg-transparent transition-colors duration-500">
+                        {tech.img ?
+                        <img
+                          src={tech.img}
+                          alt={tech.title}
+                          className="w-full h-auto object-cover origin-top scale-y-0 opacity-0 group-hover:scale-y-100 group-hover:opacity-100 transition-all duration-500 ease-out"
+                        />:
+                        <Image className="w-full h-52 text-gray-700 opacity-50" />}
+
+                        {/* Futuristic Overlays */}
+                        <div className="absolute inset-0 border border-white/20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-300 m-2" />
+                        
+                        {/* Holographic Scanning Laser */}
+                        <div className="absolute left-0 w-full h-[2px] bg-white shadow-[0_0_10px_#fff] top-0 opacity-0 group-hover:opacity-100 group-hover:top-[100%] transition-all duration-[1500ms] ease-linear pointer-events-none z-20" />
+                        
+                        {/* Data Grid Overlay */}
+                        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200" />
+                      </div>
+                    </div>
+                  </Card>
+                );
+              })}
             </div>
           </div>
         </section>
 
-        {/* Process */}
+        {/* Process, Deliverables, Why Choose Us, Final CTA - unchanged */}
         <section className="py-16 md:py-24 bg-muted/50">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center mb-16">
@@ -197,7 +259,6 @@ result = clahe.apply(cv2.cvtColor(enhanced, cv2.COLOR_BGR2GRAY))`}
           </div>
         </section>
 
-        {/* Deliverables */}
         <section className="py-16 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-12 gap-16 items-center">
@@ -257,7 +318,6 @@ result = clahe.apply(cv2.cvtColor(enhanced, cv2.COLOR_BGR2GRAY))`}
           </div>
         </section>
 
-        {/* Why Choose Us */}
         <section className="py-16 md:py-24 bg-primary text-primary-foreground">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-16">
@@ -288,7 +348,6 @@ result = clahe.apply(cv2.cvtColor(enhanced, cv2.COLOR_BGR2GRAY))`}
           </div>
         </section>
 
-        {/* Final CTA */}
         <section className="py-20 border-t">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-4xl font-bold">Ready to Transform Your Images?</h2>

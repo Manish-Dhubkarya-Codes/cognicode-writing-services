@@ -24,7 +24,7 @@
 .DS_Store
 *.pem
 
-
+/public/data-driven-services
 # debug
 npm-debug.log*
 yarn-debug.log*

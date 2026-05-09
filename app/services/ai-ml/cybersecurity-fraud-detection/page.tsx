@@ -12,22 +12,62 @@ export const metadata: Metadata = {
 };
 
 const fraudSecurity = [
-  { title: "Credit Card Fraud Detection", desc: "Real-time fraud prevention in financial transactions using ensemble models, autoencoders, and graph neural networks." },
-  { title: "Healthcare Fraud Detection", desc: "Detection of fraudulent claims, billing anomalies, and suspicious patterns in healthcare and insurance data." },
-  { title: "Authorship Verification (Account Hijacking)", desc: "Stylometric and behavioral analysis to detect account takeovers and impersonation." },
-  { title: "Crime Detection using ML", desc: "Predictive crime analysis and pattern recognition using machine learning on spatiotemporal data." },
+  { 
+    title: "Credit Card Fraud Detection", 
+    desc: "Real-time fraud prevention in financial transactions using ensemble models, autoencoders, and graph neural networks.",
+    img: "/data-driven-services/ai-ml/cyber-security-ds/credit-card-fraud.png" 
+  },
+  { 
+    title: "Healthcare Fraud Detection", 
+    desc: "Detection of fraudulent claims, billing anomalies, and suspicious patterns in healthcare and insurance data.",
+    img: "/data-driven-services/ai-ml/cyber-security-ds/healthcare-fraud.png" 
+  },
+  { 
+    title: "Authorship Verification (Account Hijacking)", 
+    desc: "Stylometric and behavioral analysis to detect account takeovers and impersonation.",
+    img: "/data-driven-services/ai-ml/cyber-security-ds/authorship-verification.png" 
+  },
+  { 
+    title: "Crime Detection using ML", 
+    desc: "Predictive crime analysis and pattern recognition using machine learning on spatiotemporal data.",
+    img: "/data-driven-services/ai-ml/cyber-security-ds/crime-detection.png" 
+  },
 ];
 
 const cybersecurity = [
-  { title: "Anomaly Traffic Detection", desc: "Network traffic anomaly detection for identifying intrusions and unusual behavior in real-time." },
-  { title: "DDoS Detection", desc: "Advanced deep learning models for early detection and mitigation of Distributed Denial of Service attacks." },
-  { title: "AI-based Cyber Defense Systems", desc: "Autonomous cyber defense platforms using reinforcement learning and adaptive threat response." },
-  { title: "Threat Intelligence using ML/DL", desc: "Automated threat intelligence, malware classification, and zero-day attack prediction." },
+  { 
+    title: "Anomaly Traffic Detection", 
+    desc: "Network traffic anomaly detection for identifying intrusions and unusual behavior in real-time.",
+    img: "/data-driven-services/ai-ml/cyber-security-ds/anomaly-traffic-detection.png" 
+  },
+  { 
+    title: "DDoS Detection", 
+    desc: "Advanced deep learning models for early detection and mitigation of Distributed Denial of Service attacks.",
+    img: "/data-driven-services/ai-ml/cyber-security-ds/ddos-detection.png" 
+  },
+  { 
+    title: "AI-based Cyber Defense Systems", 
+    desc: "Autonomous cyber defense platforms using reinforcement learning and adaptive threat response.",
+    img: "/data-driven-services/ai-ml/cyber-security-ds/ai-cyber-defense.png" 
+  },
+  { 
+    title: "Threat Intelligence using ML/DL", 
+    desc: "Automated threat intelligence, malware classification, and zero-day attack prediction.",
+    img: "/data-driven-services/ai-ml/cyber-security-ds/threat-intelligence.png" 
+  },
 ];
 
 const predictiveAnalytics = [
-  { title: "Software Defect Prediction", desc: "Machine learning models to predict defective modules and optimize software testing efforts." },
-  { title: "Air Pollution Forecasting", desc: "Spatiotemporal deep learning models for accurate air quality and pollution level prediction." },
+  { 
+    title: "Software Defect Prediction", 
+    desc: "Machine learning models to predict defective modules and optimize software testing efforts.",
+    img: "/data-driven-services/ai-ml/cyber-security-ds/software-defect-prediction.png" 
+  },
+  { 
+    title: "Air Pollution Forecasting", 
+    desc: "Spatiotemporal deep learning models for accurate air quality and pollution level prediction.",
+    img: "/data-driven-services/ai-ml/cyber-security-ds/air-pollution-forecasting.png" 
+  },
 ];
 
 const deliverables = [
@@ -84,7 +124,7 @@ export default function CybersecurityFraudDetectionPage() {
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1 mt-17">
-        {/* Hero */}
+        {/* Hero - unchanged */}
         <section className="bg-gradient-to-br from-slate-900 via-blue-950 to-background py-20 md:py-28 text-white">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -102,10 +142,10 @@ export default function CybersecurityFraudDetectionPage() {
                   high-precision machine learning solutions.
                 </p>
                 <div className="mt-10 flex text-black flex-wrap gap-4">
-                  <Button size="lg" asChild className="bg-blue-600 text-white ">
+                  <Button size="lg" asChild className="bg-blue-600 text-white">
                     <Link href="/contact">Start Security Project</Link>
                   </Button>
-                  <Button size="lg" variant="outline" className="border-primary hover:bg-primary  hover:text-white" asChild>
+                  <Button size="lg" variant="outline" className="border-primary hover:bg-primary hover:text-white" asChild>
                     <Link href="/samples">View Security Samples</Link>
                   </Button>
                 </div>
@@ -148,7 +188,7 @@ anomalies = iso_forest.fit_predict(transaction_data)`}
           </div>
         </section>
 
-        {/* Grouped Techniques */}
+        {/* === FUTURISTIC HIGH-TECH CARDS === */}
         <section className="py-16 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
@@ -161,14 +201,56 @@ anomalies = iso_forest.fit_predict(transaction_data)`}
                 <Lock className="h-6 w-6 text-red-600" /> Fraud & Security
               </h3>
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {fraudSecurity.map((tech, i) => (
-                  <Card key={i} className="hover:shadow-xl transition-all duration-300">
-                    <CardContent className="p-8">
-                      <h4 className="font-semibold text-lg mb-3">{tech.title}</h4>
-                      <p className="text-muted-foreground text-sm leading-relaxed">{tech.desc}</p>
-                    </CardContent>
-                  </Card>
-                ))}
+                {fraudSecurity.map((tech, i) => {
+                  const techThemes = [
+                    { bg: "bg-slate-100", accent: "text-cyan-500", border: "hover:border-cyan-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(6,182,212,0.3)]", bar: "bg-cyan-400" },
+                    { bg: "bg-zinc-100", accent: "text-indigo-500", border: "hover:border-indigo-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(99,102,241,0.3)]", bar: "bg-indigo-500" },
+                    { bg: "bg-neutral-100", accent: "text-emerald-500", border: "hover:border-emerald-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(16,185,129,0.3)]", bar: "bg-emerald-400" },
+                    { bg: "bg-gray-100", accent: "text-violet-500", border: "hover:border-violet-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(139,92,246,0.3)]", bar: "bg-violet-500" },
+                  ];
+                  const theme = techThemes[i % techThemes.length];
+
+                  return (
+                    <Card
+                      key={i}
+                      className={`group relative ${theme.bg} border border-gray-200 ${theme.border} ${theme.glow} rounded-none p-6 cursor-pointer transition-all duration-300 overflow-hidden font-sans`}
+                    >
+                      {/* Futuristic accents */}
+                      <div className={`absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-gray-300 group-hover:border-transparent transition-colors duration-300 m-2`} />
+                      <div className={`absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-transparent group-hover:${theme.border.replace('hover:', '')} transition-colors duration-300 m-2`} />
+                      <div className={`absolute left-0 top-0 w-1 h-0 ${theme.bar} group-hover:h-full transition-all duration-500 ease-out`} />
+
+                      {/* Text */}
+                      <div className="relative z-10 flex flex-col gap-2 pl-4">
+                        <span className={`text-[10px] font-mono font-bold tracking-[0.2em] ${theme.accent} uppercase`}>
+                          SYS.MODULE_0{i + 1}
+                        </span>
+                        <h4 className="font-bold text-lg text-gray-800 tracking-tight group-hover:translate-x-2 transition-transform duration-300 ease-out">
+                          {tech.title}
+                        </h4>
+                        <p className="text-gray-500 text-sm leading-relaxed group-hover:text-gray-900 transition-colors duration-300">
+                          {tech.desc}
+                        </p>
+                      </div>
+
+                      {/* Image unfold */}
+                      <div className="pl-4 grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out mt-0 group-hover:mt-5">
+                        <div className="overflow-hidden relative bg-gray-900 group-hover:bg-transparent transition-colors duration-500">
+                          {tech.img?
+                          <img
+                            src={tech.img}
+                            alt={tech.title}
+                            className="w-full h-auto object-cover origin-top scale-y-0 opacity-0 group-hover:scale-y-100 group-hover:opacity-100 transition-all duration-500 ease-out"
+                          />:
+                          <Lock className="w-full h-52 text-gray-700 opacity-50" />}
+                          <div className="absolute inset-0 border border-white/20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-300 m-2" />
+                          <div className="absolute left-0 w-full h-[2px] bg-white shadow-[0_0_10px_#fff] top-0 opacity-0 group-hover:opacity-100 group-hover:top-[100%] transition-all duration-[1500ms] ease-linear pointer-events-none z-20" />
+                          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200" />
+                        </div>
+                      </div>
+                    </Card>
+                  );
+                })}
               </div>
             </div>
 
@@ -178,14 +260,54 @@ anomalies = iso_forest.fit_predict(transaction_data)`}
                 <Shield className="h-6 w-6 text-blue-600" /> Cybersecurity
               </h3>
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {cybersecurity.map((tech, i) => (
-                  <Card key={i} className="hover:shadow-xl transition-all duration-300">
-                    <CardContent className="p-8">
-                      <h4 className="font-semibold text-lg mb-3">{tech.title}</h4>
-                      <p className="text-muted-foreground text-sm leading-relaxed">{tech.desc}</p>
-                    </CardContent>
-                  </Card>
-                ))}
+                {cybersecurity.map((tech, i) => {
+                  const techThemes = [
+                    { bg: "bg-slate-100", accent: "text-cyan-500", border: "hover:border-cyan-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(6,182,212,0.3)]", bar: "bg-cyan-400" },
+                    { bg: "bg-zinc-100", accent: "text-indigo-500", border: "hover:border-indigo-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(99,102,241,0.3)]", bar: "bg-indigo-500" },
+                    { bg: "bg-neutral-100", accent: "text-emerald-500", border: "hover:border-emerald-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(16,185,129,0.3)]", bar: "bg-emerald-400" },
+                    { bg: "bg-gray-100", accent: "text-violet-500", border: "hover:border-violet-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(139,92,246,0.3)]", bar: "bg-violet-500" },
+                  ];
+                  const theme = techThemes[i % techThemes.length];
+
+                  return (
+                    <Card
+                      key={i}
+                      className={`group relative ${theme.bg} border border-gray-200 ${theme.border} ${theme.glow} rounded-none p-6 cursor-pointer transition-all duration-300 overflow-hidden font-sans`}
+                    >
+                      <div className={`absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-gray-300 group-hover:border-transparent transition-colors duration-300 m-2`} />
+                      <div className={`absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-transparent group-hover:${theme.border.replace('hover:', '')} transition-colors duration-300 m-2`} />
+                      <div className={`absolute left-0 top-0 w-1 h-0 ${theme.bar} group-hover:h-full transition-all duration-500 ease-out`} />
+
+                      <div className="relative z-10 flex flex-col gap-2 pl-4">
+                        <span className={`text-[10px] font-mono font-bold tracking-[0.2em] ${theme.accent} uppercase`}>
+                          SYS.MODULE_0{i + 1}
+                        </span>
+                        <h4 className="font-bold text-lg text-gray-800 tracking-tight group-hover:translate-x-2 transition-transform duration-300 ease-out">
+                          {tech.title}
+                        </h4>
+                        <p className="text-gray-500 text-sm leading-relaxed group-hover:text-gray-900 transition-colors duration-300">
+                          {tech.desc}
+                        </p>
+                      </div>
+
+                      <div className="pl-4 grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out mt-0 group-hover:mt-5">
+                        <div className="overflow-hidden relative bg-gray-900 group-hover:bg-transparent transition-colors duration-500">
+                         {tech.img?
+                          <img
+                            src={tech.img}
+                            alt={tech.title}
+                            className="w-full h-auto object-cover origin-top scale-y-0 opacity-0 group-hover:scale-y-100 group-hover:opacity-100 transition-all duration-500 ease-out"
+                          />:
+                          <Lock className="w-full h-52 text-gray-700 opacity-50" />
+                        }
+                          <div className="absolute inset-0 border border-white/20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-300 m-2" />
+                          <div className="absolute left-0 w-full h-[2px] bg-white shadow-[0_0_10px_#fff] top-0 opacity-0 group-hover:opacity-100 group-hover:top-[100%] transition-all duration-[1500ms] ease-linear pointer-events-none z-20" />
+                          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200" />
+                        </div>
+                      </div>
+                    </Card>
+                  );
+                })}
               </div>
             </div>
 
@@ -194,21 +316,61 @@ anomalies = iso_forest.fit_predict(transaction_data)`}
               <h3 className="text-2xl font-semibold mb-6 flex items-center gap-3">
                 <TrendingUp className="h-6 w-6 text-emerald-600" /> Predictive Analytics
               </h3>
-              <div className="grid md:grid-cols-2 gap-6">
-                {predictiveAnalytics.map((tech, i) => (
-                  <Card key={i} className="hover:shadow-xl transition-all duration-300">
-                    <CardContent className="p-8">
-                      <h4 className="font-semibold text-lg mb-3">{tech.title}</h4>
-                      <p className="text-muted-foreground text-sm leading-relaxed">{tech.desc}</p>
-                    </CardContent>
-                  </Card>
-                ))}
+              <div className="grid md:grid-cols-4 gap-6">
+                {predictiveAnalytics.map((tech, i) => {
+                  const techThemes = [
+                    { bg: "bg-slate-100", accent: "text-cyan-500", border: "hover:border-cyan-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(6,182,212,0.3)]", bar: "bg-cyan-400" },
+                    { bg: "bg-zinc-100", accent: "text-indigo-500", border: "hover:border-indigo-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(99,102,241,0.3)]", bar: "bg-indigo-500" },
+                    { bg: "bg-neutral-100", accent: "text-emerald-500", border: "hover:border-emerald-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(16,185,129,0.3)]", bar: "bg-emerald-400" },
+                    { bg: "bg-gray-100", accent: "text-violet-500", border: "hover:border-violet-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(139,92,246,0.3)]", bar: "bg-violet-500" },
+                  ];
+                  const theme = techThemes[i % techThemes.length];
+
+                  return (
+                    <Card
+                      key={i}
+                      className={`group relative ${theme.bg} border border-gray-200 ${theme.border} ${theme.glow} rounded-none p-6 cursor-pointer transition-all duration-300 overflow-hidden font-sans`}
+                    >
+                      <div className={`absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-gray-300 group-hover:border-transparent transition-colors duration-300 m-2`} />
+                      <div className={`absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-transparent group-hover:${theme.border.replace('hover:', '')} transition-colors duration-300 m-2`} />
+                      <div className={`absolute left-0 top-0 w-1 h-0 ${theme.bar} group-hover:h-full transition-all duration-500 ease-out`} />
+
+                      <div className="relative z-10 flex flex-col gap-2 pl-4">
+                        <span className={`text-[10px] font-mono font-bold tracking-[0.2em] ${theme.accent} uppercase`}>
+                          SYS.MODULE_0{i + 1}
+                        </span>
+                        <h4 className="font-bold text-lg text-gray-800 tracking-tight group-hover:translate-x-2 transition-transform duration-300 ease-out">
+                          {tech.title}
+                        </h4>
+                        <p className="text-gray-500 text-sm leading-relaxed group-hover:text-gray-900 transition-colors duration-300">
+                          {tech.desc}
+                        </p>
+                      </div>
+
+                      <div className="pl-4 grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out mt-0 group-hover:mt-5">
+                        <div className="overflow-hidden relative bg-gray-900 group-hover:bg-transparent transition-colors duration-500">
+                          {tech.img?
+                            <img
+                              src={tech.img}
+                              alt={tech.title}
+                              className="w-full h-auto object-cover origin-top scale-y-0 opacity-0 group-hover:scale-y-100 group-hover:opacity-100 transition-all duration-500 ease-out"
+                            />:
+                            <Lock className="w-full h-52 text-gray-700 opacity-50" />
+                          }
+                          <div className="absolute inset-0 border border-white/20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-300 m-2" />
+                          <div className="absolute left-0 w-full h-[2px] bg-white shadow-[0_0_10px_#fff] top-0 opacity-0 group-hover:opacity-100 group-hover:top-[100%] transition-all duration-[1500ms] ease-linear pointer-events-none z-20" />
+                          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200" />
+                        </div>
+                      </div>
+                    </Card>
+                  );
+                })}
               </div>
             </div>
           </div>
         </section>
 
-        {/* Process, Deliverables, Why Choose Us, Final CTA remain the same */}
+        {/* Process, Deliverables, Why Choose Us, Final CTA remain unchanged */}
         <section className="py-16 md:py-24 bg-muted/50">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center mb-16">
@@ -230,7 +392,6 @@ anomalies = iso_forest.fit_predict(transaction_data)`}
           </div>
         </section>
 
-        {/* Deliverables, Why Choose Us, and Final CTA sections remain unchanged */}
         <section className="py-16 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-12 gap-16 items-center">
