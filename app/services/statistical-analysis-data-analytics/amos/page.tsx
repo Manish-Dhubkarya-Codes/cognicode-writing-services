@@ -4,7 +4,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle, Users, Clock, Shield, Award, Layers, Target, TrendingUp, Zap, Sparkles, GitBranch, FileText, Eye } from "lucide-react";
+import { CheckCircle, Layers, Target, Eye, Zap, GitBranch, FileText, Award } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "AMOS Analysis Services | Analysis of Moment Structures (SEM)",
@@ -14,43 +14,53 @@ export const metadata: Metadata = {
 const techniques = [
   {
     title: "Model Specification",
-    desc: "Translate theoretical framework into path diagrams with latent and observed variables, ensuring proper construct definition."
+    desc: "Translate theoretical framework into path diagrams with latent and observed variables, ensuring proper construct definition.",
+    img: "/data-driven-services/sa-da/amos/model-specification.png"
   },
   {
     title: "Measurement Model (CFA)",
-    desc: "Confirmatory Factor Analysis including factor loadings, AVE, CR, and discriminant validity to validate constructs."
+    desc: "Confirmatory Factor Analysis including factor loadings, AVE, CR, and discriminant validity to validate constructs.",
+    img: "/data-driven-services/sa-da/amos/measurement-model-cfa.png"
   },
   {
     title: "Structural Model (SEM)",
-    desc: "Full structural modeling to test hypotheses with direct, indirect, and total effects between variables."
+    desc: "Full structural modeling to test hypotheses with direct, indirect, and total effects between variables.",
+    img: "/data-driven-services/sa-da/amos/structural-model-sem.png"
   },
   {
     title: "Model Fit Evaluation",
-    desc: "Assessment using CMIN/DF, CFI, TLI, RMSEA, and SRMR with strict threshold validation for model acceptance."
+    desc: "Assessment using CMIN/DF, CFI, TLI, RMSEA, and SRMR with strict threshold validation for model acceptance.",
+    img: "/data-driven-services/sa-da/amos/model-fit-evaluation.png"
   },
   {
     title: "Mediation Analysis",
-    desc: "Bootstrapping-based indirect effect testing with confidence intervals for mediation validation."
+    desc: "Bootstrapping-based indirect effect testing with confidence intervals for mediation validation.",
+    img: "/data-driven-services/sa-da/amos/mediation-analysis.png"
   },
   {
     title: "Moderation Analysis",
-    desc: "Interaction effects testing using multi-group SEM and moderation techniques."
+    desc: "Interaction effects testing using multi-group SEM and moderation techniques.",
+    img: "/data-driven-services/sa-da/amos/moderation-analysis.png"
   },
   {
     title: "Multi-Group Analysis (MGA)",
-    desc: "Measurement invariance testing across groups (configural, metric, scalar invariance)."
+    desc: "Measurement invariance testing across groups (configural, metric, scalar invariance).",
+    img: "/data-driven-services/sa-da/amos/multi-group-analysis-mga.png"
   },
   {
     title: "Assumption Testing & Data Screening",
-    desc: "Normality, multivariate outliers, multicollinearity, and sample adequacy checks before SEM modeling."
+    desc: "Normality, multivariate outliers, multicollinearity, and sample adequacy checks before SEM modeling.",
+    img: "/data-driven-services/sa-da/amos/assumption-testing-data-screening.png"
   },
   {
     title: "Model Modification & Validation",
-    desc: "Modification indices, theory-driven adjustments, and cross-validation to improve model fit."
+    desc: "Modification indices, theory-driven adjustments, and cross-validation to improve model fit.",
+    img: "/data-driven-services/sa-da/amos/model-modification-validation.png"
   },
   {
     title: "SEM Interpretation & Reporting",
-    desc: "Path coefficient interpretation, hypothesis testing, and APA-formatted reporting with publication-ready diagrams."
+    desc: "Path coefficient interpretation, hypothesis testing, and APA-formatted reporting with publication-ready diagrams.",
+    img: "/data-driven-services/sa-da/amos/sem-interpretation-reporting.png"
   }
 ];
 
@@ -108,7 +118,7 @@ export default function AMOSAnalysisPage() {
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1 mt-17">
-        {/* Hero */}
+        {/* Hero - unchanged */}
         <section className="bg-gradient-to-br from-purple-50 via-violet-50 to-background py-20 md:py-28">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -134,7 +144,7 @@ export default function AMOSAnalysisPage() {
                 </div>
               </div>
 
-              {/* Unique Hero Card */}
+              {/* Unique Hero Card - unchanged */}
               <div className="relative">
                 <Card className="bg-gradient-to-br from-violet-700 via-purple-700 to-fuchsia-700 text-white shadow-2xl border-0 overflow-hidden">
                   <CardContent className="p-8">
@@ -172,27 +182,71 @@ SRMR = 0.031`}
           </div>
         </section>
 
-        {/* Techniques */}
+        {/* === FUTURISTIC HIGH-TECH CARDS (with images) === */}
         <section className="py-16 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="font-serif text-4xl font-bold">AMOS Services We Provide</h2>
-              <p className="mt-3 text-muted-foreground">Advanced Structural Equation Modeling solutions</p>
+              <h2 className="font-serif text-4xl font-bold">AMOS Analysis Services We Provide</h2>
+              <p className="mt-3 text-muted-foreground">From model specification to advanced SEM techniques</p>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {techniques.map((tech, i) => (
-                <Card key={i} className="hover:shadow-xl transition-all duration-300">
-                  <CardContent className="p-8">
-                    <h3 className="font-semibold text-xl mb-3">{tech.title}</h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed">{tech.desc}</p>
-                  </CardContent>
-                </Card>
-              ))}
+              {techniques.map((tech, i) => {
+                const techThemes = [
+                  { bg: "bg-slate-100", accent: "text-cyan-500", border: "hover:border-cyan-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(6,182,212,0.3)]", bar: "bg-cyan-400" },
+                  { bg: "bg-zinc-100", accent: "text-indigo-500", border: "hover:border-indigo-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(99,102,241,0.3)]", bar: "bg-indigo-500" },
+                  { bg: "bg-neutral-100", accent: "text-emerald-500", border: "hover:border-emerald-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(16,185,129,0.3)]", bar: "bg-emerald-400" },
+                  { bg: "bg-gray-100", accent: "text-violet-500", border: "hover:border-violet-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(139,92,246,0.3)]", bar: "bg-violet-500" },
+                ];
+                
+                const theme = techThemes[i % techThemes.length];
+
+                return (
+                  <Card
+                    key={i}
+                    className={`group relative ${theme.bg} border border-gray-200 ${theme.border} ${theme.glow} rounded-none p-6 cursor-pointer transition-all duration-300 overflow-hidden font-sans`}
+                  >
+                    {/* Futuristic UI Accents */}
+                    <div className={`absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-gray-300 group-hover:border-transparent transition-colors duration-300 m-2`} />
+                    <div className={`absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-transparent group-hover:${theme.border.replace('hover:', '')} transition-colors duration-300 m-2`} />
+                    
+                    {/* Animated Data Bar */}
+                    <div className={`absolute left-0 top-0 w-1 h-0 ${theme.bar} group-hover:h-full transition-all duration-500 ease-out`} />
+
+                    {/* Text Section */}
+                    <div className="relative z-10 flex flex-col gap-2 pl-4">
+                      <span className={`text-[10px] font-mono font-bold tracking-[0.2em] ${theme.accent} uppercase`}>
+                        SYS.MODULE_0{i + 1}
+                      </span>
+                      <h3 className="font-bold text-xl text-gray-800 tracking-tight flex items-center gap-2 group-hover:translate-x-2 transition-transform duration-300 ease-out">
+                        {tech.title}
+                      </h3>
+                      <p className="text-gray-500 text-sm leading-relaxed group-hover:text-gray-900 transition-colors duration-300">
+                        {tech.desc}
+                      </p>
+                    </div>
+
+                    {/* Image Unfold Animation */}
+                    <div className="pl-4 grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out mt-0 group-hover:mt-5">
+                      <div className="overflow-hidden relative bg-gray-900 group-hover:bg-transparent transition-colors duration-500">
+                        <img
+                          src={tech.img}
+                          alt={tech.title}
+                          className="w-full h-auto object-cover origin-top scale-y-0 opacity-0 group-hover:scale-y-100 group-hover:opacity-100 transition-all duration-500 ease-out"
+                        />
+                        {/* Futuristic Overlays */}
+                        <div className="absolute inset-0 border border-white/20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-300 m-2" />
+                        <div className="absolute left-0 w-full h-[2px] bg-white shadow-[0_0_10px_#fff] top-0 opacity-0 group-hover:opacity-100 group-hover:top-[100%] transition-all duration-[1500ms] ease-linear pointer-events-none z-20" />
+                        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200" />
+                      </div>
+                    </div>
+                  </Card>
+                );
+              })}
             </div>
           </div>
         </section>
 
-        {/* Process */}
+        {/* Rest of the page (Process, Deliverables, Why Choose Us, CTA) remains unchanged */}
         <section className="py-16 md:py-24 bg-muted/50">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center mb-16">
@@ -214,7 +268,6 @@ SRMR = 0.031`}
           </div>
         </section>
 
-        {/* Deliverables */}
         <section className="py-16 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-12 gap-16 items-center">
@@ -274,7 +327,6 @@ SRMR = 0.031`}
           </div>
         </section>
 
-        {/* Why Choose Us */}
         <section className="py-16 md:py-24 bg-primary text-primary-foreground">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-16">
@@ -305,7 +357,6 @@ SRMR = 0.031`}
           </div>
         </section>
 
-        {/* Final CTA */}
         <section className="py-20 border-t">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-4xl font-bold">Ready for Professional AMOS Analysis?</h2>
