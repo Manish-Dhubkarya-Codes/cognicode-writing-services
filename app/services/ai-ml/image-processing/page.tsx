@@ -1,15 +1,12 @@
-import { Metadata } from "next";
+'use client';
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle, Users, Clock, Shield, Award, Image, Palette, Filter, Zap, Sparkles, GitBranch, FileText, Eye, RefreshCw } from "lucide-react";
-
-export const metadata: Metadata = {
-  title: "Image Processing Services | Enhancement, Restoration & Analysis",
-  description: "Expert Image Processing solutions using OpenCV, Pillow, scikit-image, and Deep Learning. Medical imaging, fingerprint enhancement, X-ray processing, and automated pipelines.",
-};
+import { CheckCircle, Users, Clock, Shield, Award, Image, Palette, Filter, Zap, Sparkles, GitBranch, FileText, Eye, RefreshCw, ZoomIn, X } from "lucide-react";
 
 const techniques = [
   { 
@@ -94,11 +91,45 @@ const benefits = [
 ];
 
 export default function ImageProcessingPage() {
+  const [selectedImage, setSelectedImage] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (selectedImage !== null) {
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.documentElement.style.overflow = 'hidden';
+
+      return () => {
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        document.documentElement.style.overflow = 'visible';
+        window.scrollTo(0, scrollY);
+      };
+    } else {
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.documentElement.style.overflow = 'visible';
+      window.scrollTo(0, parseInt(scrollY || '0') * -1);
+    }
+  }, [selectedImage]);
+
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelectedImage(null);
+    };
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, []);
+
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1 mt-17">
-        {/* Hero - Unique Design (unchanged) */}
         <section className="bg-gradient-to-br from-amber-50 via-orange-50 to-background py-20 md:py-28">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -124,7 +155,6 @@ export default function ImageProcessingPage() {
                 </div>
               </div>
 
-              {/* Unique Hero Card */}
               <div className="relative">
                 <Card className="bg-gradient-to-br from-orange-700 via-amber-700 to-red-700 text-white shadow-2xl border-0 overflow-hidden">
                   <CardContent className="p-8">
@@ -161,7 +191,6 @@ result = clahe.apply(cv2.cvtColor(enhanced, cv2.COLOR_BGR2GRAY))`}
           </div>
         </section>
 
-        {/* === FUTURISTIC HIGH-TECH CARDS (Same design as NLP & Computer Vision) === */}
         <section className="py-16 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
@@ -170,14 +199,12 @@ result = clahe.apply(cv2.cvtColor(enhanced, cv2.COLOR_BGR2GRAY))`}
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {techniques.map((tech, i) => {
-                // High-Tech "Lab" Color Palettes (exactly same as CV & NLP)
                 const techThemes = [
                   { bg: "bg-slate-100", accent: "text-cyan-500", border: "hover:border-cyan-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(6,182,212,0.3)]", bar: "bg-cyan-400" },
                   { bg: "bg-zinc-100", accent: "text-indigo-500", border: "hover:border-indigo-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(99,102,241,0.3)]", bar: "bg-indigo-500" },
                   { bg: "bg-neutral-100", accent: "text-emerald-500", border: "hover:border-emerald-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(16,185,129,0.3)]", bar: "bg-emerald-400" },
                   { bg: "bg-gray-100", accent: "text-violet-500", border: "hover:border-violet-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(139,92,246,0.3)]", bar: "bg-violet-500" },
                 ];
-                
                 const theme = techThemes[i % techThemes.length];
 
                 return (
@@ -185,48 +212,54 @@ result = clahe.apply(cv2.cvtColor(enhanced, cv2.COLOR_BGR2GRAY))`}
                     key={i}
                     className={`group relative ${theme.bg} border border-gray-200 ${theme.border} ${theme.glow} rounded-none p-6 cursor-pointer transition-all duration-300 overflow-hidden font-sans`}
                   >
-                    {/* 1. FUTURISTIC UI ACCENTS */}
-                    {/* Top Left Tech Corner */}
                     <div className={`absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-gray-300 group-hover:border-transparent transition-colors duration-300 m-2`} />
                     <div className={`absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-transparent group-hover:${theme.border.replace('hover:', '')} transition-colors duration-300 m-2`} />
-                    
-                    {/* Animated Data Bar on the left */}
                     <div className={`absolute left-0 top-0 w-1 h-0 ${theme.bar} group-hover:h-full transition-all duration-500 ease-out`} />
 
-                    {/* 2. TEXT SECTION */}
                     <div className="relative z-10 flex flex-col gap-2 pl-4">
-                      {/* Tech Subheading/Index */}
                       <span className={`text-[10px] font-mono font-bold tracking-[0.2em] ${theme.accent} uppercase`}>
                         SYS.MODULE_0{i + 1}
                       </span>
-
                       <h3 className="font-bold text-xl text-gray-800 tracking-tight flex items-center gap-2 group-hover:translate-x-2 transition-transform duration-300 ease-out">
                         {tech.title}
                       </h3>
-
                       <p className="text-gray-500 text-sm leading-relaxed group-hover:text-gray-900 transition-colors duration-300">
                         {tech.desc}
                       </p>
                     </div>
 
-                    {/* 3. VERTICAL UNFOLD ANIMATION WITH IMAGE */}
                     <div className="pl-4 grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out mt-0 group-hover:mt-5">
-                      <div className="overflow-hidden relative bg-gray-900 group-hover:bg-transparent transition-colors duration-500">
-                        {tech.img ?
-                        <img
-                          src={tech.img}
-                          alt={tech.title}
-                          className="w-full h-auto object-cover origin-top scale-y-0 opacity-0 group-hover:scale-y-100 group-hover:opacity-100 transition-all duration-500 ease-out"
-                        />:
-                        <Image className="w-full h-52 text-gray-700 opacity-50" />}
+                      <div 
+                        className="overflow-hidden relative bg-gray-900 group-hover:bg-transparent transition-colors duration-500 cursor-zoom-in"
+                        onClick={() => tech.img && setSelectedImage(i)}
+                      >
+                        {tech.img ? (
+                          <img
+                            src={tech.img}
+                            alt={tech.title}
+                            className="w-full h-auto object-cover origin-top scale-y-0 opacity-0 group-hover:scale-y-100 group-hover:opacity-100 transition-all duration-500 ease-out"
+                          />
+                        ) : (
+                          <Image className="w-full h-52 text-gray-700 opacity-50" />
+                        )}
 
-                        {/* Futuristic Overlays */}
+                        {tech.img && (
+                          <div className="absolute top-4 right-4 z-30 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedImage(i);
+                              }}
+                              className="bg-black/70 hover:bg-black/90 text-white p-2 rounded-2xl backdrop-blur-md shadow-xl border border-white/20 transition-transform hover:scale-105"
+                              title="View full image"
+                            >
+                              <ZoomIn className="h-5 w-5" />
+                            </button>
+                          </div>
+                        )}
+
                         <div className="absolute inset-0 border border-white/20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-300 m-2" />
-                        
-                        {/* Holographic Scanning Laser */}
                         <div className="absolute left-0 w-full h-[2px] bg-white shadow-[0_0_10px_#fff] top-0 opacity-0 group-hover:opacity-100 group-hover:top-[100%] transition-all duration-[1500ms] ease-linear pointer-events-none z-20" />
-                        
-                        {/* Data Grid Overlay */}
                         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200" />
                       </div>
                     </div>
@@ -237,7 +270,6 @@ result = clahe.apply(cv2.cvtColor(enhanced, cv2.COLOR_BGR2GRAY))`}
           </div>
         </section>
 
-        {/* Process, Deliverables, Why Choose Us, Final CTA - unchanged */}
         <section className="py-16 md:py-24 bg-muted/50">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center mb-16">
@@ -362,6 +394,31 @@ result = clahe.apply(cv2.cvtColor(enhanced, cv2.COLOR_BGR2GRAY))`}
             </div>
           </div>
         </section>
+
+        {selectedImage !== null && (
+          <div
+            className="fixed inset-0 z-[9999] bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-[8px] backdrop-saturate-200 flex items-center justify-center p-4"
+            onClick={() => setSelectedImage(null)}
+          >
+            <div
+              className="relative max-w-[95vw] max-h-[95vh]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setSelectedImage(null)}
+                className="absolute -top-3 -right-3 z-50 bg-black/20 hover:bg-black/30 backdrop-blur-2xl text-white border cursor-pointer border-white/30 rounded-2xl p-3 shadow-2xl transition-all hover:scale-110"
+              >
+                <X className="h-5 w-5" />
+              </button>
+
+              <img
+                src={techniques[selectedImage].img}
+                alt={techniques[selectedImage].title}
+                className="max-h-[90vh] max-w-full object-contain rounded-3xl shadow-2xl"
+              />
+            </div>
+          </div>
+        )}
       </main>
       <Footer />
     </div>
