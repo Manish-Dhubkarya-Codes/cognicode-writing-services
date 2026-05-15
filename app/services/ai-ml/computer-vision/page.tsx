@@ -9,66 +9,18 @@ import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle, Camera, Eye, Image as ImageIcon, Video, Zap, Sparkles, GitBranch, FileText, ZoomIn, X } from "lucide-react";
 
 const techniques = [
-  { 
-    title: "CNN Model for MNIST & Fashion-MNIST", 
-    desc: "End-to-end CNN implementation for handwritten digit recognition and fashion item classification with high accuracy and visualization.",
-    img: "/data-driven-services/ai-ml/computer-vision/cnn-model.png", 
-  },
-  { 
-    title: "Fashion Image Classification & Visual Search", 
-    desc: "Advanced fashion product classification, attribute prediction, and visual similarity-based search systems." ,
-    img: "/data-driven-services/ai-ml/computer-vision/fashion-image.png",
-  },
-  { 
-    title: "Natural Image Classification (Data Augmentation)", 
-    desc: "High-performance image classification on natural images with robust data augmentation and transfer learning techniques." ,
-    img: "/data-driven-services/ai-ml/computer-vision/natural-image.png",
-  },
-  { 
-    title: "Indoor-Outdoor Scene Classification", 
-    desc: "Accurate scene understanding models to classify indoor vs outdoor environments with contextual awareness.",
-    img: "/data-driven-services/ai-ml/computer-vision/indoor-outdoor.png", 
-  },
-  { 
-    title: "Aerial Scene Classification (Deep Fusion)", 
-    desc: "Advanced aerial/satellite imagery classification using multi-scale deep fusion and attention mechanisms.",
-    img: "/data-driven-services/ai-ml/computer-vision/aerial-scene.png", 
-  },
-  { 
-    title: "Multi-label Image Classification", 
-    desc: "Multi-label tagging systems capable of detecting multiple objects, attributes, or scenes in a single image.",
-    img: "/data-driven-services/ai-ml/computer-vision/multi-label.png", 
-  },
-  { 
-    title: "Fake Image Detection using CNN", 
-    desc: "Deep learning models for detecting deepfakes, GAN-generated, and manipulated images with high precision.",
-    img: "/data-driven-services/ai-ml/computer-vision/fake-image.png", 
-  },
-  { 
-    title: "Facial Expression Recognition", 
-    desc: "Real-time emotion detection (happy, sad, angry, surprise, etc.) using FER datasets and modern architectures.",
-    img: "/data-driven-services/ai-ml/computer-vision/facial-expression.png", 
-  },
-  { 
-    title: "Age & Gender Prediction", 
-    desc: "Robust age estimation and gender classification from facial images with demographic analysis.",
-    img: "/data-driven-services/ai-ml/computer-vision/age-gender.png", 
-  },
-  { 
-    title: "Vehicle Detection (Vision + LiDAR)", 
-    desc: "Multi-modal vehicle detection and tracking combining camera vision with LiDAR data for autonomous systems.",
-    img: "/data-driven-services/ai-ml/computer-vision/vehicle-detection.png", 
-  },
-  { 
-    title: "Crowd Monitoring / Social Distance Detection", 
-    desc: "Real-time crowd density analysis, people counting, and social distancing violation detection.",
-    img: "/data-driven-services/ai-ml/computer-vision/crowd-monitoring.png", 
-  },
-  { 
-    title: "Public Security Video Investigation System", 
-    desc: "Intelligent video surveillance system for anomaly detection, person re-identification, and forensic analysis.",
-    img: "/data-driven-services/ai-ml/computer-vision/public-security.png", 
-  },
+  { title: "CNN Model for MNIST & Fashion-MNIST", desc: "End-to-end CNN implementation for handwritten digit recognition and fashion item classification with high accuracy and visualization.", img: "/data-driven-services/ai-ml/computer-vision/cnn-model.png" },
+  { title: "Fashion Image Classification & Visual Search", desc: "Advanced fashion product classification, attribute prediction, and visual similarity-based search systems.", img: "/data-driven-services/ai-ml/computer-vision/fashion-image.png" },
+  { title: "Natural Image Classification (Data Augmentation)", desc: "High-performance image classification on natural images with robust data augmentation and transfer learning techniques.", img: "/data-driven-services/ai-ml/computer-vision/natural-image.png" },
+  { title: "Indoor-Outdoor Scene Classification", desc: "Accurate scene understanding models to classify indoor vs outdoor environments with contextual awareness.", img: "/data-driven-services/ai-ml/computer-vision/indoor-outdoor.png" },
+  { title: "Aerial Scene Classification (Deep Fusion)", desc: "Advanced aerial/satellite imagery classification using multi-scale deep fusion and attention mechanisms.", img: "/data-driven-services/ai-ml/computer-vision/aerial-scene.png" },
+  { title: "Multi-label Image Classification", desc: "Multi-label tagging systems capable of detecting multiple objects, attributes, or scenes in a single image.", img: "/data-driven-services/ai-ml/computer-vision/multi-label.png" },
+  { title: "Fake Image Detection using CNN", desc: "Deep learning models for detecting deepfakes, GAN-generated, and manipulated images with high precision.", img: "/data-driven-services/ai-ml/computer-vision/fake-image.png" },
+  { title: "Facial Expression Recognition", desc: "Real-time emotion detection (happy, sad, angry, surprise, etc.) using FER datasets and modern architectures.", img: "/data-driven-services/ai-ml/computer-vision/facial-expression.png" },
+  { title: "Age & Gender Prediction", desc: "Robust age estimation and gender classification from facial images with demographic analysis.", img: "/data-driven-services/ai-ml/computer-vision/age-gender.png" },
+  { title: "Vehicle Detection (Vision + LiDAR)", desc: "Multi-modal vehicle detection and tracking combining camera vision with LiDAR data for autonomous systems.", img: "/data-driven-services/ai-ml/computer-vision/vehicle-detection.png" },
+  { title: "Crowd Monitoring / Social Distance Detection", desc: "Real-time crowd density analysis, people counting, and social distancing violation detection.", img: "/data-driven-services/ai-ml/computer-vision/crowd-monitoring.png" },
+  { title: "Public Security Video Investigation System", desc: "Intelligent video surveillance system for anomaly detection, person re-identification, and forensic analysis.", img: "/data-driven-services/ai-ml/computer-vision/public-security.png" },
 ];
 
 const deliverables = [
@@ -103,40 +55,20 @@ const benefits = [
 export default function ComputerVisionPage() {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
 
-useEffect(() => {
+  // Lightweight scroll lock – only prevents background scrolling
+  useEffect(() => {
     if (selectedImage !== null) {
-      const scrollY = window.scrollY;
-
-      // Lock everything
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
-      document.documentElement.style.overflow = 'hidden';   // also lock <html>
-
-      return () => {
-        // Cleanup on unmount
-        document.body.style.position = '';
-        document.body.style.top = '';
-        document.body.style.width = '';
-        document.documentElement.style.overflow = 'visible';
-        window.scrollTo(0, scrollY);
-      };
+      document.documentElement.style.overflow = 'hidden';
     } else {
-      // Restore scroll when modal closes
-      const scrollY = document.body.style.top;
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
       document.documentElement.style.overflow = 'visible';
-      window.scrollTo(0, parseInt(scrollY || '0') * -1);
     }
   }, [selectedImage]);
 
+  // ESC key support
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") setSelectedImage(null);
     };
-
     window.addEventListener("keydown", handleEsc);
     return () => window.removeEventListener("keydown", handleEsc);
   }, []);
@@ -145,7 +77,7 @@ useEffect(() => {
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1 mt-17">
-        {/* Hero Section (unchanged) */}
+        {/* Hero Section */}
         <section className="bg-gradient-to-br from-blue-50 via-indigo-50 to-background py-20 md:py-28">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -198,7 +130,7 @@ useEffect(() => {
           </div>
         </section>
 
-        {/* Techniques Section - Updated Zoom Icon (smaller) */}
+        {/* Techniques Section with Image Popup */}
         <section className="py-16 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
@@ -221,7 +153,6 @@ useEffect(() => {
                     key={i}
                     className={`group relative ${theme.bg} border border-gray-200 ${theme.border} ${theme.glow} rounded-none p-6 cursor-pointer transition-all duration-300 overflow-hidden`}
                   >
-                    {/* Futuristic accents (unchanged) */}
                     <div className={`absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-gray-300 group-hover:border-transparent transition-colors duration-300 m-2`} />
                     <div className={`absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-transparent group-hover:${theme.border.replace('hover:', '')} transition-colors duration-300 m-2`} />
                     <div className={`absolute left-0 top-0 w-1 h-0 ${theme.bar} group-hover:h-full transition-all duration-500 ease-out`} />
@@ -238,7 +169,6 @@ useEffect(() => {
                       </p>
                     </div>
 
-                    {/* Image Container */}
                     <div className="pl-4 grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out mt-0 group-hover:mt-5">
                       <div 
                         className="overflow-hidden relative bg-gray-900 group-hover:bg-transparent transition-colors duration-500 cursor-zoom-in"
@@ -254,7 +184,6 @@ useEffect(() => {
                           <Camera className="w-full h-52 text-gray-700 opacity-50" />
                         )}
 
-                        {/* SMALLER ZOOM ICON */}
                         {tech.img && (
                           <div className="absolute top-4 right-4 z-30 opacity-0 group-hover:opacity-100 transition-all duration-300">
                             <button
@@ -270,7 +199,6 @@ useEffect(() => {
                           </div>
                         )}
 
-                        {/* Overlays (unchanged) */}
                         <div className="absolute inset-0 border border-white/20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-300 m-2" />
                         <div className="absolute left-0 w-full h-[2px] bg-white shadow-[0_0_10px_#fff] top-0 opacity-0 group-hover:opacity-100 group-hover:top-[100%] transition-all duration-[1500ms] ease-linear pointer-events-none z-20" />
                         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200" />
@@ -283,35 +211,34 @@ useEffect(() => {
           </div>
         </section>
 
-        {/* Process, Deliverables, Why Choose Us, Final CTA sections remain unchanged */}
-        {/* ... (copy them from your previous working file) ... */}
+        {/* Process, Deliverables, Benefits, CTA sections remain unchanged */}
+        {/* (Copy them from your original file if needed) */}
 
-        {/* CLEAN GLASSY IMAGE POPUP - Just the image (no caption, no heavy card) */}
-{selectedImage !== null && (
-  <div
-    className="fixed inset-0 z-[9999] bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-[8px] backdrop-saturate-200 flex items-center justify-center p-4"
-    onClick={() => setSelectedImage(null)}
-  >
-    <div
-      className="relative max-w-[95vw] max-h-[95vh]"
-      onClick={(e) => e.stopPropagation()}
-    >
-      {/* GLASS CLOSE BUTTON */}
-      <button
-        onClick={() => setSelectedImage(null)}
-        className="absolute -top-3 -right-3 z-50 bg-black/20 hover:bg-black/30 backdrop-blur-2xl text-white border cursor-pointer border-white/30 rounded-2xl p-3 shadow-2xl transition-all hover:scale-110"
-      >
-        <X className="h-5 w-5" />
-      </button>
+        {/* CLEAN GLASSY IMAGE POPUP */}
+        {selectedImage !== null && (
+          <div
+            className="fixed inset-0 z-[9999] bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-[8px] backdrop-saturate-200 flex items-center justify-center p-4"
+            onClick={() => setSelectedImage(null)}
+          >
+            <div
+              className="relative max-w-[95vw] max-h-[95vh]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setSelectedImage(null)}
+                className="absolute -top-3 -right-3 z-50 bg-black/20 hover:bg-black/30 backdrop-blur-2xl text-white border cursor-pointer border-white/30 rounded-2xl p-3 shadow-2xl transition-all hover:scale-110"
+              >
+                <X className="h-5 w-5" />
+              </button>
 
-      <img
-        src={techniques[selectedImage].img}
-        alt={techniques[selectedImage].title}
-        className="max-h-[90vh] max-w-full object-contain rounded-3xl shadow-2xl"
-      />
-    </div>
-  </div>
-)}
+              <img
+                src={techniques[selectedImage].img}
+                alt={techniques[selectedImage].title}
+                className="max-h-[90vh] max-w-full object-contain rounded-3xl shadow-2xl"
+              />
+            </div>
+          </div>
+        )}
       </main>
       <Footer />
     </div>

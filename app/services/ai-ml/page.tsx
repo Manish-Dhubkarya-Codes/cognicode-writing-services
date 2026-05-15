@@ -5,6 +5,7 @@ import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle, Users, Clock, Shield, Award, Brain, Network, TrendingUp, Target, Cpu } from "lucide-react";
+import Img from "@/public/data-driven-services/ai-ml/computer-vision/computer-vision.png"
 
 export const metadata: Metadata = { 
   title: "Computer Vision, NLP, Deep Learning & AI Solutions | CogniCode", 
@@ -16,7 +17,8 @@ const features = [
     icon: Cpu, 
     title: "Computer Vision", 
     description: "Advanced computer vision solutions including object detection, image segmentation, facial recognition, and video analysis using YOLO, Detectron2, and custom CNN architectures.",
-    href: "/services/ai-ml/computer-vision"
+    href: "/services/ai-ml/computer-vision",
+    image:"/data-driven-services/ai-ml/computer-vision/computer-vision.png"
   },
   { 
     icon: Brain, 
@@ -149,18 +151,39 @@ export default function ServicePage() {
             </div>
             <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {features.map((f, i) => (
-                <Link key={i} href={f.href} className="block group">
-                  <Card className="border-none shadow-lg hover:shadow-2xl transition-all duration-300 h-full group-hover:-translate-y-1">
-                    <CardContent className="p-6">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                        <f.icon className="h-6 w-6 text-primary" />
-                      </div>
-                      <h3 className="mt-4 text-lg font-semibold text-foreground">{f.title}</h3>
-                      <p className="mt-2 text-muted-foreground">{f.description}</p>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
+  <Link key={i} href={f.href} className="block group">
+    <Card className="relative overflow-hidden border-none shadow-lg hover:shadow-2xl transition-all duration-300 h-full group-hover:-translate-y-1">
+      
+      {/* Background Image - Full Visibility */}
+      <div className="absolute inset-0 z-0">
+        <img 
+          src={f.image} 
+          alt={f.title}
+          className="h-full w-full object-cover transition-transform duration-700 scale-105"
+        />
+        {/* Soft Gradient Overlay: Dark only at the bottom, clear at the top */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+      </div>
+
+      {/* Content Container - Pushed to the bottom */}
+      <CardContent className="relative z-10 p-6 flex flex-col h-full justify-end min-h-[300px]">
+        {/* Icon with a subtle backdrop blur */}
+        <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-md bg-white/20 backdrop-blur-md border border-white/30">
+          <f.icon className="h-5 w-5 text-white" />
+        </div>
+        
+        {/* Text with subtle shadow for legibility */}
+        <h3 className="text-xl font-bold text-white drop-shadow-md">
+          {f.title}
+        </h3>
+        <p className="mt-2 text-sm text-gray-100/90 drop-shadow-sm">
+          {f.description}
+        </p>
+      </CardContent>
+
+    </Card>
+  </Link>
+))}
             </div>
           </div>
         </section>

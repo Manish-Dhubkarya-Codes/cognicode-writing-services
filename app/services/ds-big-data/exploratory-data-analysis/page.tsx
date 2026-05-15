@@ -1,15 +1,12 @@
-import { Metadata } from "next";
+'use client';
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle, Search, BarChart3, TrendingUp, Eye, GitBranch, FileText, Award, Sparkles } from "lucide-react";
-
-export const metadata: Metadata = {
-  title: "Exploratory Data Analysis (EDA) | CogniCode",
-  description: "Expert Exploratory Data Analysis (EDA) for PhD research and big data projects. In-depth statistical summaries, correlation analysis, distribution visualization, pattern discovery, and actionable insights using Python, R, and interactive notebooks.",
-};
+import { CheckCircle, Search, BarChart3, TrendingUp, Eye, GitBranch, FileText, Award, Sparkles, ZoomIn, X } from "lucide-react";
 
 const techniques = [
   {
@@ -84,6 +81,26 @@ const benefits = [
 ];
 
 export default function ExploratoryDataAnalysisPage() {
+  const [selectedImage, setSelectedImage] = useState<number | null>(null);
+
+  // Lightweight scroll lock
+  useEffect(() => {
+    if (selectedImage !== null) {
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      document.documentElement.style.overflow = 'visible';
+    }
+  }, [selectedImage]);
+
+  // ESC key support
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelectedImage(null);
+    };
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, []);
+
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
@@ -137,7 +154,7 @@ plt.show()`}
           </div>
         </section>
 
-        {/* === FUTURISTIC HIGH-TECH CARDS === */}
+        {/* Techniques Section with Image Popup */}
         <section className="py-16 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
@@ -152,7 +169,6 @@ plt.show()`}
                   { bg: "bg-neutral-100", accent: "text-emerald-500", border: "hover:border-emerald-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(16,185,129,0.3)]", bar: "bg-emerald-400" },
                   { bg: "bg-gray-100", accent: "text-violet-500", border: "hover:border-violet-400", glow: "hover:shadow-[0_0_30px_-5px_rgba(139,92,246,0.3)]", bar: "bg-violet-500" },
                 ];
-                
                 const theme = techThemes[i % techThemes.length];
 
                 return (
@@ -160,14 +176,10 @@ plt.show()`}
                     key={i}
                     className={`group relative ${theme.bg} border border-gray-200 ${theme.border} ${theme.glow} rounded-none p-6 cursor-pointer transition-all duration-300 overflow-hidden font-sans`}
                   >
-                    {/* Futuristic UI Accents */}
                     <div className={`absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-gray-300 group-hover:border-transparent transition-colors duration-300 m-2`} />
                     <div className={`absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-transparent group-hover:${theme.border.replace('hover:', '')} transition-colors duration-300 m-2`} />
-                    
-                    {/* Animated Data Bar */}
                     <div className={`absolute left-0 top-0 w-1 h-0 ${theme.bar} group-hover:h-full transition-all duration-500 ease-out`} />
 
-                    {/* Text Section */}
                     <div className="relative z-10 flex flex-col gap-2 pl-4">
                       <span className={`text-[10px] font-mono font-bold tracking-[0.2em] ${theme.accent} uppercase`}>
                         SYS.MODULE_0{i + 1}
@@ -180,15 +192,36 @@ plt.show()`}
                       </p>
                     </div>
 
-                    {/* Image Unfold Animation */}
                     <div className="pl-4 grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out mt-0 group-hover:mt-5">
-                      <div className="overflow-hidden relative bg-gray-900 group-hover:bg-transparent transition-colors duration-500">
-                        <img
-                          src={tech.img}
-                          alt={tech.title}
-                          className="w-full h-auto object-cover origin-top scale-y-0 opacity-0 group-hover:scale-y-100 group-hover:opacity-100 transition-all duration-500 ease-out"
-                        />
-                        {/* Futuristic Overlays */}
+                      <div 
+                        className="overflow-hidden relative bg-gray-900 group-hover:bg-transparent transition-colors duration-500 cursor-zoom-in"
+                        onClick={() => tech.img && setSelectedImage(i)}
+                      >
+                        {tech.img ? (
+                          <img
+                            src={tech.img}
+                            alt={tech.title}
+                            className="w-full h-auto object-cover origin-top scale-y-0 opacity-0 group-hover:scale-y-100 group-hover:opacity-100 transition-all duration-500 ease-out"
+                          />
+                        ) : (
+                          <BarChart3 className="w-full h-52 text-gray-700 opacity-50" />
+                        )}
+
+                        {tech.img && (
+                          <div className="absolute top-4 right-4 z-30 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedImage(i);
+                              }}
+                              className="bg-black/70 hover:bg-black/90 text-white p-2 rounded-2xl backdrop-blur-md shadow-xl border border-white/20 transition-transform hover:scale-105"
+                              title="View full image"
+                            >
+                              <ZoomIn className="h-5 w-5" />
+                            </button>
+                          </div>
+                        )}
+
                         <div className="absolute inset-0 border border-white/20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-300 m-2" />
                         <div className="absolute left-0 w-full h-[2px] bg-white shadow-[0_0_10px_#fff] top-0 opacity-0 group-hover:opacity-100 group-hover:top-[100%] transition-all duration-[1500ms] ease-linear pointer-events-none z-20" />
                         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200" />
@@ -201,7 +234,7 @@ plt.show()`}
           </div>
         </section>
 
-        {/* Process, Deliverables, Why Choose Us, Final CTA - unchanged */}
+        {/* Rest of your sections (Process, Deliverables, Benefits, CTA) remain unchanged */}
         <section className="py-16 md:py-24 bg-muted/50">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center mb-16">
@@ -326,6 +359,32 @@ plt.show()`}
             </div>
           </div>
         </section>
+
+        {/* CLEAN GLASSY IMAGE POPUP */}
+        {selectedImage !== null && (
+          <div
+            className="fixed inset-0 z-[9999] bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-[8px] backdrop-saturate-200 flex items-center justify-center p-4"
+            onClick={() => setSelectedImage(null)}
+          >
+            <div
+              className="relative max-w-[95vw] max-h-[95vh]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setSelectedImage(null)}
+                className="absolute -top-3 -right-3 z-50 bg-black/20 hover:bg-black/30 backdrop-blur-2xl text-white border cursor-pointer border-white/30 rounded-2xl p-3 shadow-2xl transition-all hover:scale-110"
+              >
+                <X className="h-5 w-5" />
+              </button>
+
+              <img
+                src={techniques[selectedImage].img}
+                alt={techniques[selectedImage].title}
+                className="max-h-[90vh] max-w-full object-contain rounded-3xl shadow-2xl"
+              />
+            </div>
+          </div>
+        )}
       </main>
       <Footer />
     </div>

@@ -113,31 +113,16 @@ const benefits = [
 export default function AMOSAnalysisPage() {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
 
+  // Lightweight scroll lock – only prevents background scrolling
   useEffect(() => {
     if (selectedImage !== null) {
-      const scrollY = window.scrollY;
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
       document.documentElement.style.overflow = 'hidden';
-
-      return () => {
-        document.body.style.position = '';
-        document.body.style.top = '';
-        document.body.style.width = '';
-        document.documentElement.style.overflow = 'visible';
-        window.scrollTo(0, scrollY);
-      };
     } else {
-      const scrollY = document.body.style.top;
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
       document.documentElement.style.overflow = 'visible';
-      window.scrollTo(0, parseInt(scrollY || '0') * -1);
     }
   }, [selectedImage]);
 
+  // ESC key support
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") setSelectedImage(null);

@@ -1,6 +1,6 @@
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
-import { HeroSection } from "@/components/home/hero-section";
+import HeroSection from "@/components/home/hero-section";
 import { StatsSection } from "@/components/home/stats-section";
 import { ServicesSection } from "@/components/home/services-section";
 import { WhyChooseUsSection } from "@/components/home/why-choose-us-section";

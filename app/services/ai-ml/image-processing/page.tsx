@@ -93,31 +93,16 @@ const benefits = [
 export default function ImageProcessingPage() {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
 
+  // Lightweight scroll lock – only prevents background scrolling
   useEffect(() => {
     if (selectedImage !== null) {
-      const scrollY = window.scrollY;
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
       document.documentElement.style.overflow = 'hidden';
-
-      return () => {
-        document.body.style.position = '';
-        document.body.style.top = '';
-        document.body.style.width = '';
-        document.documentElement.style.overflow = 'visible';
-        window.scrollTo(0, scrollY);
-      };
     } else {
-      const scrollY = document.body.style.top;
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
       document.documentElement.style.overflow = 'visible';
-      window.scrollTo(0, parseInt(scrollY || '0') * -1);
     }
   }, [selectedImage]);
 
+  // ESC key support
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") setSelectedImage(null);
@@ -367,7 +352,7 @@ result = clahe.apply(cv2.cvtColor(enhanced, cv2.COLOR_BGR2GRAY))`}
               <Card className="bg-white text-foreground">
                 <CardContent className="p-8">
                   <h3 className="text-2xl font-semibold mb-2">Get Your Image Processing Proposal</h3>
-                  <p className="text-muted-foreground mb-6">Share your images and requirements — receive a detailed technical proposal within 24 hours.</p>
+                  <p className="text-muted-foreground mb-6">Share your images and requirements: receive a detailed technical proposal within 24 hours.</p>
                   <form className="space-y-4">
                     <input type="text" placeholder="Your Name" className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
                     <input type="email" placeholder="University / Company Email" className="w-full rounded-xl border border-border bg-background px-5 py-4 text-sm" />
@@ -383,7 +368,7 @@ result = clahe.apply(cv2.cvtColor(enhanced, cv2.COLOR_BGR2GRAY))`}
         <section className="py-20 border-t">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-4xl font-bold">Ready to Transform Your Images?</h2>
-            <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From raw noisy images to publication-quality visuals — we deliver fast, accurate, and scalable image processing solutions.</p>
+            <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From raw noisy images to publication-quality visuals: we deliver fast, accurate, and scalable image processing solutions.</p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
                 <Link href="/contact">Start Your Image Processing Project</Link>
