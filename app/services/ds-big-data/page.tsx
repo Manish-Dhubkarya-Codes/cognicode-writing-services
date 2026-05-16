@@ -16,25 +16,29 @@ const features = [
     icon: Database,
     title: "Data Cleaning & Preprocessing",
     description: "Comprehensive data wrangling : handling missing values, outliers, duplicates, normalization, feature scaling, encoding, and pipeline automation using Pandas, NumPy, and PySpark.",
-    href: "/services/ds-big-data/data-cleaning-preprocessing"
+    href: "/services/ds-big-data/data-cleaning-preprocessing",
+    image: "/data-driven-services/ds-bigdata/data-clean/data-cleaning.png"
   },
   {
     icon: Search,
     title: "Exploratory Data Analysis (EDA)",
     description: "In-depth statistical summaries, correlation analysis, distribution visualization, pattern discovery, and actionable insights using Python, R, and interactive notebooks.",
-    href: "/services/ds-big-data/exploratory-data-analysis"
+    href: "/services/ds-big-data/exploratory-data-analysis",
+    image: "/data-driven-services/ds-bigdata/eda/eda.png"
   },
   {
     icon: Server,
     title: "Big Data Analytics",
     description: "Scalable processing of massive datasets with Apache Spark, Hadoop, Hive, Kafka, and distributed computing for real-time analytics and batch processing.",
-    href: "/services/ds-big-data/big-data-analytics"
+    href: "/services/ds-big-data/big-data-analytics",
+    image: "/data-driven-services/ds-bigdata/bd-analytics/big-data.png"
   },
   {
     icon: BarChart3,
     title: "Data Visualization & Dashboarding",
     description: "Interactive dashboards and publication-ready visualizations using Tableau, Power BI, Matplotlib, Seaborn, Plotly, Dash, and Streamlit for clear data storytelling.",
-    href: "/services/ds-big-data/data-visualization-dashboarding"
+    href: "/services/ds-big-data/data-visualization-dashboarding",
+    image: "/data-driven-services/ds-bigdata/data-visual/visualization.png"
   },
 ];
 
@@ -150,7 +154,7 @@ export default function ServicePage() {
           </div>
         </section>
 
-        {/* What We Deliver - Clickable Cards */}
+        {/* What We Deliver - Clickable Cards with Banner Images */}
         <section className="py-16 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
@@ -161,17 +165,38 @@ export default function ServicePage() {
                 Click on any service below to explore detailed offerings
               </p>
             </div>
-            <div className="mt-16 grid gap-8 md:grid-cols-2">
+            <div className="mt-16 grid gap-8 md:grid-cols-3">
               {features.map((f, i) => (
                 <Link key={i} href={f.href} className="block group">
-                  <Card className="border-none shadow-lg hover:shadow-2xl transition-all duration-300 h-full group-hover:-translate-y-1">
-                    <CardContent className="p-6">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                        <f.icon className="h-6 w-6 text-primary" />
+                  <Card className="relative overflow-hidden border-none shadow-lg hover:shadow-2xl transition-all duration-300 h-full group-hover:-translate-y-1">
+                    
+                    {/* Background Image - Full Visibility */}
+                    <div className="absolute inset-0 z-0">
+                      <img 
+                        src={f.image} 
+                        alt={f.title}
+                        className="h-full w-full object-cover transition-transform duration-700"
+                      />
+                      {/* Soft Gradient Overlay: Dark only at the bottom, clear at the top */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+                    </div>
+
+                    {/* Content Container - Pushed to the bottom */}
+                    <CardContent className="relative z-10 p-6 flex flex-col h-full justify-end min-h-[300px]">
+                      {/* Icon with a subtle backdrop blur */}
+                      <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-md bg-white/20 backdrop-blur-md border border-white/30">
+                        <f.icon className="h-5 w-5 text-white" />
                       </div>
-                      <h3 className="mt-4 text-lg font-semibold text-foreground">{f.title}</h3>
-                      <p className="mt-2 text-muted-foreground">{f.description}</p>
+                      
+                      {/* Text with subtle shadow for legibility */}
+                      <h3 className="text-xl font-bold text-white drop-shadow-md">
+                        {f.title}
+                      </h3>
+                      <p className="mt-2 text-sm text-gray-100/90 drop-shadow-sm">
+                        {f.description}
+                      </p>
                     </CardContent>
+
                   </Card>
                 </Link>
               ))}

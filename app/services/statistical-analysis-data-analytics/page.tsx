@@ -16,31 +16,36 @@ const features = [
     icon: BarChart3,
     title: "Statistical Package for the Social Sciences (SPSS)",
     description: "Complete SPSS-based statistical analysis including data cleaning, descriptive statistics, hypothesis testing, regression, and advanced multivariate analysis with publication-ready output.",
-    href: "/services/statistical-analysis-data-analytics/spss"
+    href: "/services/statistical-analysis-data-analytics/spss",
+    image: "/data-driven-services/sa-da/spss/spss.png"
   },
   {
     icon: Layers,
     title: "Analysis of Moment Structures (AMOS)",
     description: "Professional AMOS modeling for path analysis, structural equation modeling, and complex relationships with excellent visual diagrams and model fit assessment.",
-    href: "/services/statistical-analysis-data-analytics/amos"
+    href: "/services/statistical-analysis-data-analytics/amos",
+    image: "/data-driven-services/sa-da/amos/amos.png"
   },
   {
     icon: Target,
     title: "Confirmatory Factor Analysis (CFA)",
     description: "Advanced CFA using AMOS and SmartPLS to validate measurement models, assess construct validity, reliability, and model fit indices for research instruments.",
-    href: "/services/statistical-analysis-data-analytics/cfa"
+    href: "/services/statistical-analysis-data-analytics/cfa",
+    image: "/data-driven-services/sa-da/cfa/cfa.png"
   },
   {
     icon: TrendingUp,
     title: "Structural Equation Modeling (SEM)",
     description: "Comprehensive Structural Equation Modeling (SEM) using AMOS and SmartPLS including mediation, moderation, and multi-group analysis with detailed interpretation.",
-    href: "/services/statistical-analysis-data-analytics/sem"
+    href: "/services/statistical-analysis-data-analytics/sem",
+    image: "/data-driven-services/sa-da/sem/sem.png"
   },
   {
     icon: Layers,
     title: "SmartPLS Analysis",
     description: "Expert Partial Least Squares Structural Equation Modeling (PLS-SEM) using SmartPLS for predictive modeling, complex models, and exploratory research with bootstrapping.",
-    href: "/services/statistical-analysis-data-analytics/smartpls"
+    href: "/services/statistical-analysis-data-analytics/smartpls",
+    image: "/data-driven-services/sa-da/smartpls-analysis/smartpls.png"
   },
 ];
 
@@ -158,7 +163,7 @@ export default function ServicePage() {
           </div>
         </section>
 
-        {/* What We Deliver - Clickable Cards */}
+        {/* What We Deliver - Clickable Cards with Banner Images */}
         <section className="py-16 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
@@ -172,14 +177,35 @@ export default function ServicePage() {
             <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {features.map((f, i) => (
                 <Link key={i} href={f.href} className="block group">
-                  <Card className="border-none shadow-lg hover:shadow-2xl transition-all duration-300 h-full group-hover:-translate-y-1">
-                    <CardContent className="p-6">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                        <f.icon className="h-6 w-6 text-primary" />
+                  <Card className="relative overflow-hidden border-none shadow-lg hover:shadow-2xl transition-all duration-300 h-full group-hover:-translate-y-1">
+                    
+                    {/* Background Image - Full Visibility */}
+                    <div className="absolute inset-0 z-0">
+                      <img 
+                        src={f.image} 
+                        alt={f.title}
+                        className="h-full w-full object-cover transition-transform duration-700 scale-105"
+                      />
+                      {/* Soft Gradient Overlay: Dark only at the bottom, clear at the top */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+                    </div>
+
+                    {/* Content Container - Pushed to the bottom */}
+                    <CardContent className="relative z-10 p-6 flex flex-col h-full justify-end min-h-[300px]">
+                      {/* Icon with a subtle backdrop blur */}
+                      <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-md bg-white/20 backdrop-blur-md border border-white/30">
+                        <f.icon className="h-5 w-5 text-white" />
                       </div>
-                      <h3 className="mt-4 text-lg font-semibold text-foreground">{f.title}</h3>
-                      <p className="mt-2 text-muted-foreground">{f.description}</p>
+                      
+                      {/* Text with subtle shadow for legibility */}
+                      <h3 className="text-xl font-bold text-white drop-shadow-md">
+                        {f.title}
+                      </h3>
+                      <p className="mt-2 text-sm text-gray-100/90 drop-shadow-sm">
+                        {f.description}
+                      </p>
                     </CardContent>
+
                   </Card>
                 </Link>
               ))}

@@ -24,31 +24,36 @@ const features = [
     icon: Brain, 
     title: "Natural Language Processing (NLP)", 
     description: "Build powerful NLP systems for text classification, sentiment analysis, named entity recognition, question answering, and large language model fine-tuning with Transformers.",
-    href: "/services/ai-ml/nlp"
+    href: "/services/ai-ml/nlp",
+    image:"/data-driven-services/ai-ml/nlp/npl.png"
   },
   { 
     icon: Network, 
     title: "Image Processing", 
     description: "Professional image enhancement, restoration, feature extraction, and preprocessing pipelines using OpenCV, Pillow, and deep learning-based techniques.",
-    href: "/services/ai-ml/image-processing"
+    href: "/services/ai-ml/image-processing",
+    image:"/data-driven-services/ai-ml/ip/ip.png"
   },
   { 
     icon: TrendingUp, 
     title: "Deep Learning", 
     description: "End-to-end deep learning solutions with modern architectures (CNNs, RNNs, Transformers, Diffusion Models) using PyTorch and TensorFlow for complex research problems.",
-    href: "/services/ai-ml/deep-learning"
+    href: "/services/ai-ml/deep-learning",
+    image:"/data-driven-services/ai-ml/dl/dl.png"
   },
   { 
     icon: Shield, 
     title: "Healthcare AI & Biomedical Systems", 
     description: "Specialized AI for medical imaging, disease prediction, drug discovery, genomics analysis, and clinical decision support systems with regulatory compliance focus.",
-    href: "/services/ai-ml/healthcare-ai"
+    href: "/services/ai-ml/healthcare-ai",
+    image:"/data-driven-services/ai-ml/healthcare-ai/healthcare-ai.png"
   },
   { 
     icon: Target, 
     title: "Cybersecurity, Fraud Detection & Data Science", 
     description: "AI-powered fraud detection, anomaly detection, threat intelligence, and advanced data science solutions to secure systems and extract actionable insights from complex data.",
-    href: "/services/ai-ml/cybersecurity-fraud-detection"
+    href: "/services/ai-ml/cybersecurity-fraud-detection",
+    image:"/data-driven-services/ai-ml/cyber-security-ds/cybersecurity.png"
   },
 ];
 

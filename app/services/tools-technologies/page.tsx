@@ -16,25 +16,29 @@ const features = [
     icon: Code,
     title: "Python, R, MATLAB",
     description: "Advanced programming and scripting in Python, R, and MATLAB for data analysis, statistical modeling, simulations, algorithm development, and reproducible research workflows.",
-    href: "/services/tools-technologies/python-r-matlab"
+    href: "/services/tools-technologies/python-r-matlab",
+    image: "/data-driven-services/tools-techno/python-matlab/python-r-matlab.png"
   },
   {
     icon: BarChart3,
     title: "SPSS, STATA",
     description: "Professional statistical analysis using SPSS and STATA : from data management and descriptive statistics to complex econometric modeling and hypothesis testing.",
-    href: "/services/tools-technologies/spss-stata"
+    href: "/services/tools-technologies/spss-stata",
+    image: "/data-driven-services/tools-techno/spss-stata/spss-stata.png"
   },
   {
     icon: Brain,
     title: "TensorFlow, PyTorch",
     description: "Deep learning and machine learning model development with TensorFlow and PyTorch : including custom architectures, training pipelines, transfer learning, and model optimization.",
-    href: "/services/tools-technologies/tensorflow-pytorch"
+    href: "/services/tools-technologies/tensorflow-pytorch",
+    image: "/data-driven-services/tools-techno/tensorflow/tensorflow-pytorch.png"
   },
   {
     icon: Monitor,
     title: "Tableau, Power BI",
     description: "Interactive data visualization and business intelligence dashboards using Tableau and Power BI : creating publication-ready reports, real-time analytics, and compelling data storytelling.",
-    href: "/services/tools-technologies/tableau-power-bi"
+    href: "/services/tools-technologies/tableau-power-bi",
+    image: "/data-driven-services/tools-techno/tableau-powerbi/tableau-power-bi.png"
   },
 ];
 
@@ -150,7 +154,7 @@ export default function ServicePage() {
           </div>
         </section>
 
-        {/* What We Deliver - Clickable Cards */}
+        {/* What We Deliver - Clickable Cards with Banner Images */}
         <section className="py-16 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
@@ -161,17 +165,38 @@ export default function ServicePage() {
                 Click on any service below to explore detailed offerings
               </p>
             </div>
-            <div className="mt-16 grid gap-8 md:grid-cols-2">
+            <div className="mt-16 grid gap-8 md:grid-cols-3">
               {features.map((f, i) => (
                 <Link key={i} href={f.href} className="block group">
-                  <Card className="border-none shadow-lg hover:shadow-2xl transition-all duration-300 h-full group-hover:-translate-y-1">
-                    <CardContent className="p-6">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                        <f.icon className="h-6 w-6 text-primary" />
+                  <Card className="relative overflow-hidden border-none shadow-lg hover:shadow-2xl transition-all duration-300 h-full group-hover:-translate-y-1">
+                    
+                    {/* Background Image - Full Visibility */}
+                    <div className="absolute inset-0 z-0">
+                      <img 
+                        src={f.image} 
+                        alt={f.title}
+                        className="h-full w-full object-cover transition-transform duration-700"
+                      />
+                      {/* Soft Gradient Overlay: Dark only at the bottom, clear at the top */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+                    </div>
+
+                    {/* Content Container - Pushed to the bottom */}
+                    <CardContent className="relative z-10 p-6 flex flex-col h-full justify-end min-h-[300px]">
+                      {/* Icon with a subtle backdrop blur */}
+                      <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-md bg-white/20 backdrop-blur-md border border-white/30">
+                        <f.icon className="h-5 w-5 text-white" />
                       </div>
-                      <h3 className="mt-4 text-lg font-semibold text-foreground">{f.title}</h3>
-                      <p className="mt-2 text-muted-foreground">{f.description}</p>
+                      
+                      {/* Text with subtle shadow for legibility */}
+                      <h3 className="text-xl font-bold text-white drop-shadow-md">
+                        {f.title}
+                      </h3>
+                      <p className="mt-2 text-sm text-gray-100/90 drop-shadow-sm">
+                        {f.description}
+                      </p>
                     </CardContent>
+
                   </Card>
                 </Link>
               ))}
