@@ -5,11 +5,10 @@ import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle, FileText, Search, BarChart3, Users, Clock, Shield, Award, TrendingUp,Table, Layers } from "lucide-react";
-import { Layer } from "recharts";
 export const metadata: Metadata = { title: "Review Paper Writing | CogniCode", description: "Expert review paper writing that surveys, critiques, and synthesizes existing research for high-impact journals." };
 const features = [
   { icon: Search, title: "Comprehensive Survey", description: "Exhaustive survey of your research domain covering hundreds of papers with documented methodology." },
-  { icon: Layer, title: "Systematic Approach", description: "Choice of systematic, scoping, narrative, or meta-analytic review methodologies for your goals." },
+  { icon: Layers, title: "Systematic Approach", description: "Choice of systematic, scoping, narrative, or meta-analytic review methodologies for your goals." },
   { icon: BarChart3, title: "Comparative Analysis", description: "Detailed comparison of methodologies, algorithms, frameworks, and findings across studies." },
   { icon: TrendingUp, title: "Trend Identification", description: "Identification of emerging trends, paradigm shifts, and future research directions." },
   { icon: Table, title: "Taxonomy & Classification", description: "Creation of classification frameworks, comparison tables, and taxonomies for the landscape." },
