@@ -22,7 +22,7 @@ export function CTASection() {
               asChild
               className="text-base"
             >
-              <Link href="/contact">
+              <Link prefetch={false} href="/contact">
                 Get Started
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
@@ -33,7 +33,7 @@ export function CTASection() {
               asChild
               className="text-base bg-transparent border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
             >
-              <Link href="/contact" className="flex items-center gap-2">
+              <Link prefetch={false} href="/contact" className="flex items-center gap-2">
                 <Phone className="h-4 w-4" />
                 Schedule a Call
               </Link>

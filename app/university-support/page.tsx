@@ -213,7 +213,7 @@ export default function UniversitySupportPage() {
                 universities.
               </p>
               <Button variant="outline" asChild>
-                <Link href="/contact">Contact for Your University</Link>
+                <Link prefetch={false} href="/contact">Contact for Your University</Link>
               </Button>
             </div>
           </div>

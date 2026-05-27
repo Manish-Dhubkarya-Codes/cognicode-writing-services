@@ -264,7 +264,7 @@ export default function FAQsPage() {
 
             <div className="mt-12 text-center">
               <Button size="lg" asChild>
-                <Link href="/contact">Get Free Consultation</Link>
+                <Link prefetch={false} href="/contact">Get Free Consultation</Link>
               </Button>
             </div>
           </div>

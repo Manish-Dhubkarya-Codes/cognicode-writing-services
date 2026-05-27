@@ -206,7 +206,7 @@ export default function BlogPage() {
                     </div>
                   </div>
                   <Button className="mt-6" asChild>
-                    <Link href="#">
+                    <Link prefetch={false} href="#">
                       Read Article
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
@@ -239,7 +239,7 @@ export default function BlogPage() {
                       </span>
                     </div>
                     <h3 className="mt-3 font-serif text-lg font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2">
-                      <Link href="#">{post.title}</Link>
+                      <Link prefetch={false} href="#">{post.title}</Link>
                     </h3>
                     <p className="mt-3 text-sm text-muted-foreground line-clamp-2 flex-1">
                       {post.excerpt}

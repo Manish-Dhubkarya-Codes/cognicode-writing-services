@@ -152,10 +152,10 @@ export default function CFAAnalysisPage() {
                 </p>
                 <div className="mt-10 flex flex-wrap gap-4">
                   <Button size="lg" asChild>
-                    <Link href="/contact">Start CFA Project</Link>
+                    <Link prefetch={false} href="/contact">Start CFA Project</Link>
                   </Button>
                   <Button size="lg" variant="outline" asChild>
-                    <Link href="/samples">View CFA Samples</Link>
+                    <Link prefetch={false} href="/samples">View CFA Samples</Link>
                   </Button>
                 </div>
               </div>
@@ -392,10 +392,10 @@ SRMR = 0.029
             <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">Get accurate, reliable, and publication-ready Confirmatory Factor Analysis results.</p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
-                <Link href="/contact">Start Your CFA Project</Link>
+                <Link prefetch={false} href="/contact">Start Your CFA Project</Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
-                <Link href="/services/statistical-analysis-data-analytics">Back to Statistical Services</Link>
+                <Link prefetch={false} href="/services/statistical-analysis-data-analytics">Back to Statistical Services</Link>
               </Button>
             </div>
           </div>

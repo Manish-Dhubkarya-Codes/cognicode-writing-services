@@ -122,10 +122,10 @@ export default function BigDataAnalyticsPage() {
                 </p>
                 <div className="mt-10 flex flex-wrap gap-4">
                   <Button size="lg" asChild>
-                    <Link href="/contact">Start Big Data Project</Link>
+                    <Link prefetch={false} href="/contact">Start Big Data Project</Link>
                   </Button>
                   <Button size="lg" variant="outline" asChild>
-                    <Link href="/samples">View Big Data Samples</Link>
+                    <Link prefetch={false} href="/samples">View Big Data Samples</Link>
                   </Button>
                 </div>
               </div>
@@ -352,10 +352,10 @@ export default function BigDataAnalyticsPage() {
             <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From petabyte-scale batch processing to real-time streaming analytics : we deliver production-grade big data solutions.</p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
-                <Link href="/contact">Start Your Big Data Project</Link>
+                <Link prefetch={false} href="/contact">Start Your Big Data Project</Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
-                <Link href="/services/data-driven/data-science-big-data">Back to Data Science &amp; Big Data Services</Link>
+                <Link prefetch={false} href="/services/data-driven/data-science-big-data">Back to Data Science &amp; Big Data Services</Link>
               </Button>
             </div>
           </div>

@@ -60,7 +60,7 @@ export function Footer() {
           
           {/* Brand Column */}
           <div className="flex flex-col items-center text-center sm:items-start sm:text-left space-y-6">
-            <Link href="/" className="group flex items-center gap-3">
+            <Link prefetch={false} href="/" className="group flex items-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary transition-transform group-hover:scale-110">
                 <GraduationCap className="h-6 w-6 text-primary-foreground" />
               </div>
@@ -94,7 +94,7 @@ export function Footer() {
               <ul role="list" className="space-y-3">
                 {footerNavigation.services.map((item) => (
                   <li key={item.name}>
-                    <Link href={item.href} className="text-sm text-background/60 hover:text-primary hover:pl-1 transition-all">
+                    <Link prefetch={false} href={item.href} className="text-sm text-background/60 hover:text-primary hover:pl-1 transition-all">
                       {item.name}
                     </Link>
                   </li>
@@ -106,7 +106,7 @@ export function Footer() {
               <ul role="list" className="space-y-3">
                 {footerNavigation.company.map((item) => (
                   <li key={item.name}>
-                    <Link href={item.href} className="text-sm text-background/60 hover:text-primary hover:pl-1 transition-all">
+                    <Link prefetch={false} href={item.href} className="text-sm text-background/60 hover:text-primary hover:pl-1 transition-all">
                       {item.name}
                     </Link>
                   </li>
@@ -149,7 +149,7 @@ export function Footer() {
             </p>
             <div className="flex flex-wrap justify-center gap-x-8 gap-y-2">
               {footerNavigation.legal.map((item) => (
-                <Link
+                <Link prefetch={false}
                   key={item.name}
                   href={item.href}
                   className="text-xs font-medium text-background/40 hover:text-primary transition-colors"

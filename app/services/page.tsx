@@ -273,7 +273,7 @@ export default function ServicesPage() {
                     </ul>
                     <div className="mt-8">
                       <Button asChild>
-                        <Link href="/contact">
+                        <Link prefetch={false} href="/contact">
                           Get Started
                           <ArrowRight className="ml-2 h-4 w-4" />
                         </Link>
@@ -352,7 +352,7 @@ export default function ServicesPage() {
               </p>
               <div className="mt-10 flex items-center justify-center gap-4 flex-wrap">
                 <Button size="lg" variant="secondary" asChild>
-                  <Link href="/contact">
+                  <Link prefetch={false} href="/contact">
                     Contact Us
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
@@ -363,7 +363,7 @@ export default function ServicesPage() {
                   asChild
                   className="bg-transparent border-primary-foreground/30 text-black hover:bg-primary-foreground/10"
                 >
-                  <Link href="/pricing">View Pricing</Link>
+                  <Link prefetch={false} href="/pricing">View Pricing</Link>
                 </Button>
               </div>
             </div>

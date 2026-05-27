@@ -273,7 +273,7 @@ export default function WhyUsPage() {
                 className="min-w-[200px]"
                 asChild
               >
-                <Link href="/contact">Get Free Consultation</Link>
+                <Link prefetch={false} href="/contact">Get Free Consultation</Link>
               </Button>
               <Button
                 size="lg"
@@ -281,7 +281,7 @@ export default function WhyUsPage() {
                 className="min-w-[200px] border-primary-foreground text-black hover:bg-primary-foreground hover:text-primary"
                 asChild
               >
-                <Link href="/services">Explore Services</Link>
+                <Link prefetch={false} href="/services">Explore Services</Link>
               </Button>
             </div>
           </div>

@@ -122,10 +122,10 @@ export default function TableauPowerBIPage() {
                 </p>
                 <div className="mt-10 flex flex-wrap gap-4">
                   <Button size="lg" asChild>
-                    <Link href="/contact">Build Your Dashboard</Link>
+                    <Link prefetch={false} href="/contact">Build Your Dashboard</Link>
                   </Button>
                   <Button size="lg" variant="outline" asChild>
-                    <Link href="/samples">View Dashboard Samples</Link>
+                    <Link prefetch={false} href="/samples">View Dashboard Samples</Link>
                   </Button>
                 </div>
               </div>
@@ -351,10 +351,10 @@ SUM(Sales) by Region`}
             <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From insightful charts to interactive business intelligence dashboards : we make your data visually compelling and publication-ready.</p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
-                <Link href="/contact">Start Your Dashboard Project</Link>
+                <Link prefetch={false} href="/contact">Start Your Dashboard Project</Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
-                <Link href="/services/data-driven/tools-technologies">Back to Tools &amp; Technologies</Link>
+                <Link prefetch={false} href="/services/data-driven/tools-technologies">Back to Tools &amp; Technologies</Link>
               </Button>
             </div>
           </div>

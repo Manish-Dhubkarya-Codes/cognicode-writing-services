@@ -126,10 +126,10 @@ export default function ResearchWritingPage() {
               </p>
               <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <Button size="lg" asChild>
-                  <Link href="/contact">Start Your Publication Journey</Link>
+                  <Link prefetch={false} href="/contact">Start Your Publication Journey</Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild>
-                  <Link href="/samples">View Published Papers</Link>
+                  <Link prefetch={false} href="/samples">View Published Papers</Link>
                 </Button>
               </div>
             </div>
@@ -309,7 +309,7 @@ export default function ResearchWritingPage() {
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Button size="lg" variant="secondary" asChild>
-                <Link href="/contact">Get Publication Support</Link>
+                <Link prefetch={false} href="/contact">Get Publication Support</Link>
               </Button>
               <Button
                 size="lg"
@@ -317,7 +317,7 @@ export default function ResearchWritingPage() {
                 className="border-primary-foreground text-black hover:bg-primary-foreground hover:text-primary"
                 asChild
               >
-                <Link href="/pricing">View Pricing</Link>
+                <Link prefetch={false} href="/pricing">View Pricing</Link>
               </Button>
             </div>
           </div>

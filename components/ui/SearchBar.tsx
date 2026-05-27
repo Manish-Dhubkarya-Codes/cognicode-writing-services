@@ -194,7 +194,7 @@ useEffect(() => {
   >
     {results.length > 0 ? (
       results.map((item, index) => (
-        <Link
+        <Link prefetch={false}
           key={item.href}
           href={item.href}
           ref={(el) => {

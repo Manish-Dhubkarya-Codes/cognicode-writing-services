@@ -323,13 +323,13 @@ export default async function ServiceDetailPage({
               <nav className="mb-4">
                 <ol className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
                   <li>
-                    <Link href="/" className="hover:text-primary">
+                    <Link prefetch={false} href="/" className="hover:text-primary">
                       Home
                     </Link>
                   </li>
                   <li>/</li>
                   <li>
-                    <Link href="/services" className="hover:text-primary">
+                    <Link prefetch={false} href="/services" className="hover:text-primary">
                       Services
                     </Link>
                   </li>
@@ -345,10 +345,10 @@ export default async function ServiceDetailPage({
               </p>
               <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <Button size="lg" asChild>
-                  <Link href="/contact">Get Started</Link>
+                  <Link prefetch={false} href="/contact">Get Started</Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild>
-                  <Link href="/pricing">View Pricing</Link>
+                  <Link prefetch={false} href="/pricing">View Pricing</Link>
                 </Button>
               </div>
             </div>
@@ -464,7 +464,7 @@ export default async function ServiceDetailPage({
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Button size="lg" variant="secondary" asChild>
-                <Link href="/contact">
+                <Link prefetch={false} href="/contact">
                   Get Free Consultation
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
@@ -475,7 +475,7 @@ export default async function ServiceDetailPage({
                 className="border-primary-foreground text-primary hover:bg-primary-foreground hover:text-primary"
                 asChild
               >
-                <Link href="/services">View All Services</Link>
+                <Link prefetch={false} href="/services">View All Services</Link>
               </Button>
             </div>
           </div>

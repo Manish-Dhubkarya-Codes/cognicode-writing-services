@@ -104,10 +104,10 @@ export default function ServicePage() {
                 </p>
                 <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                   <Button size="lg" asChild>
-                    <Link href="/contact">Get Started</Link>
+                    <Link prefetch={false} href="/contact">Get Started</Link>
                   </Button>
                   <Button size="lg" variant="outline" asChild>
-                    <Link href="/samples">View Samples</Link>
+                    <Link prefetch={false} href="/samples">View Samples</Link>
                   </Button>
                 </div>
               </div>
@@ -176,7 +176,7 @@ export default function ServicePage() {
             </div>
             <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {features.map((f, i) => (
-                <Link key={i} href={f.href} className="block group">
+                <Link prefetch={false} key={i} href={f.href} className="block group">
                   <Card className="relative overflow-hidden border-none shadow-lg hover:shadow-2xl transition-all duration-300 h-full group-hover:-translate-y-1">
                     
                     {/* Background Image - Full Visibility */}
@@ -295,10 +295,10 @@ export default function ServicePage() {
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Button size="lg" variant="secondary" asChild>
-                <Link href="/contact">Get Started</Link>
+                <Link prefetch={false} href="/contact">Get Started</Link>
               </Button>
               <Button size="lg" variant="outline" className="border-primary-foreground text-primary hover:bg-primary-foreground hover:text-primary" asChild>
-                <Link href="/pricing">View Pricing</Link>
+                <Link prefetch={false} href="/pricing">View Pricing</Link>
               </Button>
             </div>
           </div>

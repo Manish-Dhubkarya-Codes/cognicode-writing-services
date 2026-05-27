@@ -122,10 +122,10 @@ export default function DataVisualizationDashboardingPage() {
                 </p>
                 <div className="mt-10 flex flex-wrap gap-4">
                   <Button size="lg" asChild>
-                    <Link href="/contact">Build Your Dashboard</Link>
+                    <Link prefetch={false} href="/contact">Build Your Dashboard</Link>
                   </Button>
                   <Button size="lg" variant="outline" asChild>
-                    <Link href="/samples">View Visualization Samples</Link>
+                    <Link prefetch={false} href="/samples">View Visualization Samples</Link>
                   </Button>
                 </div>
               </div>
@@ -351,10 +351,10 @@ export default function DataVisualizationDashboardingPage() {
             <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From insightful charts to interactive dashboards : we make your data visually powerful and publication-ready.</p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
-                <Link href="/contact">Start Your Visualization Project</Link>
+                <Link prefetch={false} href="/contact">Start Your Visualization Project</Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
-                <Link href="/services/data-driven/data-science-big-data">Back to Data Science &amp; Big Data Services</Link>
+                <Link prefetch={false} href="/services/data-driven/data-science-big-data">Back to Data Science &amp; Big Data Services</Link>
               </Button>
             </div>
           </div>

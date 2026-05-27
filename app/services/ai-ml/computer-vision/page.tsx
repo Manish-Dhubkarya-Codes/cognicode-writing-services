@@ -95,10 +95,10 @@ export default function ComputerVisionPage() {
                 </p>
                 <div className="mt-10 flex flex-wrap gap-4">
                   <Button size="lg" asChild>
-                    <Link href="/contact">Start Computer Vision Project</Link>
+                    <Link prefetch={false} href="/contact">Start Computer Vision Project</Link>
                   </Button>
                   <Button size="lg" variant="outline" asChild>
-                    <Link href="/samples">View CV Samples</Link>
+                    <Link prefetch={false} href="/samples">View CV Samples</Link>
                   </Button>
                 </div>
               </div>

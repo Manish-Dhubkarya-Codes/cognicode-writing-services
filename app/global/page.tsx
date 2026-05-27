@@ -205,7 +205,7 @@ export default function GlobalPage() {
                     </div>
 
                     <Button className="w-full mt-6" asChild>
-                      <Link href={region.href}>
+                      <Link prefetch={false} href={region.href}>
                         Explore {region.name} Support
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>
@@ -261,7 +261,7 @@ export default function GlobalPage() {
                     with tailored guidance based on institutional requirements.
                   </p>
                   <Button className="mt-6" variant="outline" asChild>
-                    <Link href="/university-support">
+                    <Link prefetch={false} href="/university-support">
                       Explore University Support
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
@@ -284,7 +284,7 @@ export default function GlobalPage() {
             </p>
             <div className="mt-8">
               <Button size="lg" variant="secondary" asChild>
-                <Link href="/contact">Get Started Today</Link>
+                <Link prefetch={false} href="/contact">Get Started Today</Link>
               </Button>
             </div>
           </div>

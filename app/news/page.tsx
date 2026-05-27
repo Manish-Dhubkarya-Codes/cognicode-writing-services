@@ -124,7 +124,7 @@ export default async function NewsPage() {
                 UGC has issued warnings against fake universities. Always verify
                 credentials before enrollment.
               </p>
-              <Link
+              <Link prefetch={false}
                 href="#"
                 className="ml-auto shrink-0 text-sm font-medium text-primary hover:underline"
               >
@@ -159,7 +159,7 @@ export default async function NewsPage() {
                       </div>
 
                       {/* Make title clickable (opens in new tab like writingtree.in) */}
-                      <Link
+                      <Link prefetch={false}
                         href={news.url}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -175,7 +175,7 @@ export default async function NewsPage() {
                       </p>
 
                       {/* Real external link */}
-                      <Link
+                      <Link prefetch={false}
                         href={news.url}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -196,7 +196,7 @@ export default async function NewsPage() {
 
                 <div className="flex justify-center pt-8">
                   <Button variant="outline" size="lg" asChild>
-                    <Link href="https://newsapi.org/" target="_blank">
+                    <Link prefetch={false} href="https://newsapi.org/" target="_blank">
                       Powered by NewsAPI.org • Load More on Source
                     </Link>
                   </Button>

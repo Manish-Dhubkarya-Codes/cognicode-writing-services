@@ -159,10 +159,10 @@ export default function CybersecurityFraudDetectionPage() {
                 </p>
                 <div className="mt-10 flex text-black flex-wrap gap-4">
                   <Button size="lg" asChild className="bg-blue-600 text-white">
-                    <Link href="/contact">Start Security Project</Link>
+                    <Link prefetch={false} href="/contact">Start Security Project</Link>
                   </Button>
                   <Button size="lg" variant="outline" className="border-primary hover:bg-primary hover:text-white" asChild>
-                    <Link href="/samples">View Security Samples</Link>
+                    <Link prefetch={false} href="/samples">View Security Samples</Link>
                   </Button>
                 </div>
               </div>
@@ -556,10 +556,10 @@ anomalies = iso_forest.fit_predict(transaction_data)`}
             <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From fraud prevention to advanced threat detection: we deliver intelligent, proactive, and scalable cybersecurity solutions.</p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
-                <Link href="/contact">Start Your Security Project</Link>
+                <Link prefetch={false} href="/contact">Start Your Security Project</Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
-                <Link href="/services/ai-ml">Back to AI & Machine Learning Services</Link>
+                <Link prefetch={false} href="/services/ai-ml">Back to AI & Machine Learning Services</Link>
               </Button>
             </div>
           </div>

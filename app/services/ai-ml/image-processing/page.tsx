@@ -132,10 +132,10 @@ export default function ImageProcessingPage() {
                 </p>
                 <div className="mt-10 flex flex-wrap gap-4">
                   <Button size="lg" asChild>
-                    <Link href="/contact">Start Image Processing Project</Link>
+                    <Link prefetch={false} href="/contact">Start Image Processing Project</Link>
                   </Button>
                   <Button size="lg" variant="outline" asChild>
-                    <Link href="/samples">View Image Samples</Link>
+                    <Link prefetch={false} href="/samples">View Image Samples</Link>
                   </Button>
                 </div>
               </div>
@@ -371,10 +371,10 @@ result = clahe.apply(cv2.cvtColor(enhanced, cv2.COLOR_BGR2GRAY))`}
             <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From raw noisy images to publication-quality visuals: we deliver fast, accurate, and scalable image processing solutions.</p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
-                <Link href="/contact">Start Your Image Processing Project</Link>
+                <Link prefetch={false} href="/contact">Start Your Image Processing Project</Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
-                <Link href="/services/ai-ml">Back to AI & Machine Learning Services</Link>
+                <Link prefetch={false} href="/services/ai-ml">Back to AI & Machine Learning Services</Link>
               </Button>
             </div>
           </div>

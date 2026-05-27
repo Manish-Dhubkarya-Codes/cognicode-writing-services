@@ -294,7 +294,7 @@ export default function PricingPage() {
                     }`}
                     asChild
                   >
-                    <Link href="/contact">
+                    <Link prefetch={false} href="/contact">
                       {plan.ctaLabel ?? "Get Started"}
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
@@ -379,7 +379,7 @@ export default function PricingPage() {
               </p>
               <div className="mt-10">
                 <Button size="lg" variant="secondary" asChild>
-                  <Link href="/contact">
+                  <Link prefetch={false} href="/contact">
                     Request a Quote
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>

@@ -127,10 +127,10 @@ export default function DeepLearningPage() {
                 </p>
                 <div className="mt-10 flex flex-wrap gap-4">
                   <Button size="lg" asChild>
-                    <Link href="/contact">Start Deep Learning Project</Link>
+                    <Link prefetch={false} href="/contact">Start Deep Learning Project</Link>
                   </Button>
                   <Button size="lg" variant="outline" asChild>
-                    <Link href="/samples">View DL Samples</Link>
+                    <Link prefetch={false} href="/samples">View DL Samples</Link>
                   </Button>
                 </div>
               </div>
@@ -370,10 +370,10 @@ export default function DeepLearningPage() {
             <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From research prototypes to production-grade systems: we deliver high-performance, reproducible deep learning solutions.</p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
-                <Link href="/contact">Start Your Deep Learning Project</Link>
+                <Link prefetch={false} href="/contact">Start Your Deep Learning Project</Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
-                <Link href="/services/ai-ml">Back to AI & Machine Learning Services</Link>
+                <Link prefetch={false} href="/services/ai-ml">Back to AI & Machine Learning Services</Link>
               </Button>
             </div>
           </div>

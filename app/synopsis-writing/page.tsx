@@ -94,10 +94,10 @@ export default function SynopsisWritingPage() {
                 </p>
                 <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                   <Button size="lg" asChild>
-                    <Link href="/contact">Get Synopsis Support</Link>
+                    <Link prefetch={false} href="/contact">Get Synopsis Support</Link>
                   </Button>
                   <Button size="lg" variant="outline" asChild>
-                    <Link href="/samples">View Sample Synopsis</Link>
+                    <Link prefetch={false} href="/samples">View Sample Synopsis</Link>
                   </Button>
                 </div>
               </div>
@@ -248,7 +248,7 @@ export default function SynopsisWritingPage() {
             </p>
             <div className="mt-8">
               <Button size="lg" variant="secondary" asChild>
-                <Link href="/contact">Get Started Now</Link>
+                <Link prefetch={false} href="/contact">Get Started Now</Link>
               </Button>
             </div>
           </div>

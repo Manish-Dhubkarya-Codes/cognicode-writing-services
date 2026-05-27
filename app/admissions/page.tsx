@@ -133,10 +133,10 @@ export default function AdmissionsPage() {
                 </p>
                 <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                   <Button size="lg" asChild>
-                    <Link href="/contact">Get Admission Guidance</Link>
+                    <Link prefetch={false} href="/contact">Get Admission Guidance</Link>
                   </Button>
                   <Button size="lg" variant="outline" asChild>
-                    <Link href="/services">Explore Services</Link>
+                    <Link prefetch={false} href="/services">Explore Services</Link>
                   </Button>
                 </div>
               </div>
@@ -299,7 +299,7 @@ export default function AdmissionsPage() {
                     </div>
                   </div>
                   <Button variant="secondary" className="w-full mt-4" asChild>
-                    <Link href="/contact">
+                    <Link prefetch={false} href="/contact">
                       Book Free Consultation
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>

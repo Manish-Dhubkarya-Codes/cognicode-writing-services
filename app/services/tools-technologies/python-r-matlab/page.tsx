@@ -122,10 +122,10 @@ export default function PythonRMatlabPage() {
                 </p>
                 <div className="mt-10 flex flex-wrap gap-4">
                   <Button size="lg" asChild>
-                    <Link href="/contact">Start Programming Project</Link>
+                    <Link prefetch={false} href="/contact">Start Programming Project</Link>
                   </Button>
                   <Button size="lg" variant="outline" asChild>
-                    <Link href="/samples">View Code Samples</Link>
+                    <Link prefetch={false} href="/samples">View Code Samples</Link>
                   </Button>
                 </div>
               </div>
@@ -352,10 +352,10 @@ df = pd.read_csv("data.csv")`}
             <p className="mt-4 text-xl text-muted-foreground max-w-xl mx-auto">From data analysis to advanced simulations : we deliver professional, reproducible programming solutions for your research.</p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
-                <Link href="/contact">Start Your Programming Project</Link>
+                <Link prefetch={false} href="/contact">Start Your Programming Project</Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
-                <Link href="/services/data-driven/tools-technologies">Back to Tools &amp; Technologies</Link>
+                <Link prefetch={false} href="/services/data-driven/tools-technologies">Back to Tools &amp; Technologies</Link>
               </Button>
             </div>
           </div>

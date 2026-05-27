@@ -36,7 +36,7 @@ const globalPages = [
   { name: "Services", href: "/services" },
   { name: "Pricing", href: "/pricing" },
   { name: "Samples", href: "/samples" },
-  { name: "Blogs", href: "/blog" },
+  // { name: "Blogs", href: "/blog" },
   { name: "News", href: "/news" },
   { name: "FAQs", href: "/faqs" },
   { name: "Contact", href: "/contact" },
@@ -429,20 +429,20 @@ export function HeroSection() {
           {/* CTAs */}
           <div className="mt-10 flex justify-center gap-4 flex-wrap">
             <Button size="lg" asChild>
-              <Link href="/contact">
+              <Link prefetch={false} href="/contact">
                 Get Started Today
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
-              <Link href="/services">Explore Our Services</Link>
+              <Link prefetch={false} href="/services">Explore Our Services</Link>
             </Button>
           </div>
 
           {/* Global nav */}
           <div className="mt-12 flex flex-wrap justify-center gap-3">
             {globalPages.map((p) => (
-              <Link
+              <Link prefetch={false}
                 key={p.href}
                 href={p.href}
                 className="rounded-full border border-border bg-muted px-4 py-2 text-sm hover:bg-primary hover:text-primary-foreground transition"

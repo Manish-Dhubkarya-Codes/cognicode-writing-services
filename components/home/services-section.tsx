@@ -91,7 +91,7 @@ export function ServicesSection() {
                 <dd className="mt-4 text-base leading-7 text-muted-foreground">
                   {service.description}
                 </dd>
-                <Link
+                <Link prefetch={false}
                   href={service.href}
                   className="mt-4 inline-flex items-center text-sm font-medium text-primary hover:text-primary/80 transition-colors"
                 >
@@ -105,7 +105,7 @@ export function ServicesSection() {
 
         <div className="mt-16 flex items-center justify-center">
           <Button size="lg" asChild>
-            <Link href="/services">
+            <Link prefetch={false} href="/services">
               View All Services
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>

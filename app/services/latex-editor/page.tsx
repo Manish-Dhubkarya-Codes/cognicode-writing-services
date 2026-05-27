@@ -667,7 +667,7 @@ useEffect(() => {
               </p>
               <div className="mt-10">
                 <Button size="lg" variant="secondary" asChild>
-                  <Link href="/contact">
+                  <Link prefetch={false} href="/contact">
                     Get Expert Help
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>

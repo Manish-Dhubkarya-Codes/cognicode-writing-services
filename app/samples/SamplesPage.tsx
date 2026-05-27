@@ -349,7 +349,7 @@ export default function SamplesPage() {
               </p>
               <div className="mt-8">
                 <Button size="lg" asChild>
-                  <Link href="/contact">Request Sample</Link>
+                  <Link prefetch={false} href="/contact">Request Sample</Link>
                 </Button>
               </div>
             </div>
@@ -368,7 +368,7 @@ export default function SamplesPage() {
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Button size="lg" variant="secondary" asChild>
-                <Link href="/contact">Get Free Consultation</Link>
+                <Link prefetch={false} href="/contact">Get Free Consultation</Link>
               </Button>
               <Button
                 size="lg"
@@ -376,7 +376,7 @@ export default function SamplesPage() {
                 className="border-primary-foreground text-black hover:bg-primary-foreground hover:text-primary"
                 asChild
               >
-                <Link href="/pricing">View Pricing</Link>
+                <Link prefetch={false} href="/pricing">View Pricing</Link>
               </Button>
             </div>
           </div>

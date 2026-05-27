@@ -110,10 +110,10 @@ export default function AustraliaPage() {
                 </p>
                 <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                   <Button size="lg" asChild>
-                    <Link href="/contact">Get Australian Support</Link>
+                    <Link prefetch={false} href="/contact">Get Australian Support</Link>
                   </Button>
                   <Button size="lg" variant="outline" asChild>
-                    <Link href="/services">View All Services</Link>
+                    <Link prefetch={false} href="/services">View All Services</Link>
                   </Button>
                 </div>
               </div>
@@ -242,7 +242,7 @@ export default function AustraliaPage() {
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Button size="lg" variant="secondary" asChild>
-                <Link href="/contact">Get Free Consultation</Link>
+                <Link prefetch={false} href="/contact">Get Free Consultation</Link>
               </Button>
               <Button
                 size="lg"
@@ -250,7 +250,7 @@ export default function AustraliaPage() {
                 className="border-primary-foreground text-primary hover:bg-primary-foreground hover:text-primary"
                 asChild
               >
-                <Link href="/pricing">View Pricing</Link>
+                <Link prefetch={false} href="/pricing">View Pricing</Link>
               </Button>
             </div>
           </div>

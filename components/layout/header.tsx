@@ -5,6 +5,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
   Sheet,
   SheetContent,
   SheetTrigger,
@@ -21,11 +26,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Menu, X, GraduationCap, Phone, ChevronDown, Search } from "lucide-react";
+import { Menu, X, GraduationCap, Phone, ChevronDown, Search, UserRoundKey } from "lucide-react";
 import { cn } from "@/lib/utils";
 import CogniCodeLogo from "@/public/CogniCode_Old.png";
 import Image from "next/image";
 import { SearchBar } from "../ui/SearchBar";
+import { AdminProfile } from "./adminprofile";
 
 // ==================== SINGLE SOURCE OF TRUTH ====================
 // All navigation is defined in ONE place. Both desktop & mobile use .map()
@@ -34,7 +40,7 @@ const aboutLinks = [
   { name: "About Us", href: "/about" },
   { name: "Why Choose Us", href: "/why-us" },
   { name: "Latest News & Updates", href: "/news" },
-  { name: "Blogs", href: "/blog" },
+  // { name: "Blogs", href: "/blog" },
   { name: "FAQs", href: "/faqs" },
 ] as const;
 
@@ -104,6 +110,7 @@ type NavItem = typeof navigationConfig[number];
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [adminOpen, setAdminOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -142,7 +149,7 @@ export function Header() {
       <nav className={`mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8`}>
         {/* Logo */}
         <div className="flex lg:flex-1">
-          <Link href="/" className="py-1 flex items-center gap-2">
+          <Link prefetch={false} href="/" className="py-1 flex items-center gap-2">
             <Image
       src={CogniCodeLogo}
       alt="CogniCode Logo"
@@ -158,7 +165,7 @@ export function Header() {
             {navigationConfig.map((item) => {
               if (item.type === "link") {
                 return (
-                  <Link
+                  <Link prefetch={false}
                     key={item.id}
                     href={item.href}
                     className={cn(
@@ -192,7 +199,7 @@ export function Header() {
                     {'allItem' in item && item.allItem && (
                       <>
                         <DropdownMenuItem asChild>
-                          <Link
+                          <Link prefetch={false}
                             href={item.allItem.href}
                             className={cn(
                               "w-full cursor-pointer font-semibold",
@@ -208,7 +215,7 @@ export function Header() {
 
                     {item.items.map((link) => (
                       <DropdownMenuItem key={link.href} asChild>
-                        <Link
+                        <Link prefetch={false}
                           href={link.href}
                           className={cn(
                             "w-full cursor-pointer text-sm",
@@ -231,18 +238,38 @@ export function Header() {
         )}
 
         {/* Right side actions */}
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-4">
+        <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:ml-10 lg:gap-x-4">
           {!searchOpen ? (
             <>
               <Button variant="ghost" size="icon" onClick={() => setSearchOpen(true)}>
                 <Search className="h-5 w-5" />
               </Button>
               <Button variant="outline" size="sm" asChild>
-                <Link href="/contact" className="flex bg-white items-center gap-2">
+                <Link prefetch={false} href="/contact" className="flex bg-white items-center gap-2">
                   <Phone className="h-4 w-4" />
                   Get a Quote
                 </Link>
               </Button>
+             <Dialog>
+  <DialogTrigger asChild>
+    <Button
+    onClick={() => setAdminOpen(true)}
+      variant="outline"
+      size="sm"
+      title="This is only for Admin"
+      className="flex bg-white items-center gap-2"
+    >
+      <UserRoundKey className="h-4 w-4" />
+    </Button>
+  </DialogTrigger>
+
+  <DialogContent className="max-w-2xl p-0 overflow-hidden">
+    <AdminProfile
+  open={adminOpen}
+  onOpenChange={setAdminOpen}
+/>
+  </DialogContent>
+</Dialog>
             </>
           ) : (
             <>
@@ -250,11 +277,31 @@ export function Header() {
                 <X className="h-5 w-5" />
               </Button>
               <Button variant="outline" size="sm" asChild>
-                <Link href="/contact" className="flex bg-white items-center gap-2">
+                <Link prefetch={false} href="/contact" className="flex bg-white items-center gap-2">
                   <Phone className="h-4 w-4" />
                   Get a Quote
                 </Link>
               </Button>
+               <Dialog>
+  <DialogTrigger asChild>
+    <Button
+    onClick={() => setAdminOpen(true)}
+      variant="outline"
+      size="sm"
+      title="This is only for Admin"
+      className="flex bg-white items-center gap-2"
+    >
+      <UserRoundKey className="h-4 w-4" />
+    </Button>
+  </DialogTrigger>
+
+  <DialogContent className="max-w-2xl p-0 overflow-hidden">
+    <AdminProfile
+  open={adminOpen}
+  onOpenChange={setAdminOpen}
+/>
+  </DialogContent>
+</Dialog>
             </>
           )}
         </div>
@@ -278,7 +325,7 @@ export function Header() {
             <SheetContent side="right" className="w-[90vw] max-w-sm sm:w-80 sm:max-w-md p-0">
               {/* Sticky Header */}
               <div className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-border/50 bg-background/95 px-4 sm:px-6 backdrop-blur-sm">
-                <Link
+                <Link prefetch={false}
                   href="/"
                   className="flex items-center gap-3 -m-1 p-1"
                   onClick={() => setMobileMenuOpen(false)}
@@ -305,9 +352,29 @@ export function Header() {
               <div className="flex h-[calc(100%-4rem)] flex-col overflow-hidden">
                 <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
                   <div className="-my-2.5 divide-y divide-border/50">
+                  <Dialog>
+  <DialogTrigger asChild>
+    <Button
+    onClick={() => setAdminOpen(true)}
+      variant="outline"
+      size="sm"
+      title="This is only for Admin"
+      className="flex bg-white items-center gap-2"
+    >
+      <UserRoundKey className="h-4 w-4" />
+    </Button>
+  </DialogTrigger>
+
+  <DialogContent className="max-w-2xl p-0 overflow-hidden">
+    <AdminProfile
+  open={adminOpen}
+  onOpenChange={setAdminOpen}
+/>
+  </DialogContent>
+</Dialog>
                     {/* Home */}
                     <div className="py-2.5">
-                      <Link
+                      <Link prefetch={false}
                         href="/"
                         onClick={() => setMobileMenuOpen(false)}
                         className={cn(
@@ -337,7 +404,7 @@ export function Header() {
                               {/* Special handling for Writing Services */}
                               {'allItem' in item && item.allItem ? (
                                 <div className="space-y-1.5">
-                                  <Link
+                                  <Link prefetch={false}
                                     href={item.allItem.href}
                                     onClick={() => setMobileMenuOpen(false)}
                                     className={cn(
@@ -350,7 +417,7 @@ export function Header() {
                                     {item.allItem.name}
                                   </Link>
                                   {item.items.map((link) => (
-                                    <Link
+                                    <Link prefetch={false}
                                       key={link.href}
                                       href={link.href}
                                       onClick={() => setMobileMenuOpen(false)}
@@ -369,7 +436,7 @@ export function Header() {
                                 /* Normal dropdowns */
                                 <div className="ml-4 space-y-1.5 border-l border-border/50 pl-3">
                                   {item.items.map((link) => (
-                                    <Link
+                                    <Link prefetch={false}
                                       key={link.href}
                                       href={link.href}
                                       onClick={() => setMobileMenuOpen(false)}
@@ -394,7 +461,7 @@ export function Header() {
                     {/* Flat links (Samples, Pricing, Contact) */}
                     <div className="py-2.5 space-y-1.5">
                       {flatLinks.map((item) => (
-                        <Link
+                        <Link prefetch={false}
                           key={item.id}
                           href={item.href}
                           onClick={() => setMobileMenuOpen(false)}
@@ -417,7 +484,7 @@ export function Header() {
                     asChild
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <Link href="/contact" className="flex bg-white  items-center gap-2">
+                    <Link prefetch={false} href="/contact" className="flex bg-white  items-center gap-2">
                       <Phone className="h-4 w-4" />
                       Get a Quote
                     </Link>
