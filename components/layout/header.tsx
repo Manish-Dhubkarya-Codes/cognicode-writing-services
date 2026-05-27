@@ -8,6 +8,7 @@ import {
   Dialog,
   DialogContent,
   DialogTrigger,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import {
   Sheet,
@@ -18,6 +19,8 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -26,12 +29,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Menu, X, GraduationCap, Phone, ChevronDown, Search, UserRoundKey } from "lucide-react";
+import { Menu, X, GraduationCap, Phone, ChevronDown, Search, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import CogniCodeLogo from "@/public/CogniCode_Old.png";
 import Image from "next/image";
 import { SearchBar } from "../ui/SearchBar";
-import { AdminProfile } from "./adminprofile";
+import { UserAuth } from "./user-auth";
 
 // ==================== SINGLE SOURCE OF TRUTH ====================
 // All navigation is defined in ONE place. Both desktop & mobile use .map()
@@ -102,7 +105,6 @@ const navigationConfig = [
   { id: "samples", label: "Samples", type: "link", href: "/samples" } as const,
   { id: "pricing", label: "Pricing", type: "link", href: "/pricing" } as const,
   { id: "global", label: "Global Services", type: "dropdown", items: globalLinks } as const,
-  // { id: "contact", label: "Contact", type: "link", href: "/contact" } as const,
 ] as const;
 
 type NavItem = typeof navigationConfig[number];
@@ -110,14 +112,29 @@ type NavItem = typeof navigationConfig[number];
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [adminOpen, setAdminOpen] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState<{ adminId: number; name: string; email: string } | null>(null);
+
   const pathname = usePathname();
+
+  // Load login state from localStorage (same as your original)
+  useEffect(() => {
+    const storedAdmin = localStorage.getItem("admin");
+    if (storedAdmin) {
+      const parsedAdmin = JSON.parse(storedAdmin);
+      setUser(parsedAdmin);
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   useEffect(() => {
     setSearchOpen(false);
   }, [pathname]);
 
-  // Dynamic active state checker
+  // Dynamic active state checker (exactly as original)
   const isActive = (item: NavItem): boolean => {
     if (item.type === "link") return pathname === item.href;
 
@@ -140,9 +157,21 @@ export function Header() {
     return false;
   };
 
-  // Separate sections for mobile rendering
   const dropdownSections = navigationConfig.filter((item) => item.type === "dropdown");
   const flatLinks = navigationConfig.filter((item) => item.type === "link" && item.id !== "home");
+
+  const handleLoginSuccess = (userData: any) => {
+    localStorage.setItem("admin", JSON.stringify(userData));
+    setUser(userData);
+    setIsLoggedIn(true);
+    setLoginOpen(false);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("admin");
+    setIsLoggedIn(false);
+    setUser(null);
+  };
 
   return (
     <header className="fixed top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -151,11 +180,11 @@ export function Header() {
         <div className="flex lg:flex-1">
           <Link prefetch={false} href="/" className="py-1 flex items-center gap-2">
             <Image
-      src={CogniCodeLogo}
-      alt="CogniCode Logo"
-      className="w-30 select-none"
-      draggable={false}
-    />
+              src={CogniCodeLogo}
+              alt="CogniCode Logo"
+              className="w-30 select-none"
+              draggable={false}
+            />
           </Link>
         </div>
 
@@ -169,13 +198,11 @@ export function Header() {
                     key={item.id}
                     href={item.href}
                     className={cn(
-  "relative text-sm font-medium transition-colors hover:text-primary",
-  "after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-primary",
-  "after:transition-all after:duration-300 hover:after:w-full",
-  isActive(item)
-    ? "text-primary after:w-full"
-    : "text-muted-foreground"
-)}
+                      "relative text-sm font-medium transition-colors hover:text-primary",
+                      "after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-primary",
+                      "after:transition-all after:duration-300 hover:after:w-full",
+                      isActive(item) ? "text-primary after:w-full" : "text-muted-foreground"
+                    )}
                   >
                     {item.label}
                   </Link>
@@ -195,7 +222,6 @@ export function Header() {
                   </DropdownMenuTrigger>
 
                   <DropdownMenuContent align="start" className="w-64 max-h-96 overflow-y-auto">
-                    {/* Only Writing Services has "All Writing Services" + divider */}
                     {'allItem' in item && item.allItem && (
                       <>
                         <DropdownMenuItem asChild>
@@ -250,26 +276,46 @@ export function Header() {
                   Get a Quote
                 </Link>
               </Button>
-             <Dialog>
-  <DialogTrigger asChild>
-    <Button
-    onClick={() => setAdminOpen(true)}
-      variant="outline"
-      size="sm"
-      title="This is only for Admin"
-      className="flex bg-white items-center gap-2"
-    >
-      <UserRoundKey className="h-4 w-4" />
-    </Button>
-  </DialogTrigger>
 
-  <DialogContent className="max-w-2xl p-0 overflow-hidden">
-    <AdminProfile
-  open={adminOpen}
-  onOpenChange={setAdminOpen}
-/>
-  </DialogContent>
-</Dialog>
+              {/* === NEW USER LOGIN / PROFILE === */}
+              {isLoggedIn && user ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="flex items-center gap-2">
+                      <User className="h-4 w-4 text-green-500" />
+                      <span className="max-w-[140px] truncate">{user.name}</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-72">
+                    <DropdownMenuLabel>
+                      <div className="flex flex-col gap-1">
+                        <p className="font-semibold text-base">{user.name}</p>
+                        <p className="text-sm text-muted-foreground">{user.email}</p>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => setEditOpen(true)}>
+                      ✏️ Change Details
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleLogout} className="text-red-600 focus:text-red-600">
+                      ⭍ Logout
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Dialog open={loginOpen} onOpenChange={setLoginOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" size="sm" className="flex items-center gap-2">
+                      <User className="h-4 w-4" />
+                      Login
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-md">
+                    <DialogTitle className="text-xl">Login to your account</DialogTitle>
+                    <UserAuth mode="login" onSuccess={handleLoginSuccess} />
+                  </DialogContent>
+                </Dialog>
+              )}
             </>
           ) : (
             <>
@@ -282,26 +328,6 @@ export function Header() {
                   Get a Quote
                 </Link>
               </Button>
-               <Dialog>
-  <DialogTrigger asChild>
-    <Button
-    onClick={() => setAdminOpen(true)}
-      variant="outline"
-      size="sm"
-      title="This is only for Admin"
-      className="flex bg-white items-center gap-2"
-    >
-      <UserRoundKey className="h-4 w-4" />
-    </Button>
-  </DialogTrigger>
-
-  <DialogContent className="max-w-2xl p-0 overflow-hidden">
-    <AdminProfile
-  open={adminOpen}
-  onOpenChange={setAdminOpen}
-/>
-  </DialogContent>
-</Dialog>
             </>
           )}
         </div>
@@ -325,128 +351,75 @@ export function Header() {
             <SheetContent side="right" className="w-[90vw] max-w-sm sm:w-80 sm:max-w-md p-0">
               {/* Sticky Header */}
               <div className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-border/50 bg-background/95 px-4 sm:px-6 backdrop-blur-sm">
-                <Link prefetch={false}
-                  href="/"
-                  className="flex items-center gap-3 -m-1 p-1"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
+                <Link prefetch={false} href="/" className="flex items-center gap-3 -m-1 p-1" onClick={() => setMobileMenuOpen(false)}>
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary">
                     <GraduationCap className="h-5 w-5 text-primary-foreground" />
                   </div>
-                  <span className="font-serif text-xl font-bold tracking-tight sm:text-lg">
-                    CogniCode
-                  </span>
+                  <span className="font-serif text-xl font-bold tracking-tight sm:text-lg">CogniCode</span>
                 </Link>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-10 w-10 p-0 -m-2"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
+                <Button variant="ghost" size="icon" className="h-10 w-10 p-0 -m-2" onClick={() => setMobileMenuOpen(false)}>
                   <span className="sr-only">Close menu</span>
                   <X className="h-6 w-6" />
                 </Button>
               </div>
 
-              {/* Scrollable Content */}
               <div className="flex h-[calc(100%-4rem)] flex-col overflow-hidden">
                 <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
                   <div className="-my-2.5 divide-y divide-border/50">
-                  <Dialog>
-  <DialogTrigger asChild>
-    <Button
-    onClick={() => setAdminOpen(true)}
-      variant="outline"
-      size="sm"
-      title="This is only for Admin"
-      className="flex bg-white items-center gap-2"
-    >
-      <UserRoundKey className="h-4 w-4" />
-    </Button>
-  </DialogTrigger>
+                    {/* Mobile Login / Profile */}
+                    <div className="py-2.5">
+                      {isLoggedIn && user ? (
+                        <div className="rounded-xl border p-4 mb-4">
+                          <div className="flex items-center gap-3">
+                            <User className="h-8 w-8 text-green-500" />
+                            <div>
+                              <p className="font-semibold">{user.name}</p>
+                              <p className="text-sm text-muted-foreground">{user.email}</p>
+                            </div>
+                          </div>
+                          <div className="mt-4 flex gap-2">
+                            <Button variant="outline" className="flex-1" onClick={() => { setEditOpen(true); setMobileMenuOpen(false); }}>Change Details</Button>
+                            <Button variant="destructive" className="flex-1" onClick={() => { handleLogout(); setMobileMenuOpen(false); }}>Logout</Button>
+                          </div>
+                        </div>
+                      ) : (
+                        <Button variant="outline" className="w-full mb-4" onClick={() => { setLoginOpen(true); setMobileMenuOpen(false); }}>
+                          <User className="mr-2 h-4 w-4" /> Login
+                        </Button>
+                      )}
+                    </div>
 
-  <DialogContent className="max-w-2xl p-0 overflow-hidden">
-    <AdminProfile
-  open={adminOpen}
-  onOpenChange={setAdminOpen}
-/>
-  </DialogContent>
-</Dialog>
                     {/* Home */}
                     <div className="py-2.5">
-                      <Link prefetch={false}
-                        href="/"
-                        onClick={() => setMobileMenuOpen(false)}
-                        className={cn(
-                          "group flex w-full items-center rounded-xl p-3 text-base font-semibold leading-6 transition-all duration-200 hover:bg-muted/80",
-                          pathname === "/" ? "bg-primary/10 text-primary shadow-sm" : "text-foreground hover:text-foreground"
-                        )}
-                      >
+                      <Link prefetch={false} href="/" onClick={() => setMobileMenuOpen(false)} className={cn("group flex w-full items-center rounded-xl p-3 text-base font-semibold leading-6 transition-all duration-200 hover:bg-muted/80", pathname === "/" ? "bg-primary/10 text-primary shadow-sm" : "text-foreground hover:text-foreground")}>
                         Home
                       </Link>
                     </div>
 
-                    {/* Dropdown sections via .map() */}
+                    {/* Dropdown sections */}
                     <div className="py-2.5">
                       <Accordion type="single" collapsible className="w-full">
                         {dropdownSections.map((item) => (
                           <AccordionItem key={item.id} value={item.id} className="border-none mt-1">
-                            <AccordionTrigger
-                              className={cn(
-                                "group flex w-full items-center rounded-xl p-3 text-base font-semibold leading-6 transition-all duration-200 hover:bg-muted/80 hover:no-underline",
-                                "data-[state=open]:bg-muted/80 data-[state=open]:shadow-sm"
-                              )}
-                            >
+                            <AccordionTrigger className={cn("group flex w-full items-center rounded-xl p-3 text-base font-semibold leading-6 transition-all duration-200 hover:bg-muted/80 hover:no-underline", "data-[state=open]:bg-muted/80 data-[state=open]:shadow-sm")}>
                               {item.label}
                             </AccordionTrigger>
-
                             <AccordionContent className="pt-3">
-                              {/* Special handling for Writing Services */}
                               {'allItem' in item && item.allItem ? (
                                 <div className="space-y-1.5">
-                                  <Link prefetch={false}
-                                    href={item.allItem.href}
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className={cn(
-                                      "group block rounded-lg p-2.5 text-sm font-medium transition-all duration-200 hover:bg-muted/60 truncate",
-                                      pathname === item.allItem.href
-                                        ? "bg-primary/10 text-primary border border-primary/20"
-                                        : "text-foreground"
-                                    )}
-                                  >
+                                  <Link prefetch={false} href={item.allItem.href} onClick={() => setMobileMenuOpen(false)} className={cn("group block rounded-lg p-2.5 text-sm font-medium transition-all duration-200 hover:bg-muted/60 truncate", pathname === item.allItem.href ? "bg-primary/10 text-primary border border-primary/20" : "text-foreground")}>
                                     {item.allItem.name}
                                   </Link>
                                   {item.items.map((link) => (
-                                    <Link prefetch={false}
-                                      key={link.href}
-                                      href={link.href}
-                                      onClick={() => setMobileMenuOpen(false)}
-                                      className={cn(
-                                        "group block rounded-lg p-2.5 text-sm transition-all duration-200 hover:bg-muted/60 truncate",
-                                        pathname === link.href
-                                          ? "bg-primary/10 text-primary border border-primary/20"
-                                          : "text-muted-foreground"
-                                      )}
-                                    >
+                                    <Link prefetch={false} key={link.href} href={link.href} onClick={() => setMobileMenuOpen(false)} className={cn("group block rounded-lg p-2.5 text-sm transition-all duration-200 hover:bg-muted/60 truncate", pathname === link.href ? "bg-primary/10 text-primary border border-primary/20" : "text-muted-foreground")}>
                                       {link.name}
                                     </Link>
                                   ))}
                                 </div>
                               ) : (
-                                /* Normal dropdowns */
                                 <div className="ml-4 space-y-1.5 border-l border-border/50 pl-3">
                                   {item.items.map((link) => (
-                                    <Link prefetch={false}
-                                      key={link.href}
-                                      href={link.href}
-                                      onClick={() => setMobileMenuOpen(false)}
-                                      className={cn(
-                                        "group block rounded-lg p-2.5 text-sm transition-all duration-200 hover:bg-muted/60 truncate",
-                                        pathname === link.href
-                                          ? "bg-primary/10 text-primary border border-primary/20"
-                                          : "text-muted-foreground"
-                                      )}
-                                    >
+                                    <Link prefetch={false} key={link.href} href={link.href} onClick={() => setMobileMenuOpen(false)} className={cn("group block rounded-lg p-2.5 text-sm transition-all duration-200 hover:bg-muted/60 truncate", pathname === link.href ? "bg-primary/10 text-primary border border-primary/20" : "text-muted-foreground")}>
                                       {link.name}
                                     </Link>
                                   ))}
@@ -458,18 +431,10 @@ export function Header() {
                       </Accordion>
                     </div>
 
-                    {/* Flat links (Samples, Pricing, Contact) */}
+                    {/* Flat links */}
                     <div className="py-2.5 space-y-1.5">
                       {flatLinks.map((item) => (
-                        <Link prefetch={false}
-                          key={item.id}
-                          href={item.href}
-                          onClick={() => setMobileMenuOpen(false)}
-                          className={cn(
-                            "group flex w-full items-center rounded-xl p-3 text-base font-semibold leading-6 transition-all duration-200 hover:bg-muted/80",
-                            isActive(item) ? "bg-primary/10 text-primary shadow-sm" : "text-foreground"
-                          )}
-                        >
+                        <Link prefetch={false} key={item.id} href={item.href} onClick={() => setMobileMenuOpen(false)} className={cn("group flex w-full items-center rounded-xl p-3 text-base font-semibold leading-6 transition-all duration-200 hover:bg-muted/80", isActive(item) ? "bg-primary/10 text-primary shadow-sm" : "text-foreground")}>
                           {item.label}
                         </Link>
                       ))}
@@ -479,12 +444,8 @@ export function Header() {
 
                 {/* Sticky CTA */}
                 <div className="sticky bottom-0 z-10 shrink-0 border-t border-border/50 bg-background/95 px-4 py-6 sm:px-6 backdrop-blur-sm">
-                  <Button
-                    className="w-full h-12 rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 text-black text-sm font-semibold"
-                    asChild
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <Link prefetch={false} href="/contact" className="flex bg-white  items-center gap-2">
+                  <Button className="w-full h-12 rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 text-black text-sm font-semibold" asChild onClick={() => setMobileMenuOpen(false)}>
+                    <Link prefetch={false} href="/contact" className="flex bg-white items-center gap-2">
                       <Phone className="h-4 w-4" />
                       Get a Quote
                     </Link>
@@ -495,6 +456,22 @@ export function Header() {
           </Sheet>
         </div>
       </nav>
+
+      {/* Edit Profile Dialog */}
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent className="max-w-md">
+          <DialogTitle>Change Details</DialogTitle>
+          <UserAuth 
+            mode="edit" 
+            currentUser={user} 
+            onClose={() => setEditOpen(false)}
+            onProfileUpdated={(updatedUser) => {
+              setUser(updatedUser);
+              localStorage.setItem("admin", JSON.stringify(updatedUser));
+            }}
+          />
+        </DialogContent>
+      </Dialog>
     </header>
   );
 }
