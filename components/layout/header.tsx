@@ -9,6 +9,7 @@ import {
   DialogContent,
   DialogTrigger,
   DialogTitle,
+  DialogHeader,
 } from "@/components/ui/dialog";
 import {
   Sheet,
@@ -37,20 +38,15 @@ import { SearchBar } from "../ui/SearchBar";
 import { UserAuth } from "./user-auth";
 
 // ==================== SINGLE SOURCE OF TRUTH ====================
-// All navigation is defined in ONE place. Both desktop & mobile use .map()
-
 const aboutLinks = [
   { name: "About Us", href: "/about" },
   { name: "Why Choose Us", href: "/why-us" },
   { name: "Latest News & Updates", href: "/news" },
-  // { name: "Blogs", href: "/blog" },
   { name: "FAQs", href: "/faqs" },
 ] as const;
 
 const dataDrivenLinks = [
   { name: "Artificial Intelligence, Machine Learning & Deep Learning", href: "/services/ai-ml" },
-  // { name: "Computer Vision", href: "/services/computer-vision" },
-  // { name: "Natural Language Processing (NLP)", href: "/services/natural-language-processing" },
   { name: "Statistical Analysis & Data Analytics", href: "/services/statistical-analysis-data-analytics" },
   { name: "Data Science & Big Data", href: "/services/ds-big-data" },
   { name: "Tools & Technologies", href: "/services/tools-technologies" },
@@ -61,7 +57,6 @@ const writingServiceLinks = [
   { name: "PhD Thesis Writing Assistance", href: "/services/thesis-assistance" },
   { name: "Dissertation Consultation", href: "/services/dissertation-consultation" },
   { name: "PhD Topic Selection", href: "/services/topic-selection" },
-  // { name: "PhD Scholar Guidance", href: "/services/scholar-guidance" },
   { name: "PhD Consultation Services", href: "/services/phd-consultation" },
   { name: "Coding & Implementation", href: "/services/coding-implementation" },
   { name: "Research Paper Writing", href: "/services/research-paper-writing" },
@@ -90,7 +85,6 @@ const globalLinks = [
   { name: "University Scholars Support", href: "/university-support" },
 ] as const;
 
-// Central navigation configuration (add/remove/reorder here only)
 const navigationConfig = [
   { id: "home", label: "Home", type: "link", href: "/" } as const,
   { id: "about", label: "About Us", type: "dropdown", items: aboutLinks } as const,
@@ -120,7 +114,6 @@ export function Header() {
 
   const pathname = usePathname();
 
-  // Load login state from localStorage (same as your original)
   useEffect(() => {
     const storedAdmin = localStorage.getItem("admin");
     if (storedAdmin) {
@@ -134,7 +127,6 @@ export function Header() {
     setSearchOpen(false);
   }, [pathname]);
 
-  // Dynamic active state checker (exactly as original)
   const isActive = (item: NavItem): boolean => {
     if (item.type === "link") return pathname === item.href;
 
@@ -142,7 +134,6 @@ export function Header() {
       return pathname.startsWith("/about") ||
              pathname.startsWith("/why-us") ||
              pathname.startsWith("/news") ||
-             pathname.startsWith("/blog") ||
              pathname.startsWith("/faqs");
     }
     if (item.id === "data-driven") {
@@ -271,19 +262,18 @@ export function Header() {
                 <Search className="h-5 w-5" />
               </Button>
               <Button variant="outline" size="sm" asChild>
-                <Link prefetch={false} href="/contact" className="flex bg-white items-center gap-2">
+                <Link prefetch={false} href="/contact" className="flex cursor-pointer bg-white items-center gap-2">
                   <Phone className="h-4 w-4" />
                   Get a Quote
                 </Link>
               </Button>
 
-              {/* === NEW USER LOGIN / PROFILE === */}
               {isLoggedIn && user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="flex items-center gap-2">
+                    <Button variant="outline" size="sm" className="flex cursor-pointer items-center gap-2">
                       <User className="h-4 w-4 text-green-500" />
-                      <span className="max-w-[140px] truncate">{user.name}</span>
+                      {/* <span className="max-w-[140px] truncate">{user.name}</span> */}
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-72">
@@ -305,7 +295,7 @@ export function Header() {
               ) : (
                 <Dialog open={loginOpen} onOpenChange={setLoginOpen}>
                   <DialogTrigger asChild>
-                    <Button variant="outline" size="sm" className="flex items-center gap-2">
+                    <Button variant="outline" size="sm" className="flex cursor-pointer items-center gap-2">
                       <User className="h-4 w-4" />
                       Login
                     </Button>
@@ -319,11 +309,11 @@ export function Header() {
             </>
           ) : (
             <>
-              <Button variant="ghost" size="icon" onClick={() => setSearchOpen(false)}>
+              <Button  className="h-8 w-8 p-0 rounded-full cursor-pointer hover:bg-blue-400" size="icon" onClick={() => setSearchOpen(false)}>
                 <X className="h-5 w-5" />
               </Button>
               <Button variant="outline" size="sm" asChild>
-                <Link prefetch={false} href="/contact" className="flex bg-white items-center gap-2">
+                <Link prefetch={false} href="/contact" className="flex cursor-pointer bg-white items-center gap-2">
                   <Phone className="h-4 w-4" />
                   Get a Quote
                 </Link>
@@ -342,14 +332,13 @@ export function Header() {
 
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="-mx-2 h-10 w-10 p-0">
+              <Button variant="ghost" size="icon" className="-mx-2 cursor-pointer h-10 w-10 p-0">
                 <span className="sr-only">Open main menu</span>
                 <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
 
             <SheetContent side="right" className="w-[90vw] max-w-sm sm:w-80 sm:max-w-md p-0">
-              {/* Sticky Header */}
               <div className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-border/50 bg-background/95 px-4 sm:px-6 backdrop-blur-sm">
                 <Link prefetch={false} href="/" className="flex items-center gap-3 -m-1 p-1" onClick={() => setMobileMenuOpen(false)}>
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary">
@@ -357,7 +346,7 @@ export function Header() {
                   </div>
                   <span className="font-serif text-xl font-bold tracking-tight sm:text-lg">CogniCode</span>
                 </Link>
-                <Button variant="ghost" size="icon" className="h-10 w-10 p-0 -m-2" onClick={() => setMobileMenuOpen(false)}>
+                <Button  variant="ghost" size="icon"  className="h-8 w-8 p-0 rounded-full cursor-pointer hover:bg-blue-400" onClick={() => setMobileMenuOpen(false)}>
                   <span className="sr-only">Close menu</span>
                   <X className="h-6 w-6" />
                 </Button>
@@ -366,7 +355,6 @@ export function Header() {
               <div className="flex h-[calc(100%-4rem)] flex-col overflow-hidden">
                 <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
                   <div className="-my-2.5 divide-y divide-border/50">
-                    {/* Mobile Login / Profile */}
                     <div className="py-2.5">
                       {isLoggedIn && user ? (
                         <div className="rounded-xl border p-4 mb-4">
@@ -378,25 +366,23 @@ export function Header() {
                             </div>
                           </div>
                           <div className="mt-4 flex gap-2">
-                            <Button variant="outline" className="flex-1" onClick={() => { setEditOpen(true); setMobileMenuOpen(false); }}>Change Details</Button>
-                            <Button variant="destructive" className="flex-1" onClick={() => { handleLogout(); setMobileMenuOpen(false); }}>Logout</Button>
+                            <Button variant="outline" className="flex-1 cursor-pointer" onClick={() => { setEditOpen(true); setMobileMenuOpen(false); }}>Change Details</Button>
+                            <Button variant="destructive" className="flex-1 cursor-pointer" onClick={() => { handleLogout(); setMobileMenuOpen(false); }}>Logout</Button>
                           </div>
                         </div>
                       ) : (
-                        <Button variant="outline" className="w-full mb-4" onClick={() => { setLoginOpen(true); setMobileMenuOpen(false); }}>
+                        <Button variant="outline" className="w-full mb-4 cursor-pointer" onClick={() => { setLoginOpen(true); setMobileMenuOpen(false); }}>
                           <User className="mr-2 h-4 w-4" /> Login
                         </Button>
                       )}
                     </div>
 
-                    {/* Home */}
                     <div className="py-2.5">
                       <Link prefetch={false} href="/" onClick={() => setMobileMenuOpen(false)} className={cn("group flex w-full items-center rounded-xl p-3 text-base font-semibold leading-6 transition-all duration-200 hover:bg-muted/80", pathname === "/" ? "bg-primary/10 text-primary shadow-sm" : "text-foreground hover:text-foreground")}>
                         Home
                       </Link>
                     </div>
 
-                    {/* Dropdown sections */}
                     <div className="py-2.5">
                       <Accordion type="single" collapsible className="w-full">
                         {dropdownSections.map((item) => (
@@ -431,7 +417,6 @@ export function Header() {
                       </Accordion>
                     </div>
 
-                    {/* Flat links */}
                     <div className="py-2.5 space-y-1.5">
                       {flatLinks.map((item) => (
                         <Link prefetch={false} key={item.id} href={item.href} onClick={() => setMobileMenuOpen(false)} className={cn("group flex w-full items-center rounded-xl p-3 text-base font-semibold leading-6 transition-all duration-200 hover:bg-muted/80", isActive(item) ? "bg-primary/10 text-primary shadow-sm" : "text-foreground")}>
@@ -442,9 +427,8 @@ export function Header() {
                   </div>
                 </div>
 
-                {/* Sticky CTA */}
                 <div className="sticky bottom-0 z-10 shrink-0 border-t border-border/50 bg-background/95 px-4 py-6 sm:px-6 backdrop-blur-sm">
-                  <Button className="w-full h-12 rounded-xl shadow-sm hover:shadow-lg transition-all duration-200 text-black text-sm font-semibold" asChild onClick={() => setMobileMenuOpen(false)}>
+                  <Button className="w-full h-12 rounded-xl cursor-pointer shadow-sm hover:shadow-lg transition-all duration-200 text-black text-sm font-semibold" asChild onClick={() => setMobileMenuOpen(false)}>
                     <Link prefetch={false} href="/contact" className="flex bg-white items-center gap-2">
                       <Phone className="h-4 w-4" />
                       Get a Quote
@@ -457,19 +441,40 @@ export function Header() {
         </div>
       </nav>
 
-      {/* Edit Profile Dialog */}
+      {/* ==================== IMPROVED EDIT PROFILE DIALOG ==================== */}
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
-        <DialogContent className="max-w-md">
-          <DialogTitle>Change Details</DialogTitle>
-          <UserAuth 
-            mode="edit" 
-            currentUser={user} 
-            onClose={() => setEditOpen(false)}
-            onProfileUpdated={(updatedUser) => {
-              setUser(updatedUser);
-              localStorage.setItem("admin", JSON.stringify(updatedUser));
-            }}
-          />
+        <DialogContent className="max-w-md p-0 overflow-hidden sm:max-w-[440px]">
+          {/* Sticky Header (same style as Contact modal) */}
+          <DialogHeader className="sticky top-0 z-50 bg-background border-b px-6 pt-6 pb-4 flex flex-row items-center justify-between">
+            <DialogTitle className="text-xl font-semibold">Change Details</DialogTitle>
+
+            {/* X Close Button */}
+            <Button
+              onClick={() => setEditOpen(false)}
+              // variant="ghost"
+              size="icon"
+               className="h-8 w-8 p-0 rounded-full cursor-pointer hover:bg-blue-400"
+            >
+              <X className="h-5 w-5" />
+            </Button>
+          </DialogHeader>
+
+          {/* Content Area with better spacing */}
+          <div className="px-6 pb-8 pt-2">
+            <UserAuth
+              mode="edit"
+              currentUser={user}
+              onProfileUpdated={(updatedUser) => {
+                setUser(updatedUser);
+                localStorage.setItem("admin", JSON.stringify(updatedUser));
+
+                // Auto-close after success so user can see "Changes saved successfully"
+                setTimeout(() => {
+                  setEditOpen(false);
+                }, 1400);
+              }}
+            />
+          </div>
         </DialogContent>
       </Dialog>
     </header>
