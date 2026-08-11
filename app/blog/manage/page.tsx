@@ -418,9 +418,6 @@ export default function BlogManagePage() {
               <p className="mt-1 text-sm text-muted-foreground">
                 Signed in as {admin.name || admin.email}
               </p>
-              <p className="mt-1 text-xs font-medium text-emerald-700">
-                {CLIENT_BUILD} · API {apiBase || getServerURL()} · postData/getData
-              </p>
             </div>
             <div className="flex flex-wrap gap-2">
               <Button
