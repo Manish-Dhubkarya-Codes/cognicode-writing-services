@@ -64,9 +64,9 @@ export function NewsletterForm({
   return (
     <form
       onSubmit={onSubmit}
-      className="mx-auto flex w-full max-w-md flex-col gap-3 sm:flex-row"
+      className="mx-auto flex w-full max-w-md flex-col gap-2.5 sm:flex-row sm:gap-3"
     >
-      <div className="flex-1">
+      <div className="min-w-0 flex-1">
         <Input
           type="email"
           value={email}
@@ -75,12 +75,12 @@ export function NewsletterForm({
           aria-label="Email address"
           className={
             variant === "dark"
-              ? "h-12 border-0 bg-white text-foreground placeholder:text-muted-foreground"
-              : "h-12"
+              ? "h-11 w-full border-0 bg-white text-sm text-foreground placeholder:text-muted-foreground sm:h-12 sm:text-base"
+              : "h-11 w-full text-sm sm:h-12 sm:text-base"
           }
         />
         {error ? (
-          <p className="mt-2 text-left text-xs text-red-300 sm:text-red-600">
+          <p className="mt-2 text-left text-xs text-red-200 sm:text-red-600">
             {error}
           </p>
         ) : null}
@@ -90,7 +90,7 @@ export function NewsletterForm({
         size="lg"
         disabled={loading}
         variant={variant === "dark" ? "secondary" : "default"}
-        className="h-12 shrink-0"
+        className="h-11 w-full shrink-0 sm:h-12 sm:w-auto"
       >
         {loading ? (
           <>

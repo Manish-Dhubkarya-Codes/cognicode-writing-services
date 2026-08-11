@@ -400,10 +400,10 @@ export default function BlogManagePage() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
-      <main className="flex-1 bg-muted/30 mt-17">
-        <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-          <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
-            <div>
+      <main className="mt-17 min-w-0 flex-1 overflow-x-hidden bg-muted/30">
+        <div className="mx-auto max-w-7xl px-3 py-6 sm:px-6 sm:py-10 lg:px-8">
+          <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+            <div className="min-w-0">
               <Link
                 prefetch={false}
                 href="/blog/"
@@ -412,23 +412,23 @@ export default function BlogManagePage() {
                 <ArrowLeft className="mr-1 h-4 w-4" />
                 Back to social feed
               </Link>
-              <h1 className="mt-2 font-serif text-3xl font-bold text-foreground">
+              <h1 className="mt-2 font-serif text-2xl font-bold text-foreground sm:text-3xl">
                 Blog Manage
               </h1>
-              <p className="mt-1 text-sm text-muted-foreground">
+              <p className="mt-1 break-all text-sm text-muted-foreground">
                 Signed in as {admin.name || admin.email}
               </p>
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:flex-wrap">
               <Button
                 variant="outline"
-                className="rounded-full"
+                className="w-full rounded-full sm:w-auto"
                 type="button"
                 onClick={ensureTables}
               >
                 Init DB tables
               </Button>
-              <Button variant="outline" className="rounded-full" asChild>
+              <Button variant="outline" className="w-full rounded-full sm:w-auto" asChild>
                 <Link prefetch={false} href="/blog/">
                   View public feed
                 </Link>
@@ -436,10 +436,10 @@ export default function BlogManagePage() {
             </div>
           </div>
 
-          <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+          <div className="grid min-w-0 gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:gap-8">
             <form
               onSubmit={handleCreate}
-              className="space-y-5 rounded-2xl border border-border bg-card p-6 shadow-sm"
+              className="min-w-0 space-y-4 rounded-xl border border-border bg-card p-4 shadow-sm sm:space-y-5 sm:rounded-2xl sm:p-6"
             >
               <div className="flex items-center gap-2">
                 <PlusCircle className="h-5 w-5 text-primary" />
@@ -659,13 +659,13 @@ export default function BlogManagePage() {
               </Button>
             </form>
 
-            <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-              <div className="mb-4 flex items-center justify-between">
+            <div className="min-w-0 rounded-xl border border-border bg-card p-4 shadow-sm sm:rounded-2xl sm:p-6">
+              <div className="mb-4 flex items-center justify-between gap-2">
                 <h2 className="font-semibold">Your posts</h2>
                 <Button
                   variant="outline"
                   size="sm"
-                  className="rounded-full"
+                  className="shrink-0 rounded-full"
                   onClick={loadPosts}
                   disabled={loadingPosts}
                 >

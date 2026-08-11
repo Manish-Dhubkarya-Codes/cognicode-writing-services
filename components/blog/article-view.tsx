@@ -106,11 +106,11 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
   };
 
   return (
-    <>
-      <section className="bg-background pt-8 sm:pt-12">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <nav className="mb-6 text-sm text-muted-foreground" aria-label="Breadcrumb">
-            <ol className="flex flex-wrap items-center gap-2">
+    <div className="w-full min-w-0 overflow-x-hidden">
+      <section className="bg-background pt-5 sm:pt-8 md:pt-12">
+        <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
+          <nav className="mb-4 text-xs text-muted-foreground sm:mb-6 sm:text-sm" aria-label="Breadcrumb">
+            <ol className="flex min-w-0 flex-wrap items-center gap-1.5 sm:gap-2">
               <li>
                 <Link prefetch={false} href="/" className="hover:text-primary">
                   Home
@@ -122,29 +122,33 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
                   Blog
                 </Link>
               </li>
-              <li>/</li>
-              <li className="line-clamp-1 text-foreground">{post.title}</li>
+              <li className="hidden sm:inline">/</li>
+              <li className="hidden min-w-0 max-w-[50%] truncate text-foreground sm:block">
+                {post.title}
+              </li>
             </ol>
           </nav>
 
           {/* Social post header */}
-          <div className="mx-auto max-w-3xl">
-            <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-tr from-fuchsia-500 via-rose-500 to-amber-400 p-[2px]">
-                <div className="flex h-full w-full items-center justify-center rounded-full bg-background text-sm font-bold text-primary">
+          <div className="mx-auto max-w-3xl min-w-0">
+            <div className="flex items-center gap-2.5 sm:gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-fuchsia-500 via-rose-500 to-amber-400 p-[2px] sm:h-12 sm:w-12">
+                <div className="flex h-full w-full items-center justify-center rounded-full bg-background text-xs font-bold text-primary sm:text-sm">
                   CC
                 </div>
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1">
-                  <p className="font-semibold text-foreground">cognicodeedutech</p>
-                  <BadgeCheck className="h-4 w-4 fill-sky-500 text-white" />
+                  <p className="truncate text-sm font-semibold text-foreground sm:text-base">
+                    cognicodeedutech
+                  </p>
+                  <BadgeCheck className="h-4 w-4 shrink-0 fill-sky-500 text-white" />
                 </div>
-                <p className="text-sm text-muted-foreground">
+                <p className="truncate text-xs text-muted-foreground sm:text-sm">
                   {getCategoryName(post.category)} · {post.author.name}
                 </p>
               </div>
-              <Button size="sm" className="rounded-full" asChild>
+              <Button size="sm" className="h-8 shrink-0 rounded-full px-3 text-xs sm:h-9 sm:px-4 sm:text-sm" asChild>
                 <a
                   href="https://www.instagram.com/cognicodethesiswriting"
                   target="_blank"
@@ -155,38 +159,38 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
               </Button>
             </div>
 
-            <div className="mt-6 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+            <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-muted-foreground sm:mt-6 sm:gap-3 sm:text-sm">
               <Link
                 prefetch={false}
                 href={`/blog/category/${post.category}/`}
-                className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary"
+                className="rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary sm:px-3 sm:text-xs"
               >
                 {getCategoryName(post.category)}
               </Link>
-              <span className="inline-flex items-center gap-1.5">
-                <Calendar className="h-4 w-4" />
+              <span className="inline-flex items-center gap-1">
+                <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 {post.date}
               </span>
-              <span className="inline-flex items-center gap-1.5">
-                <Clock className="h-4 w-4" />
+              <span className="inline-flex items-center gap-1">
+                <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 {post.readTime}
               </span>
             </div>
 
-            <h1 className="mt-5 font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+            <h1 className="mt-4 break-words font-serif text-2xl font-bold tracking-tight text-foreground sm:mt-5 sm:text-3xl md:text-4xl lg:text-5xl">
               {post.title}
             </h1>
-            <p className="mt-5 text-lg leading-8 text-muted-foreground">
+            <p className="mt-3 text-sm leading-6 text-muted-foreground sm:mt-5 sm:text-base sm:leading-7 md:text-lg md:leading-8">
               {post.excerpt}
             </p>
 
-            <div className="mt-5">
+            <div className="mt-4 sm:mt-5">
               <SocialFollow variant="pills" />
             </div>
           </div>
 
           {/* Hero media */}
-          <div className="relative mx-auto mt-10 max-w-4xl overflow-hidden rounded-3xl border border-border/70 bg-muted">
+          <div className="relative mx-auto mt-6 max-w-4xl overflow-hidden rounded-xl border border-border/70 bg-muted sm:mt-10 sm:rounded-2xl md:rounded-3xl">
             {youtubeEmbed ? (
               <div className="aspect-video w-full">
                 <iframe
@@ -202,7 +206,7 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
               <img
                 src={heroMedia}
                 alt={post.title}
-                className="aspect-[16/9] w-full object-cover"
+                className="aspect-[16/10] w-full object-cover sm:aspect-[16/9]"
               />
             ) : heroMedia ? (
               <video
@@ -214,17 +218,17 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
             ) : (
               <div
                 className={cn(
-                  "relative aspect-[16/9] bg-gradient-to-br",
+                  "relative aspect-[16/10] bg-gradient-to-br sm:aspect-[16/9]",
                   post.imageGradient
                 )}
               >
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.2),transparent_50%)]" />
-                <div className="absolute inset-0 flex items-end p-8 sm:p-12">
-                  <div>
-                    <p className="text-sm uppercase tracking-[0.2em] text-white/70">
+                <div className="absolute inset-0 flex items-end p-4 sm:p-8 md:p-12">
+                  <div className="min-w-0">
+                    <p className="text-[10px] uppercase tracking-[0.15em] text-white/70 sm:text-sm sm:tracking-[0.2em]">
                       CogniCode Insights
                     </p>
-                    <p className="mt-2 font-serif text-3xl font-semibold text-white sm:text-4xl">
+                    <p className="mt-1 font-serif text-xl font-semibold text-white sm:mt-2 sm:text-3xl md:text-4xl">
                       {post.imageLabel}
                     </p>
                   </div>
@@ -234,59 +238,62 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
           </div>
 
           {/* IG-style actions */}
-          <div className="mx-auto mt-4 flex max-w-4xl items-center justify-between px-1">
-            <div className="flex items-center gap-1">
+          <div className="mx-auto mt-3 flex max-w-4xl items-center justify-between sm:mt-4">
+            <div className="flex items-center">
               <button
                 type="button"
                 onClick={() => setLiked((v) => !v)}
-                className="rounded-full p-2 hover:bg-muted"
+                className="rounded-full p-1.5 hover:bg-muted sm:p-2"
                 aria-label="Like"
               >
                 <Heart
                   className={cn(
-                    "h-6 w-6",
+                    "h-5 w-5 sm:h-6 sm:w-6",
                     liked ? "fill-rose-500 text-rose-500" : "text-foreground"
                   )}
                 />
               </button>
-              <button type="button" className="rounded-full p-2 hover:bg-muted" aria-label="Comment">
-                <MessageCircle className="h-6 w-6" />
+              <button type="button" className="rounded-full p-1.5 hover:bg-muted sm:p-2" aria-label="Comment">
+                <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6" />
               </button>
               <button
                 type="button"
                 onClick={shareNative}
-                className="rounded-full p-2 hover:bg-muted"
+                className="rounded-full p-1.5 hover:bg-muted sm:p-2"
                 aria-label="Share"
               >
-                <Send className="h-5 w-5" />
+                <Send className="h-4 w-4 sm:h-5 sm:w-5" />
               </button>
             </div>
             <button
               type="button"
               onClick={() => setSaved((v) => !v)}
-              className="rounded-full p-2 hover:bg-muted"
+              className="rounded-full p-1.5 hover:bg-muted sm:p-2"
               aria-label="Save"
             >
               <Bookmark
                 className={cn(
-                  "h-6 w-6",
+                  "h-5 w-5 sm:h-6 sm:w-6",
                   saved ? "fill-foreground text-foreground" : "text-foreground"
                 )}
               />
             </button>
           </div>
-          <p className="mx-auto mt-1 max-w-4xl px-2 text-sm font-semibold text-foreground">
-            {((post.likes || 120) + (liked ? 1 : 0)).toLocaleString()} likes · Share on
-            Instagram, LinkedIn, Facebook or YouTube community
+          <p className="mx-auto mt-1 max-w-4xl text-xs font-semibold leading-5 text-foreground sm:text-sm">
+            {((post.likes || 120) + (liked ? 1 : 0)).toLocaleString()} likes
+            <span className="hidden sm:inline">
+              {" "}
+              · Share on Instagram, LinkedIn, Facebook or YouTube
+            </span>
           </p>
         </div>
       </section>
 
-      <section className="bg-background py-12 sm:py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-12 lg:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[260px_minmax(0,1fr)_260px]">
-            <aside className="hidden lg:block">
-              <div className="sticky top-28 space-y-4">
+      <section className="bg-background py-8 sm:py-12 md:py-16">
+        <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
+          <div className="grid min-w-0 gap-8 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-10 xl:grid-cols-[260px_minmax(0,1fr)_240px] xl:gap-12">
+            <aside className="hidden min-w-0 lg:block">
+              <div className="sticky top-24 space-y-4 xl:top-28">
                 <div className="flex items-center gap-2 text-sm font-semibold">
                   <List className="h-4 w-4" />
                   Table of contents
@@ -341,32 +348,32 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
               </div>
             </aside>
 
-            <article className="min-w-0">
-              <div className="rounded-2xl border border-primary/15 bg-primary/[0.04] p-6 sm:p-8">
-                <h2 className="font-serif text-xl font-bold text-foreground">
+            <article className="min-w-0 overflow-hidden">
+              <div className="rounded-xl border border-primary/15 bg-primary/[0.04] p-4 sm:rounded-2xl sm:p-6 md:p-8">
+                <h2 className="font-serif text-lg font-bold text-foreground sm:text-xl">
                   Key Takeaways
                 </h2>
-                <ul className="mt-5 space-y-3">
+                <ul className="mt-3 space-y-2.5 sm:mt-5 sm:space-y-3">
                   {post.keyTakeaways.map((item) => (
                     <li
                       key={item}
-                      className="flex gap-3 text-sm leading-relaxed text-foreground/90 sm:text-base"
+                      className="flex gap-2.5 text-sm leading-relaxed text-foreground/90 sm:gap-3 sm:text-base"
                     >
-                      <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-                      <span>{item}</span>
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary sm:h-5 sm:w-5" />
+                      <span className="min-w-0 break-words">{item}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
-              <details className="mt-8 rounded-2xl border border-border p-4 lg:hidden">
-                <summary className="cursor-pointer list-none font-semibold text-foreground">
+              <details className="mt-5 rounded-xl border border-border p-3 sm:mt-8 sm:rounded-2xl sm:p-4 lg:hidden">
+                <summary className="cursor-pointer list-none text-sm font-semibold text-foreground sm:text-base">
                   <span className="inline-flex items-center gap-2">
                     <List className="h-4 w-4" />
                     Table of contents
                   </span>
                 </summary>
-                <nav className="mt-4 space-y-2 border-t border-border pt-4">
+                <nav className="mt-3 space-y-2 border-t border-border pt-3 sm:mt-4 sm:pt-4">
                   {toc.map((item) => (
                     <a
                       key={item.id}
@@ -379,30 +386,30 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
                 </nav>
               </details>
 
-              <div className="mt-10 space-y-12">
+              <div className="mt-6 space-y-8 sm:mt-10 sm:space-y-12">
                 {post.sections.map((section, index) => (
-                  <div key={section.id}>
+                  <div key={section.id} className="min-w-0">
                     {section.level === 2 ? (
                       <h2
                         id={section.id}
-                        className="scroll-mt-32 font-serif text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
+                        className="scroll-mt-28 break-words font-serif text-xl font-bold tracking-tight text-foreground sm:scroll-mt-32 sm:text-2xl md:text-3xl"
                       >
                         {section.heading}
                       </h2>
                     ) : (
                       <h3
                         id={section.id}
-                        className="scroll-mt-32 font-serif text-xl font-semibold text-foreground sm:text-2xl"
+                        className="scroll-mt-28 break-words font-serif text-lg font-semibold text-foreground sm:scroll-mt-32 sm:text-xl md:text-2xl"
                       >
                         {section.heading}
                       </h3>
                     )}
 
-                    <div className="mt-4 space-y-4">
+                    <div className="mt-3 space-y-3 sm:mt-4 sm:space-y-4">
                       {section.paragraphs.map((paragraph) => (
                         <p
                           key={paragraph.slice(0, 48)}
-                          className="text-base leading-8 text-muted-foreground sm:text-[1.05rem]"
+                          className="break-words text-sm leading-7 text-muted-foreground sm:text-base sm:leading-8 md:text-[1.05rem]"
                         >
                           {paragraph}
                         </p>
@@ -410,37 +417,37 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
                     </div>
 
                     {section.bullets?.length ? (
-                      <ul className="mt-5 space-y-2.5">
+                      <ul className="mt-4 space-y-2 sm:mt-5 sm:space-y-2.5">
                         {section.bullets.map((bullet) => (
                           <li
                             key={bullet}
-                            className="flex gap-3 text-base leading-7 text-muted-foreground"
+                            className="flex gap-2.5 text-sm leading-6 text-muted-foreground sm:gap-3 sm:text-base sm:leading-7"
                           >
                             <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                            <span>{bullet}</span>
+                            <span className="min-w-0 break-words">{bullet}</span>
                           </li>
                         ))}
                       </ul>
                     ) : null}
 
                     {section.callout ? (
-                      <div className="mt-6 rounded-2xl border border-border bg-muted/50 p-5 text-sm leading-7 text-foreground sm:text-base">
+                      <div className="mt-5 rounded-xl border border-border bg-muted/50 p-3 text-sm leading-6 text-foreground sm:mt-6 sm:rounded-2xl sm:p-5 sm:leading-7 sm:text-base">
                         {section.callout}
                       </div>
                     ) : null}
 
                     {index === Math.min(3, post.sections.length - 2) ? (
-                      <div className="mt-10 rounded-2xl border border-border bg-card p-6 sm:p-8">
-                        <p className="text-xs font-semibold uppercase tracking-wider text-primary">
+                      <div className="mt-6 rounded-xl border border-border bg-card p-4 sm:mt-10 sm:rounded-2xl sm:p-6 md:p-8">
+                        <p className="text-[11px] font-semibold uppercase tracking-wider text-primary sm:text-xs">
                           Expert support
                         </p>
-                        <h3 className="mt-2 font-serif text-xl font-bold text-foreground sm:text-2xl">
+                        <h3 className="mt-2 font-serif text-lg font-bold text-foreground sm:text-xl md:text-2xl">
                           {post.serviceCta.title}
                         </h3>
-                        <p className="mt-3 text-sm leading-7 text-muted-foreground sm:text-base">
+                        <p className="mt-2 text-sm leading-6 text-muted-foreground sm:mt-3 sm:leading-7 sm:text-base">
                           {post.serviceCta.description}
                         </p>
-                        <Button className="mt-5 rounded-full" asChild>
+                        <Button className="mt-4 w-full rounded-full sm:mt-5 sm:w-auto" asChild>
                           <Link prefetch={false} href={post.serviceCta.href}>
                             {post.serviceCta.buttonLabel}
                             <ArrowRight className="ml-2 h-4 w-4" />
@@ -451,16 +458,16 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
 
                     {post.resource &&
                     index === Math.min(2, post.sections.length - 1) ? (
-                      <div className="mt-10 overflow-hidden rounded-2xl bg-foreground p-6 text-background sm:p-8">
-                        <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-                          <div>
-                            <p className="text-xs font-semibold uppercase tracking-wider text-background/60">
+                      <div className="mt-6 overflow-hidden rounded-xl bg-foreground p-4 text-background sm:mt-10 sm:rounded-2xl sm:p-6 md:p-8">
+                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-5">
+                          <div className="min-w-0">
+                            <p className="text-[11px] font-semibold uppercase tracking-wider text-background/60 sm:text-xs">
                               Free downloadable resource
                             </p>
-                            <h3 className="mt-2 font-serif text-xl font-bold sm:text-2xl">
+                            <h3 className="mt-2 font-serif text-lg font-bold sm:text-xl md:text-2xl">
                               {post.resource.title}
                             </h3>
-                            <p className="mt-2 max-w-xl text-sm leading-7 text-background/70 sm:text-base">
+                            <p className="mt-2 max-w-xl text-sm leading-6 text-background/70 sm:leading-7 sm:text-base">
                               {post.resource.description}
                             </p>
                           </div>
@@ -468,7 +475,7 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
                             variant="secondary"
                             size="lg"
                             asChild
-                            className="shrink-0 rounded-full"
+                            className="w-full shrink-0 rounded-full sm:w-auto"
                           >
                             <Link prefetch={false} href="/contact">
                               <Download className="mr-2 h-4 w-4" />
@@ -483,14 +490,14 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
               </div>
 
               {/* Company social CTA */}
-              <div className="mt-12 rounded-2xl border border-border bg-muted/40 p-6 sm:p-8">
+              <div className="mt-8 rounded-xl border border-border bg-muted/40 p-4 sm:mt-12 sm:rounded-2xl sm:p-6 md:p-8">
                 <div className="flex items-start gap-3">
-                  <Play className="mt-1 h-5 w-5 text-primary" />
-                  <div>
-                    <h3 className="font-serif text-xl font-bold text-foreground">
+                  <Play className="mt-1 h-5 w-5 shrink-0 text-primary" />
+                  <div className="min-w-0">
+                    <h3 className="font-serif text-lg font-bold text-foreground sm:text-xl">
                       Prefer short-form tips?
                     </h3>
-                    <p className="mt-2 text-sm leading-7 text-muted-foreground">
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground sm:leading-7">
                       Follow CogniCode on Instagram, Facebook, LinkedIn and YouTube for
                       reels, carousels, and walkthroughs based on guides like this one.
                     </p>
@@ -501,21 +508,21 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
                 </div>
               </div>
 
-              <div className="mt-12 rounded-2xl border border-primary/15 bg-primary/[0.04] p-6 sm:p-8">
-                <h3 className="font-serif text-2xl font-bold text-foreground">
+              <div className="mt-8 rounded-xl border border-primary/15 bg-primary/[0.04] p-4 sm:mt-12 sm:rounded-2xl sm:p-6 md:p-8">
+                <h3 className="font-serif text-lg font-bold text-foreground sm:text-2xl">
                   {post.serviceCta.title}
                 </h3>
-                <p className="mt-3 text-muted-foreground">
+                <p className="mt-2 text-sm text-muted-foreground sm:mt-3 sm:text-base">
                   {post.serviceCta.description}
                 </p>
-                <div className="mt-6 flex flex-wrap gap-3">
-                  <Button className="rounded-full" asChild>
+                <div className="mt-4 flex flex-col gap-2 sm:mt-6 sm:flex-row sm:flex-wrap sm:gap-3">
+                  <Button className="w-full rounded-full sm:w-auto" asChild>
                     <Link prefetch={false} href={post.serviceCta.href}>
                       {post.serviceCta.buttonLabel}
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
-                  <Button variant="outline" className="rounded-full" asChild>
+                  <Button variant="outline" className="w-full rounded-full sm:w-auto" asChild>
                     <Link prefetch={false} href="/contact">
                       Free consultation
                     </Link>
@@ -523,56 +530,58 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
                 </div>
               </div>
 
-              <div className="mt-12 rounded-2xl border border-border p-6 sm:p-8">
-                <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
-                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-lg font-bold text-primary">
+              <div className="mt-8 rounded-xl border border-border p-4 sm:mt-12 sm:rounded-2xl sm:p-6 md:p-8">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-5">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-base font-bold text-primary sm:h-16 sm:w-16 sm:rounded-2xl sm:text-lg">
                     {post.author.initials}
                   </div>
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  <div className="min-w-0">
+                    <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground sm:text-xs">
                       About the author
                     </p>
-                    <h3 className="mt-1 font-serif text-xl font-bold text-foreground">
+                    <h3 className="mt-1 font-serif text-lg font-bold text-foreground sm:text-xl">
                       {post.author.name}
                     </h3>
                     <p className="mt-1 text-sm font-medium text-primary">
                       {post.author.role}
                     </p>
-                    <p className="mt-3 text-sm leading-7 text-muted-foreground sm:text-base">
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground sm:mt-3 sm:leading-7 sm:text-base">
                       {post.author.bio}
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-10 flex flex-wrap items-center gap-3 border-t border-border pt-8">
+              <div className="mt-8 flex flex-col gap-3 border-t border-border pt-6 sm:mt-10 sm:flex-row sm:flex-wrap sm:items-center sm:pt-8">
                 <span className="inline-flex items-center gap-2 text-sm font-medium text-foreground">
                   <Share2 className="h-4 w-4" />
                   Share this guide
                 </span>
-                {companySocials.map((s) => (
-                  <a
-                    key={s.id}
-                    href={s.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground"
+                <div className="flex flex-wrap gap-2">
+                  {companySocials.map((s) => (
+                    <a
+                      key={s.id}
+                      href={s.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground"
+                    >
+                      {s.name}
+                    </a>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={copyLink}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground"
                   >
-                    {s.name}
-                  </a>
-                ))}
-                <button
-                  type="button"
-                  onClick={copyLink}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground"
-                >
-                  <Link2 className="h-3.5 w-3.5" />
-                  {copied ? "Link copied" : "Copy link"}
-                </button>
+                    <Link2 className="h-3.5 w-3.5" />
+                    {copied ? "Link copied" : "Copy link"}
+                  </button>
+                </div>
               </div>
             </article>
 
-            <aside className="hidden xl:block">
+            <aside className="hidden min-w-0 xl:block">
               <div className="sticky top-28 space-y-4">
                 <div className="rounded-2xl border border-border bg-muted/40 p-5">
                   <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -609,24 +618,24 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
       </section>
 
       {related.length > 0 ? (
-        <section className="bg-muted/50 py-16 sm:py-20">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-10 flex items-end justify-between gap-4">
+        <section className="bg-muted/50 py-10 sm:py-16 md:py-20">
+          <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
+            <div className="mb-6 flex flex-col gap-3 sm:mb-10 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-wider text-primary">
+                <p className="text-xs font-semibold uppercase tracking-wider text-primary sm:text-sm">
                   Continue scrolling
                 </p>
-                <h2 className="mt-2 font-serif text-2xl font-bold text-foreground sm:text-3xl">
+                <h2 className="mt-1 font-serif text-xl font-bold text-foreground sm:mt-2 sm:text-2xl md:text-3xl">
                   Related posts
                 </h2>
               </div>
-              <Button variant="outline" className="rounded-full" asChild>
+              <Button variant="outline" className="w-full rounded-full sm:w-auto" asChild>
                 <Link prefetch={false} href="/blog/">
                   All posts
                 </Link>
               </Button>
             </div>
-            <div className="mx-auto grid max-w-xl gap-6 lg:max-w-none lg:grid-cols-3">
+            <div className="mx-auto grid max-w-xl grid-cols-1 gap-4 sm:gap-6 lg:max-w-none lg:grid-cols-3">
               {related.map((item) => (
                 <FeedPostCard key={item.id} post={item} compact />
               ))}
@@ -635,20 +644,20 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
         </section>
       ) : null}
 
-      <section className="bg-primary py-16">
-        <div className="mx-auto max-w-2xl px-4 text-center sm:px-6">
-          <h2 className="font-serif text-3xl font-bold text-primary-foreground">
+      <section className="bg-primary py-10 sm:py-16">
+        <div className="mx-auto max-w-2xl px-3 text-center sm:px-6">
+          <h2 className="font-serif text-2xl font-bold text-primary-foreground sm:text-3xl">
             Get the next practical guide
           </h2>
-          <p className="mt-4 text-primary-foreground/80">
-            Research tips and templates for scholars - concise and useful.
+          <p className="mt-3 text-sm text-primary-foreground/80 sm:mt-4 sm:text-base">
+            Research tips and templates for scholars — concise and useful.
           </p>
-          <div className="mt-8">
+          <div className="mt-6 sm:mt-8">
             <NewsletterForm variant="dark" source={`article-${post.slug}`} />
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }
 

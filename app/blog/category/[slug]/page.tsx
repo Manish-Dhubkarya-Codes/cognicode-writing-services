@@ -54,20 +54,20 @@ export default async function BlogCategoryPage({ params }: PageProps) {
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1 mt-17">
-        <section className="bg-foreground py-20 sm:py-24">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <section className="bg-foreground py-12 sm:py-20 md:py-24">
+          <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-3xl text-center">
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-background/60">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-background/60 sm:text-sm">
                 Blog Category
               </p>
-              <h1 className="mt-4 font-serif text-4xl font-bold tracking-tight text-background sm:text-5xl">
+              <h1 className="mt-3 font-serif text-2xl font-bold tracking-tight text-background sm:mt-4 sm:text-4xl md:text-5xl">
                 {category.name}
               </h1>
-              <p className="mt-6 text-lg leading-8 text-background/70">
+              <p className="mt-4 text-sm leading-6 text-background/70 sm:mt-6 sm:text-lg sm:leading-8">
                 {category.description}
               </p>
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-                <Button variant="secondary" asChild>
+              <div className="mt-6 flex flex-col items-stretch justify-center gap-2.5 sm:mt-8 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+                <Button variant="secondary" className="w-full sm:w-auto" asChild>
                   <Link prefetch={false} href={category.serviceHref}>
                     {category.serviceLabel}
                     <ArrowRight className="ml-2 h-4 w-4" />
@@ -76,7 +76,7 @@ export default async function BlogCategoryPage({ params }: PageProps) {
                 <Button
                   variant="outline"
                   asChild
-                  className="border-background/20 bg-transparent text-background hover:bg-background/10 hover:text-background"
+                  className="w-full border-background/20 bg-transparent text-background hover:bg-background/10 hover:text-background sm:w-auto"
                 >
                   <Link prefetch={false} href="/blog">
                     All articles
@@ -87,31 +87,29 @@ export default async function BlogCategoryPage({ params }: PageProps) {
           </div>
         </section>
 
-        <section className="bg-muted/50 py-16 sm:py-20">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-10 flex items-end justify-between gap-4">
-              <div>
-                <h2 className="font-serif text-2xl font-bold text-foreground sm:text-3xl">
-                  Articles in {category.name}
-                </h2>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {posts.length} guide{posts.length === 1 ? "" : "s"}
-                </p>
-              </div>
+        <section className="bg-muted/50 py-10 sm:py-16 md:py-20">
+          <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
+            <div className="mb-6 sm:mb-10">
+              <h2 className="font-serif text-xl font-bold text-foreground sm:text-2xl md:text-3xl">
+                Articles in {category.name}
+              </h2>
+              <p className="mt-2 text-sm text-muted-foreground">
+                {posts.length} guide{posts.length === 1 ? "" : "s"}
+              </p>
             </div>
 
             {posts.length > 0 ? (
-              <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
                 {posts.map((post) => (
                   <BlogCard key={post.id} post={post} />
                 ))}
               </div>
             ) : (
-              <div className="rounded-2xl border border-dashed border-border bg-background px-6 py-16 text-center">
+              <div className="rounded-2xl border border-dashed border-border bg-background px-4 py-12 text-center sm:px-6 sm:py-16">
                 <p className="font-medium text-foreground">
                   New guides in this category are coming soon.
                 </p>
-                <Button className="mt-6" variant="outline" asChild>
+                <Button className="mt-6 w-full rounded-full sm:w-auto" variant="outline" asChild>
                   <Link prefetch={false} href="/blog">
                     Browse all articles
                   </Link>
@@ -121,22 +119,22 @@ export default async function BlogCategoryPage({ params }: PageProps) {
           </div>
         </section>
 
-        <section className="bg-background py-16">
-          <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
-            <h2 className="font-serif text-2xl font-bold text-foreground sm:text-3xl">
+        <section className="bg-background py-10 sm:py-16">
+          <div className="mx-auto max-w-3xl px-3 text-center sm:px-6">
+            <h2 className="font-serif text-xl font-bold text-foreground sm:text-2xl md:text-3xl">
               Need hands-on help with {category.name.toLowerCase()}?
             </h2>
-            <p className="mt-4 text-muted-foreground">
+            <p className="mt-3 text-sm text-muted-foreground sm:mt-4 sm:text-base">
               Explore our related service or request a free consultation. Soft
-              guidance first - conversion only when it truly helps your research.
+              guidance first — conversion only when it truly helps your research.
             </p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <Button size="lg" asChild>
+            <div className="mt-6 flex flex-col items-stretch justify-center gap-2.5 sm:mt-8 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+              <Button size="lg" className="w-full sm:w-auto" asChild>
                 <Link prefetch={false} href={category.serviceHref}>
                   {category.serviceLabel}
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" asChild>
+              <Button size="lg" variant="outline" className="w-full sm:w-auto" asChild>
                 <Link prefetch={false} href="/contact">
                   Contact us
                 </Link>
