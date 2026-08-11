@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getApiBase } from "@/lib/blog-admin-api";
+import { postData } from "@/app/server/fetch-beckend-services";
 import { Loader2, CheckCircle2 } from "lucide-react";
 
 type NewsletterFormProps = {
@@ -31,13 +31,7 @@ export function NewsletterForm({
 
     setLoading(true);
     try {
-      const url = `${getApiBase()}/blog/subscribe`;
-      const res = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, source }),
-      });
-      const result = await res.json().catch(() => null);
+      const result = await postData("blog/subscribe", { email, source });
       if (result?.success === false) {
         setError(result.message || "Unable to subscribe right now.");
       } else {
@@ -45,7 +39,6 @@ export function NewsletterForm({
         setEmail("");
       }
     } catch {
-      // Offline API: still show success so UX isn't blocked
       setDone(true);
       setEmail("");
     } finally {

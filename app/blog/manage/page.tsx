@@ -1,8 +1,9 @@
 "use client";
 
 /**
- * Blog Manage - brand-new route so browsers cannot reuse a cached /blog/admin bundle.
- * 100% self-contained: no api-client, no axios, no x-admin headers.
+ * Blog Manage — production-ready.
+ * Uses getData / postData / deleteData from the shared API helper
+ * (same as login, contact, etc.) so local + live API both work.
  */
 
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -32,9 +33,15 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { blogCategories } from "@/lib/blog-data";
+import {
+  getData,
+  postData,
+  deleteData,
+  getServerURL,
+  mediaUrl,
+} from "@/app/server/fetch-beckend-services";
 
-const API = "http://localhost:3000";
-const CLIENT_BUILD = "manage-v4-fetch-only";
+const CLIENT_BUILD = "manage-v5-postData";
 
 type Admin = { adminId: number | string; email: string; name?: string };
 
@@ -74,59 +81,8 @@ function slugify(text: string) {
     .slice(0, 180);
 }
 
-function mediaUrl(path?: string | null) {
-  if (!path) return "";
-  if (/^https?:\/\//i.test(path) || path.startsWith("data:") || path.startsWith("blob:")) {
-    return path;
-  }
-  return path.startsWith("/") ? `${API}${path}` : `${API}/${path}`;
-}
-
 function authQs(admin: Admin) {
   return `adminId=${encodeURIComponent(String(admin.adminId))}&email=${encodeURIComponent(admin.email)}`;
-}
-
-/** Native fetch only - never axios, never custom headers */
-async function apiGet(path: string, admin: Admin) {
-  const url = `${API}/${path.replace(/^\/+/, "")}?${authQs(admin)}`;
-  const res = await fetch(url, { method: "GET", cache: "no-store" });
-  const data = await res.json().catch(() => null);
-  if (!res.ok) throw new Error(data?.message || `GET ${res.status}`);
-  return data;
-}
-
-async function apiPost(path: string, admin: Admin, body: Record<string, unknown>) {
-  const url = `${API}/${path.replace(/^\/+/, "")}?${authQs(admin)}`;
-  const res = await fetch(url, {
-    method: "POST",
-    cache: "no-store",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ ...body, adminId: admin.adminId, email: admin.email }),
-  });
-  const data = await res.json().catch(() => null);
-  if (!res.ok) throw new Error(data?.message || `POST ${res.status}`);
-  return data;
-}
-
-async function apiDelete(path: string, admin: Admin) {
-  const url = `${API}/${path.replace(/^\/+/, "")}?${authQs(admin)}`;
-  const res = await fetch(url, { method: "DELETE", cache: "no-store" });
-  const data = await res.json().catch(() => null);
-  if (!res.ok) throw new Error(data?.message || `DELETE ${res.status}`);
-  return data;
-}
-
-async function apiUpload(admin: Admin, file: File, mediaType: string) {
-  const url = `${API}/blog/admin/upload?${authQs(admin)}`;
-  const form = new FormData();
-  form.append("file", file);
-  form.append("adminId", String(admin.adminId));
-  form.append("email", admin.email);
-  form.append("mediaType", mediaType);
-  const res = await fetch(url, { method: "POST", body: form, cache: "no-store" });
-  const data = await res.json().catch(() => null);
-  if (!res.ok) throw new Error(data?.message || `UPLOAD ${res.status}`);
-  return data;
 }
 
 export default function BlogManagePage() {
@@ -141,8 +97,10 @@ export default function BlogManagePage() {
   const [coverImage, setCoverImage] = useState("");
   const [coverVideo, setCoverVideo] = useState("");
   const [gallery, setGallery] = useState<string[]>([]);
+  const [apiBase, setApiBase] = useState("");
 
   useEffect(() => {
+    setApiBase(getServerURL());
     try {
       const raw = localStorage.getItem("admin");
       if (raw) {
@@ -153,7 +111,10 @@ export default function BlogManagePage() {
             email: parsed.email,
             name: parsed.name,
           });
-          setForm((f) => ({ ...f, authorName: parsed.name || "CogniCode Team" }));
+          setForm((f) => ({
+            ...f,
+            authorName: parsed.name || "CogniCode Team",
+          }));
         }
       }
     } catch {
@@ -167,13 +128,24 @@ export default function BlogManagePage() {
     if (!admin) return;
     setLoadingPosts(true);
     try {
-      const res = await apiGet("blog/admin/posts", admin);
-      setPosts(Array.isArray(res?.data) ? res.data : []);
+      const res = await getData(`blog/admin/posts?${authQs(admin)}`);
+      if (res?.success && Array.isArray(res.data)) {
+        setPosts(res.data);
+      } else {
+        setPosts([]);
+        toast({
+          title: "Could not load posts",
+          description:
+            res?.message ||
+            `Check API at ${getServerURL()} and /blog/health`,
+          variant: "destructive",
+        });
+      }
     } catch (e: any) {
       setPosts([]);
       toast({
-        title: "Could not load posts",
-        description: e?.message || `Is API running at ${API}?`,
+        title: "API error",
+        description: e?.message || "Failed to load posts",
         variant: "destructive",
       });
     } finally {
@@ -199,13 +171,32 @@ export default function BlogManagePage() {
     });
   };
 
-  const handleUpload = async (file: File | null, kind: "image" | "video" | "gallery") => {
+  const handleUpload = async (
+    file: File | null,
+    kind: "image" | "video" | "gallery"
+  ) => {
     if (!file || !admin) return;
     setUploading(true);
     try {
-      const res = await apiUpload(admin, file, kind === "video" ? "video" : "image");
-      const url = mediaUrl(res?.data?.url);
-      if (!url) throw new Error(res?.message || "No file URL returned");
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("adminId", String(admin.adminId));
+      formData.append("email", admin.email);
+      formData.append("mediaType", kind === "video" ? "video" : "image");
+
+      const res = await postData(
+        `blog/admin/upload?${authQs(admin)}`,
+        formData
+      );
+      if (!res?.success || !res?.data?.url) {
+        toast({
+          title: "Upload failed",
+          description: res?.message || "Could not upload file",
+          variant: "destructive",
+        });
+        return;
+      }
+      const url = mediaUrl(res.data.url);
       if (kind === "image") setCoverImage(url);
       if (kind === "video") setCoverVideo(url);
       if (kind === "gallery") setGallery((g) => [...g, url]);
@@ -254,7 +245,7 @@ export default function BlogManagePage() {
             },
           ];
 
-      await apiPost("blog/admin/posts", admin, {
+      const payload = {
         title: form.title.trim(),
         slug: form.slug.trim() || slugify(form.title),
         excerpt: form.excerpt.trim(),
@@ -279,20 +270,39 @@ export default function BlogManagePage() {
         youtubeUrl: form.youtubeUrl.trim() || null,
         mediaGallery: gallery.length ? gallery : coverImage ? [coverImage] : [],
         imageLabel:
-          blogCategories.find((c) => c.slug === form.categorySlug)?.name || "Research",
+          blogCategories.find((c) => c.slug === form.categorySlug)?.name ||
+          "Research",
         keywords: [form.categorySlug, "cognicode"],
         readTime: form.readTime,
         status: form.status,
         featured: Boolean(form.featured),
+        adminId: admin.adminId,
+        email: admin.email,
         serviceCta: {
           title: "Need expert help with this topic?",
           description: "Talk to CogniCode mentors for research support.",
           href: "/contact",
           buttonLabel: "Free consultation",
         },
-      });
+      };
 
-      toast({ title: "Blog published", description: "Live on the company feed." });
+      const res = await postData(
+        `blog/admin/posts?${authQs(admin)}`,
+        payload
+      );
+      if (!res?.success) {
+        toast({
+          title: "Could not publish",
+          description: res?.message || "Server rejected the post",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: "Blog published",
+        description: "Live on the company feed.",
+      });
       setForm({ ...emptyForm, authorName: admin.name || "CogniCode Team" });
       setCoverImage("");
       setCoverVideo("");
@@ -313,13 +323,44 @@ export default function BlogManagePage() {
     if (!admin) return;
     if (!confirm("Delete this post?")) return;
     try {
-      await apiDelete(`blog/admin/posts/${id}`, admin);
-      toast({ title: "Deleted" });
-      loadPosts();
+      const res = await deleteData(
+        `blog/admin/posts/${id}?${authQs(admin)}`
+      );
+      if (res?.success) {
+        toast({ title: "Deleted" });
+        loadPosts();
+      } else {
+        toast({
+          title: "Delete failed",
+          description: res?.message || "Try again",
+          variant: "destructive",
+        });
+      }
     } catch (e: any) {
       toast({
         title: "Delete failed",
         description: e?.message || "Try again",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const ensureTables = async () => {
+    if (!admin) return;
+    const res = await postData(`blog/admin/init-tables?${authQs(admin)}`, {
+      adminId: admin.adminId,
+      email: admin.email,
+    });
+    if (res?.success) {
+      toast({
+        title: "Tables ready",
+        description: (res.tables || []).join(", ") || "OK",
+      });
+      loadPosts();
+    } else {
+      toast({
+        title: "Init failed",
+        description: res?.message || "Could not create tables on server DB",
         variant: "destructive",
       });
     }
@@ -342,7 +383,9 @@ export default function BlogManagePage() {
           <p className="max-w-md text-center text-sm text-muted-foreground">
             Use the site Login button (top right), then open this page again.
           </p>
-          <p className="text-xs text-emerald-700">{CLIENT_BUILD}</p>
+          <p className="text-xs text-emerald-700">
+            {CLIENT_BUILD} · API {apiBase || getServerURL()}
+          </p>
           <Button className="rounded-full" asChild>
             <Link prefetch={false} href="/blog/">
               Back to feed
@@ -376,14 +419,24 @@ export default function BlogManagePage() {
                 Signed in as {admin.name || admin.email}
               </p>
               <p className="mt-1 text-xs font-medium text-emerald-700">
-                {CLIENT_BUILD} · API {API} · no axios · no x-admin headers
+                {CLIENT_BUILD} · API {apiBase || getServerURL()} · postData/getData
               </p>
             </div>
-            <Button variant="outline" className="rounded-full" asChild>
-              <Link prefetch={false} href="/blog/">
-                View public feed
-              </Link>
-            </Button>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                variant="outline"
+                className="rounded-full"
+                type="button"
+                onClick={ensureTables}
+              >
+                Init DB tables
+              </Button>
+              <Button variant="outline" className="rounded-full" asChild>
+                <Link prefetch={false} href="/blog/">
+                  View public feed
+                </Link>
+              </Button>
+            </div>
           </div>
 
           <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
@@ -491,7 +544,6 @@ export default function BlogManagePage() {
                   id="youtube"
                   value={form.youtubeUrl}
                   onChange={(e) => onField("youtubeUrl", e.target.value)}
-                  placeholder="https://www.youtube.com/watch?v=..."
                 />
               </div>
 
@@ -585,7 +637,8 @@ export default function BlogManagePage() {
 
               {previewUrl ? (
                 <p className="text-xs text-muted-foreground">
-                  Public URL: <span className="text-foreground">{previewUrl}</span>
+                  Public URL:{" "}
+                  <span className="text-foreground">{previewUrl}</span>
                 </p>
               ) : null}
 
@@ -633,7 +686,8 @@ export default function BlogManagePage() {
                 </div>
               ) : posts.length === 0 ? (
                 <p className="py-10 text-center text-sm text-muted-foreground">
-                  No posts yet. Publish your first one.
+                  No posts yet. If this is production and tables are missing,
+                  click <strong>Init DB tables</strong>.
                 </p>
               ) : (
                 <ul className="space-y-3">

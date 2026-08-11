@@ -6,21 +6,10 @@ import {
   getCategoryName,
   getPostBySlug as getStaticPost,
 } from "@/lib/blog-data";
-import { getApiBase, mediaUrl } from "@/lib/blog-admin-api";
+import { getData, mediaUrl } from "@/app/server/fetch-beckend-services";
 
-/** Public GET via native fetch - never uses axios / custom headers */
 async function publicGet(path: string) {
-  const base = getApiBase().replace(/\/+$/, "");
-  const clean = path.replace(/^\/+/, "");
-  const url = `${base}/${clean}`;
-  try {
-    const res = await fetch(url, { method: "GET" });
-    if (!res.ok) return null;
-    return await res.json();
-  } catch (e) {
-    console.error("[blog publicGet]", url, e);
-    return null;
-  }
+  return getData(path);
 }
 
 export type FeedPost = BlogPost & {
