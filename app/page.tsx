@@ -14,7 +14,9 @@ export default function HomePage() {
       <Header />
       <main className="flex-1 mt-10">
         <HeroSection />
+        <div className="px-8">
         <StatsSection />
+        </div>
         <ServicesSection />
         <WhyChooseUsSection />
         {/* <TestimonialsSection /> */}

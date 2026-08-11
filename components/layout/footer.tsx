@@ -5,10 +5,10 @@ import {
   Phone,
   MapPin,
   Facebook,
-  Twitter,
   Linkedin,
   Instagram,
-  ExternalLink 
+  Youtube,
+  ExternalLink,
 } from "lucide-react";
 
 const footerNavigation = {
@@ -46,7 +46,8 @@ const socialLinks = [
   { name: "Facebook", icon: Facebook, href: "https://www.facebook.com/CogniCode" },
   { name: "LinkedIn", icon: Linkedin, href: "https://www.linkedin.com/company/cognicodindia/" },
   { name: "Instagram", icon: Instagram, href: "https://www.instagram.com/cognicodethesiswriting" },
-  { name: "External Link", icon: ExternalLink, href: "https://share.google/SAralwG2DYtufKBQ9" },
+  { name: "YouTube", icon: Youtube, href: "https://www.youtube.com/@CogniCodeEduTech" },
+  { name: "Google", icon: ExternalLink, href: "https://share.google/SAralwG2DYtufKBQ9" },
 ];
 
 export function Footer() {

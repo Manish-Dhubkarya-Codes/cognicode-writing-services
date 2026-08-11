@@ -171,11 +171,18 @@ Our Mission: To empower scholars worldwide by providing expert academic writing 
     content: `Stay updated with the latest UGC guidelines, academic regulations, and important news relevant to PhD scholars and researchers across India.`,
   },
   {
-    title: "Blog & Resources",
-    description: "Expert academic writing tips, research guides, thesis advice, and publication strategies.",
+    title: "Blog & Research Resources",
+    description: "Expert guides on thesis writing, literature reviews, data analysis, publishing, research integrity, and AI/ML for scholars.",
     href: "/blog",
-    keywords: ["blog", "tips", "guides", "research", "academic"],
-    content: `Expert insights, research tips, and academic writing guides from our team of PhD scholars. Stay updated with the latest in academic writing.`,
+    keywords: ["blog", "tips", "guides", "research", "academic", "literature review", "thesis", "SPSS", "templates"],
+    content: `Practical academic guides and free research templates from CogniCode EduTech. Topics include thesis structure, literature review gaps, SPSS interpretation, journal selection, research integrity, AI ethics, and scholar success.`,
+  },
+  {
+    title: "How to Write a Literature Review That Identifies Research Gaps",
+    description: "Step-by-step literature review framework with matrix template and research gap articulation.",
+    href: "/blog/how-to-write-literature-review-research-gaps",
+    keywords: ["literature review", "research gap", "matrix template", "blog"],
+    content: `Move beyond summary. Learn search strategy, literature matrix, critical analysis, and gap statements examiners respect.`,
   },
   {
     title: "PhD Admissions Guidance",

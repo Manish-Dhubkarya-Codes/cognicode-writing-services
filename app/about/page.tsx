@@ -225,7 +225,7 @@ export default function AboutPage() {
         </section>
 
         {/* Team */}
-        <section className="bg-muted py-24 sm:py-32" id="team">
+        {/* <section className="bg-muted py-24 sm:py-32" id="team">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
               <h2 className="font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
@@ -260,7 +260,7 @@ export default function AboutPage() {
               ))}
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* CTA */}
         <section className="bg-primary py-16 sm:py-24">

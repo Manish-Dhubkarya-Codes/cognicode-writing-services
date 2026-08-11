@@ -97,6 +97,7 @@ const navigationConfig = [
     allItem: { name: "All Writing Services", href: "/services" } as const,
   } as const,
   { id: "samples", label: "Samples", type: "link", href: "/samples" } as const,
+  { id: "blog", label: "Blog", type: "link", href: "/blog" } as const,
   { id: "pricing", label: "Pricing", type: "link", href: "/pricing" } as const,
   { id: "global", label: "Global Services", type: "dropdown", items: globalLinks } as const,
 ] as const;
@@ -128,7 +129,10 @@ export function Header() {
   }, [pathname]);
 
   const isActive = (item: NavItem): boolean => {
-    if (item.type === "link") return pathname === item.href;
+    if (item.type === "link") {
+      if (item.id === "blog") return pathname === "/blog" || pathname.startsWith("/blog/");
+      return pathname === item.href || pathname === `${item.href}/`;
+    }
 
     if (item.id === "about") {
       return pathname.startsWith("/about") ||
@@ -137,10 +141,12 @@ export function Header() {
              pathname.startsWith("/faqs");
     }
     if (item.id === "data-driven") {
-      return dataDrivenLinks.some((l) => pathname === l.href);
+      return dataDrivenLinks.some((l) => pathname === l.href || pathname === `${l.href}/`);
     }
     if (item.id === "writing") {
-      return pathname === "/services" || writingServiceLinks.some((l) => pathname === l.href);
+      return pathname === "/services" ||
+             pathname === "/services/" ||
+             writingServiceLinks.some((l) => pathname === l.href || pathname === `${l.href}/`);
     }
     if (item.id === "global") {
       return pathname.startsWith("/global") || pathname.startsWith("/university-support");
@@ -165,7 +171,7 @@ export function Header() {
   };
 
   return (
-    <header className="fixed top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="fixed glass-navbar top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <nav className={`mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8`}>
         {/* Logo */}
         <div className="flex lg:flex-1">
@@ -192,7 +198,7 @@ export function Header() {
                       "relative text-sm font-medium transition-colors hover:text-primary",
                       "after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-primary",
                       "after:transition-all after:duration-300 hover:after:w-full",
-                      isActive(item) ? "text-primary after:w-full" : "text-muted-foreground"
+                      isActive(item) ? "text-primary after:w-full" : "text-[#78025F]"
                     )}
                   >
                     {item.label}
@@ -205,7 +211,7 @@ export function Header() {
                   <DropdownMenuTrigger
                     className={cn(
                       "flex cursor-pointer items-center gap-1 text-sm font-medium transition-colors hover:text-primary outline-none",
-                      isActive(item) ? "text-primary" : "text-muted-foreground"
+                      isActive(item) ? "text-primary" : "text-[#78025F]"
                     )}
                   >
                     {item.label}
@@ -287,8 +293,13 @@ export function Header() {
                     <DropdownMenuItem onClick={() => setEditOpen(true)}>
                       ✏️ Change Details
                     </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link prefetch={false} href="/blog/manage/">
+                        📝 Manage Blog
+                      </Link>
+                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleLogout} className="text-red-600 focus:text-red-600">
-                      ⭍ Logout
+                      Logout
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -365,9 +376,16 @@ export function Header() {
                               <p className="text-sm text-muted-foreground">{user.email}</p>
                             </div>
                           </div>
-                          <div className="mt-4 flex gap-2">
-                            <Button variant="outline" className="flex-1 cursor-pointer" onClick={() => { setEditOpen(true); setMobileMenuOpen(false); }}>Change Details</Button>
-                            <Button variant="destructive" className="flex-1 cursor-pointer" onClick={() => { handleLogout(); setMobileMenuOpen(false); }}>Logout</Button>
+                          <div className="mt-4 flex flex-col gap-2">
+                            <Button variant="outline" className="w-full cursor-pointer" asChild>
+                              <Link prefetch={false} href="/blog/manage/" onClick={() => setMobileMenuOpen(false)}>
+                                Manage Blog
+                              </Link>
+                            </Button>
+                            <div className="flex gap-2">
+                              <Button variant="outline" className="flex-1 cursor-pointer" onClick={() => { setEditOpen(true); setMobileMenuOpen(false); }}>Change Details</Button>
+                              <Button variant="destructive" className="flex-1 cursor-pointer" onClick={() => { handleLogout(); setMobileMenuOpen(false); }}>Logout</Button>
+                            </div>
                           </div>
                         </div>
                       ) : (

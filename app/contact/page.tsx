@@ -50,18 +50,26 @@ import {
 import { Mail, Phone, MapPin, Clock, Send, MessageSquare, CheckCircle, RefreshCw, Copy, Download, X, ChevronsUpDown, Check } from "lucide-react";
 import { postData, getData } from "../server/fetch-beckend-services";
 import dynamic from "next/dynamic";
+import Image from "next/image";
+import ContactUs from "../../public/Contact_Us.png"
 
-const LiveTrackingMap = dynamic(() => import("@/app/contact/live-tracking-map"), {
-  ssr: false,
-  loading: () => (
-    <div className="rounded-2xl border bg-muted/50 flex items-center justify-center" style={{ height: 500 }}>
-      <div className="text-center">
-        <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-        <p className="text-sm text-muted-foreground">Loading map...</p>
+const LiveTrackingMap = dynamic(
+  () => import("@/app/contact/live-tracking-map"),
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        className="rounded-2xl border border-border bg-muted/50 flex items-center justify-center"
+        style={{ height: 500 }}
+      >
+        <div className="text-center">
+          <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+          <p className="text-sm text-muted-foreground">Loading map...</p>
+        </div>
       </div>
-    </div>
-  ),
-});
+    ),
+  }
+);
 // ==================== COUNTRIES WITH FLAGS (ALL COUNTRIES) ====================
 const countries = [
   { flag: "🇦🇫", name: "Afghanistan" },
@@ -682,7 +690,7 @@ Name          : ${selectedRequest.name}
 Email         : ${selectedRequest.email}
 Phone         : ${selectedRequest.phone || "Not provided"}
 Country       : ${selectedRequest.country || "Not provided"}
-Service       : ${selectedRequest.service || "—"}
+Service       : ${selectedRequest.service || "-"}
 Subject       : ${selectedRequest.subject}
 Message       : ${selectedRequest.message}
 Submitted On  : ${new Date(selectedRequest.created_at).toLocaleString("en-IN")}
@@ -741,20 +749,7 @@ Submitted On  : ${new Date(selectedRequest.created_at).toLocaleString("en-IN")}
 
       <main className="flex-1 mt-17">
         {/* Hero */}
-        <section className="bg-foreground py-24 sm:py-32">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mx-auto max-w-2xl text-center">
-              <h1 className="font-serif text-4xl font-bold tracking-tight text-background sm:text-5xl">
-                Contact Us
-              </h1>
-              <p className="mt-6 text-lg leading-8 text-background/70">
-                {isAdmin
-                  ? "Managing all client inquiries • CogniCode Admin Portal"
-                  : "Have a question or ready to start your project? Get in touch with our team."}
-              </p>
-            </div>
-          </div>
-        </section>
+<Image src={ContactUs} alt="Hero Image" className="w-full h-[200px]" />
 
         {/* Contact Info Cards */}
         <section className="bg-background py-16">
@@ -893,9 +888,9 @@ Submitted On  : ${new Date(selectedRequest.created_at).toLocaleString("en-IN")}
                           {req.email}
                         </a>
                       </TableCell>
-                      <TableCell className="whitespace-nowrap">{req.phone || "—"}</TableCell>
-                      <TableCell className="max-w-[100px] truncate">{req.country || "—"}</TableCell>
-                      <TableCell className="max-w-[120px] truncate">{req.service || "—"}</TableCell>
+                      <TableCell className="whitespace-nowrap">{req.phone || "-"}</TableCell>
+                      <TableCell className="max-w-[100px] truncate">{req.country || "-"}</TableCell>
+                      <TableCell className="max-w-[120px] truncate">{req.service || "-"}</TableCell>
                       <TableCell className="max-w-[150px] truncate">{req.subject}</TableCell>
                       <TableCell className="max-w-[200px] truncate text-sm text-muted-foreground">
                         {req.message?.length > 60 ? `${req.message.substring(0, 57)}...` : req.message}
@@ -970,7 +965,7 @@ Submitted On  : ${new Date(selectedRequest.created_at).toLocaleString("en-IN")}
                   </div>
                   <div className="space-y-0.5 sm:col-span-2">
                     <p className="text-xs font-medium text-muted-foreground">Service Required</p>
-                    <p className="font-medium">{selectedRequest?.service || "—"}</p>
+                    <p className="font-medium">{selectedRequest?.service || "-"}</p>
                   </div>
                 </div>
 

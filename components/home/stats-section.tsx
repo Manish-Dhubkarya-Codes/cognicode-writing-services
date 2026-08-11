@@ -1,5 +1,6 @@
+import Image from "next/image";
 import { Clock, Users, FileText, Award } from "lucide-react";
-
+import Trusted_Scholars from "../../public/Trusted_Scholars.png";
 const stats = [
   {
     id: 1,
@@ -33,39 +34,8 @@ const stats = [
 
 export function StatsSection() {
   return (
-    <section className="bg-foreground py-16 sm:py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="font-serif text-3xl font-bold tracking-tight text-background sm:text-4xl">
-            Trusted by Scholars Worldwide
-          </h2>
-          <p className="mt-4 text-lg leading-8 text-background/70">
-            Our track record speaks for itself. Join thousands of satisfied
-            researchers who have achieved their academic goals with our support.
-          </p>
-        </div>
-        <dl className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {stats.map((stat) => (
-            <div
-              key={stat.id}
-              className="flex flex-col items-center rounded-2xl bg-background/5 p-8 text-center backdrop-blur-sm border border-background/10"
-            >
-              <dt className="flex flex-col items-center gap-4">
-                <div className="rounded-lg bg-primary/20 p-3">
-                  <stat.icon className="h-6 w-6 text-primary" aria-hidden="true" />
-                </div>
-                <span className="text-sm font-medium text-background/70">
-                  {stat.name}
-                </span>
-              </dt>
-              <dd className="mt-2 text-4xl font-bold tracking-tight text-background">
-                {stat.value}
-              </dd>
-              <p className="mt-2 text-sm text-background/50">{stat.description}</p>
-            </div>
-          ))}
-        </dl>
-      </div>
-    </section>
+<div>
+  <Image src={Trusted_Scholars} alt="Trusted Scholars" className="w-full h-auto mb-8 x-8 rounded-lg shadow-lg" />
+</div>
   );
 }

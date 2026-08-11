@@ -224,7 +224,7 @@ export default function FAQsPage() {
                     Quick responses within minutes
                   </p>
                   <Button variant="outline" className="mt-4" asChild>
-                    <a href="https://wa.me/916264689448" target="_blank">
+                    <a href="https://wa.me/917000515617" target="_blank">
                       Chat Now
                     </a>
                   </Button>
@@ -256,7 +256,7 @@ export default function FAQsPage() {
                     Mon-Sat: 9 AM to 6:30 PM
                   </p>
                   <Button variant="outline" className="mt-4" asChild>
-                    <a href="tel:+916264689448">Call Us</a>
+                    <a href="tel:+917000515617">Call Us</a>
                   </Button>
                 </CardContent>
               </Card>
