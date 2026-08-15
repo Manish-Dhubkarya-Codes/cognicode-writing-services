@@ -1,33 +1,47 @@
 import axios from "axios";
 
 /**
- * Resolve API base for local + production.
- * - localhost / 127.0.0.1 → http://localhost:3000
- * - cognicodeedutech.com (and all other hosts) → NEXT_PUBLIC_API_URL
- *   (production: https://api.cognicodeedutech.com)
+ * Single source of truth for API base URL.
+ *
+ * Live site (cognicodeedutech.com) always uses the Hostinger API.
+ * Localhost uses NEXT_PUBLIC_API_URL, then http://127.0.0.1:3000.
  */
+const LIVE_API = "https://api.cognicodeedutech.com";
+
 export function getServerURL() {
   if (typeof window !== "undefined") {
     const host = window.location.hostname;
-    if (host === "localhost" || host === "127.0.0.1") {
-      return "http://localhost:3000";
+    if (/(^|\.)cognicodeedutech\.com$/i.test(host)) {
+      return LIVE_API;
     }
   }
 
-  let raw = String(
-    process.env.NEXT_PUBLIC_API_URL || "https://api.cognicodeedutech.com"
-  ).trim();
+  let raw = String(process.env.NEXT_PUBLIC_API_URL || "").trim();
   raw = raw.replace(/\/+$/, "");
 
-  // Fix truncated local port typos
-  if (/localhost:300$/i.test(raw) || /127\.0\.0\.1:300$/i.test(raw)) {
+  if (raw === "http://localhost:300" || raw === "http://127.0.0.1:300") {
     raw = "http://localhost:3000";
   }
 
-  return raw || "https://api.cognicodeedutech.com";
+  if (/^https?:\/\/localhost(?::|\/|$)/i.test(raw)) {
+    raw = raw.replace(/localhost/i, "127.0.0.1");
+  }
+
+  if (raw) {
+    return raw;
+  }
+
+  if (typeof window !== "undefined") {
+    const host = window.location.hostname;
+    if (host === "localhost" || host === "127.0.0.1") {
+      return "http://127.0.0.1:3000";
+    }
+  }
+
+  return LIVE_API;
 }
 
-/** @deprecated Prefer getServerURL() at call time */
+/** Snapshot at module load (may be stale in SSR); prefer getServerURL() */
 export const serverURL = getServerURL();
 
 function joinUrl(url: string) {
@@ -36,62 +50,53 @@ function joinUrl(url: string) {
   return `${base}/${clean}`;
 }
 
+/** Never throw / console.error — Next.js overlay treats console.error as a crash. */
+async function silentRequest<T = any>(
+  run: () => Promise<{ data?: T }>
+): Promise<T | null> {
+  try {
+    const response = await run();
+    return (response?.data ?? null) as T | null;
+  } catch {
+    return null;
+  }
+}
+
+const noThrow = { validateStatus: () => true as const };
+
 export const postData = async (
   url: string,
   body: any,
   responseType: "json" | "blob" = "json"
 ) => {
-  const full = joinUrl(url);
-  try {
-    const isForm =
-      typeof FormData !== "undefined" && body instanceof FormData;
-    const response = await axios.post(full, body, {
+  return silentRequest(() =>
+    axios.post(joinUrl(url), body, {
+      ...noThrow,
       responseType,
       timeout: 120000,
-      // Let browser set multipart boundary for FormData
-      headers: isForm ? undefined : undefined,
-    });
-    return response.data;
-  } catch (e: any) {
-    console.error("[postData]", full, e?.response?.status, e?.message);
-    return e?.response?.data || null;
-  }
+    })
+  );
 };
 
 export const getData = async (url: string) => {
-  const full = joinUrl(url);
-  try {
-    const response = await axios.get(full, { timeout: 60000 });
-    return response.data;
-  } catch (e: any) {
-    console.error("[getData]", full, e?.response?.status, e?.message);
-    return e?.response?.data || null;
-  }
+  return silentRequest(() =>
+    axios.get(joinUrl(url), { ...noThrow, timeout: 60000 })
+  );
 };
 
 export const putData = async (url: string, body: any) => {
-  const full = joinUrl(url);
-  try {
-    const response = await axios.put(full, body, { timeout: 60000 });
-    return response.data;
-  } catch (e: any) {
-    console.error("[putData]", full, e?.response?.status, e?.message);
-    return e?.response?.data || null;
-  }
+  return silentRequest(() =>
+    axios.put(joinUrl(url), body, { ...noThrow, timeout: 60000 })
+  );
 };
 
 export const deleteData = async (url: string) => {
-  const full = joinUrl(url);
-  try {
-    const response = await axios.delete(full, { timeout: 60000 });
-    return response.data;
-  } catch (e: any) {
-    console.error("[deleteData]", full, e?.response?.status, e?.message);
-    return e?.response?.data || null;
-  }
+  return silentRequest(() =>
+    axios.delete(joinUrl(url), { ...noThrow, timeout: 60000 })
+  );
 };
 
-/** Absolute media URL for /files/... paths from the API */
+/** Absolute media URL for API-relative paths like /files/blog/... */
 export const mediaUrl = (path?: string | null) => {
   if (!path) return "";
   if (/^(https?:|data:|blob:)/i.test(path)) return path;

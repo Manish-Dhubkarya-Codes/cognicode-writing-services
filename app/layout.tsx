@@ -44,7 +44,7 @@ export default function RootLayout({
   suppressHydrationWarning={true}
   className={`${inter.variable} ${merriweather.variable} font-sans antialiased`}
 >        {children}
-        <Analytics />
+        {process.env.NODE_ENV === "production" ? <Analytics /> : null}
       </body>
     </html>
   )

@@ -7,14 +7,14 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogTrigger,
   DialogTitle,
   DialogHeader,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import {
   Sheet,
   SheetContent,
-  SheetTrigger,
+  SheetTitle,
 } from "@/components/ui/sheet";
 import {
   DropdownMenu,
@@ -30,12 +30,24 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Menu, X, GraduationCap, Phone, ChevronDown, Search, User } from "lucide-react";
+import { Menu, X, GraduationCap, Phone, ChevronDown, Search, User, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import CogniCodeLogo from "@/public/CogniCode_Old.png";
 import Image from "next/image";
 import { SearchBar } from "../ui/SearchBar";
 import { UserAuth } from "./user-auth";
+import { SiteUserAuth } from "./site-user-auth";
+import {
+  AuthMode,
+  fetchSiteUserSession,
+  getSiteUser,
+  logoutSiteUser,
+  OPEN_AUTH_EVENT,
+  SITE_USER_BLOCKED_EVENT,
+  SITE_USER_EVENT,
+  SiteUser,
+} from "@/lib/site-user";
+import { getBlogSocket } from "@/lib/blog-socket";
 
 // ==================== SINGLE SOURCE OF TRUTH ====================
 const aboutLinks = [
@@ -112,17 +124,74 @@ export function Header() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<{ adminId: number; name: string; email: string } | null>(null);
+  const [siteUser, setSiteUserState] = useState<SiteUser | null>(null);
+  const [authMode, setAuthMode] = useState<AuthMode>("login");
+  const [authReason, setAuthReason] = useState<string | undefined>();
+  const [blockedOpen, setBlockedOpen] = useState(false);
+  const [blockedMessage, setBlockedMessage] = useState("");
+  const [mounted, setMounted] = useState(false);
 
   const pathname = usePathname();
 
   useEffect(() => {
+    setMounted(true);
     const storedAdmin = localStorage.getItem("admin");
     if (storedAdmin) {
       const parsedAdmin = JSON.parse(storedAdmin);
       setUser(parsedAdmin);
       setIsLoggedIn(true);
     }
+    setSiteUserState(getSiteUser());
+
+    const onOpenAuth = (event: Event) => {
+      const detail = (event as CustomEvent).detail || {};
+      setAuthMode(detail.mode === "register" ? "register" : "login");
+      setAuthReason(detail.reason);
+      setLoginOpen(true);
+    };
+    const onSiteUser = () => {
+      const next = getSiteUser();
+      setSiteUserState(next);
+      if (next?.userId) getBlogSocket()?.emit("joinSiteUser", next.userId);
+    };
+    const onBlocked = (event: Event) => {
+      const message = (event as CustomEvent).detail?.message;
+      setBlockedMessage(
+        message ||
+          "This account has been locked by CogniCode admin. You cannot log in or register with this email."
+      );
+      setBlockedOpen(true);
+      setLoginOpen(false);
+      setSiteUserState(null);
+    };
+
+    window.addEventListener(OPEN_AUTH_EVENT, onOpenAuth);
+    window.addEventListener(SITE_USER_EVENT, onSiteUser);
+    window.addEventListener(SITE_USER_BLOCKED_EVENT, onBlocked);
+    window.addEventListener("storage", onSiteUser);
+    return () => {
+      window.removeEventListener(OPEN_AUTH_EVENT, onOpenAuth);
+      window.removeEventListener(SITE_USER_EVENT, onSiteUser);
+      window.removeEventListener(SITE_USER_BLOCKED_EVENT, onBlocked);
+      window.removeEventListener("storage", onSiteUser);
+    };
   }, []);
+
+  useEffect(() => {
+    if (!siteUser) return;
+    getBlogSocket()?.emit("joinSiteUser", siteUser.userId);
+    const tick = async () => {
+      const res = await fetchSiteUserSession();
+      if (res?.blocked) {
+        await logoutSiteUser();
+        setBlockedMessage(res.message || "This account has been locked by CogniCode admin.");
+        setBlockedOpen(true);
+      }
+    };
+    tick();
+    const id = window.setInterval(tick, 15000);
+    return () => window.clearInterval(id);
+  }, [siteUser]);
 
   useEffect(() => {
     setSearchOpen(false);
@@ -164,10 +233,21 @@ export function Header() {
     setLoginOpen(false);
   };
 
+  const handleUserSuccess = (nextUser: SiteUser) => {
+    setSiteUserState(nextUser);
+    setLoginOpen(false);
+    setAuthReason(undefined);
+  };
+
   const handleLogout = () => {
     localStorage.removeItem("admin");
     setIsLoggedIn(false);
     setUser(null);
+  };
+
+  const handleUserLogout = async () => {
+    await logoutSiteUser();
+    setSiteUserState(null);
   };
 
   return (
@@ -274,48 +354,97 @@ export function Header() {
                 </Link>
               </Button>
 
-              {isLoggedIn && user ? (
+              {siteUser || (isLoggedIn && user) ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm" className="flex cursor-pointer items-center gap-2">
-                      <User className="h-4 w-4 text-green-500" />
-                      {/* <span className="max-w-[140px] truncate">{user.name}</span> */}
+                      <User className={cn("h-4 w-4", siteUser || isLoggedIn ? "text-green-500" : "")} />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-72">
                     <DropdownMenuLabel>
                       <div className="flex flex-col gap-1">
-                        <p className="font-semibold text-base">{user.name}</p>
-                        <p className="text-sm text-muted-foreground">{user.email}</p>
+                        {siteUser ? (
+                          <>
+                            <p className="font-semibold text-base">@{siteUser.username}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {siteUser.email || siteUser.mobile}
+                            </p>
+                          </>
+                        ) : (
+                          <>
+                            <p className="font-semibold text-base">{user?.name}</p>
+                            <p className="text-sm text-muted-foreground">{user?.email}</p>
+                          </>
+                        )}
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => setEditOpen(true)}>
-                      ✏️ Change Details
+                    <DropdownMenuItem
+                      onSelect={() => {
+                        window.location.href = "/blog/?view=saved";
+                      }}
+                    >
+                      Saved posts
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link prefetch={false} href="/blog/manage/">
-                        📝 Manage Blog
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={handleLogout} className="text-red-600 focus:text-red-600">
-                      Logout
-                    </DropdownMenuItem>
+                    {isLoggedIn && user ? (
+                      <>
+                        <DropdownMenuItem onClick={() => setEditOpen(true)}>
+                          Change admin details
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onSelect={() => {
+                            window.location.href = "/blog/manage/";
+                          }}
+                        >
+                          Manage Blog
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onSelect={() => {
+                            window.location.href = "/blog/users/";
+                          }}
+                        >
+                          <Users className="mr-2 h-4 w-4" />
+                          Site users
+                        </DropdownMenuItem>
+                        {!siteUser ? (
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setAuthMode("login");
+                              setLoginOpen(true);
+                            }}
+                          >
+                            Member login
+                          </DropdownMenuItem>
+                        ) : null}
+                        <DropdownMenuSeparator />
+                      </>
+                    ) : null}
+                    {siteUser ? (
+                      <DropdownMenuItem onClick={handleUserLogout} className="text-red-600 focus:text-red-600">
+                        Log out @{siteUser.username}
+                      </DropdownMenuItem>
+                    ) : null}
+                    {isLoggedIn && user ? (
+                      <DropdownMenuItem onClick={handleLogout} className="text-red-600 focus:text-red-600">
+                        Admin logout
+                      </DropdownMenuItem>
+                    ) : null}
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <Dialog open={loginOpen} onOpenChange={setLoginOpen}>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" size="sm" className="flex cursor-pointer items-center gap-2">
-                      <User className="h-4 w-4" />
-                      Login
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-md">
-                    <DialogTitle className="text-xl">Login to your account</DialogTitle>
-                    <UserAuth mode="login" onSuccess={handleLoginSuccess} />
-                  </DialogContent>
-                </Dialog>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex cursor-pointer items-center gap-2"
+                  onClick={() => {
+                    setAuthMode("login");
+                    setLoginOpen(true);
+                  }}
+                >
+                  <User className="h-4 w-4" />
+                  Log in
+                </Button>
               )}
             </>
           ) : (
@@ -341,15 +470,21 @@ export function Header() {
             </div>
           </div>
 
-          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="-mx-2 cursor-pointer h-10 w-10 p-0">
-                <span className="sr-only">Open main menu</span>
-                <Menu className="h-6 w-6" />
-              </Button>
-            </SheetTrigger>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="-mx-2 cursor-pointer h-10 w-10 p-0"
+            type="button"
+            onClick={() => setMobileMenuOpen(true)}
+          >
+            <span className="sr-only">Open main menu</span>
+            <Menu className="h-6 w-6" />
+          </Button>
 
+          {mounted ? (
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetContent side="right" className="w-[90vw] max-w-sm sm:w-80 sm:max-w-md p-0">
+              <SheetTitle className="sr-only">Main menu</SheetTitle>
               <div className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-border/50 bg-background/95 px-4 sm:px-6 backdrop-blur-sm">
                 <Link prefetch={false} href="/" className="flex items-center gap-3 -m-1 p-1" onClick={() => setMobileMenuOpen(false)}>
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary">
@@ -367,30 +502,54 @@ export function Header() {
                 <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
                   <div className="-my-2.5 divide-y divide-border/50">
                     <div className="py-2.5">
-                      {isLoggedIn && user ? (
+                      {siteUser || (isLoggedIn && user) ? (
                         <div className="rounded-xl border p-4 mb-4">
                           <div className="flex items-center gap-3">
                             <User className="h-8 w-8 text-green-500" />
                             <div>
-                              <p className="font-semibold">{user.name}</p>
-                              <p className="text-sm text-muted-foreground">{user.email}</p>
+                              <p className="font-semibold">
+                                {siteUser ? `@${siteUser.username}` : user?.name}
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                {siteUser ? siteUser.email || siteUser.mobile : user?.email}
+                              </p>
                             </div>
                           </div>
                           <div className="mt-4 flex flex-col gap-2">
                             <Button variant="outline" className="w-full cursor-pointer" asChild>
-                              <Link prefetch={false} href="/blog/manage/" onClick={() => setMobileMenuOpen(false)}>
-                                Manage Blog
+                              <Link prefetch={false} href="/blog/?view=saved" onClick={() => setMobileMenuOpen(false)}>
+                                Saved posts
                               </Link>
                             </Button>
+                            {isLoggedIn && user ? (
+                              <>
+                                <Button variant="outline" className="w-full cursor-pointer" asChild>
+                                  <Link prefetch={false} href="/blog/manage/" onClick={() => setMobileMenuOpen(false)}>
+                                    Manage Blog
+                                  </Link>
+                                </Button>
+                                <Button variant="outline" className="w-full cursor-pointer" asChild>
+                                  <Link prefetch={false} href="/blog/users/" onClick={() => setMobileMenuOpen(false)}>
+                                    Site users
+                                  </Link>
+                                </Button>
+                              </>
+                            ) : null}
                             <div className="flex gap-2">
-                              <Button variant="outline" className="flex-1 cursor-pointer" onClick={() => { setEditOpen(true); setMobileMenuOpen(false); }}>Change Details</Button>
-                              <Button variant="destructive" className="flex-1 cursor-pointer" onClick={() => { handleLogout(); setMobileMenuOpen(false); }}>Logout</Button>
+                              {isLoggedIn && user ? (
+                                <Button variant="outline" className="flex-1 cursor-pointer" onClick={() => { setEditOpen(true); setMobileMenuOpen(false); }}>Change Details</Button>
+                              ) : null}
+                              {siteUser ? (
+                                <Button variant="destructive" className="flex-1 cursor-pointer" onClick={() => { handleUserLogout(); setMobileMenuOpen(false); }}>Log out</Button>
+                              ) : (
+                                <Button variant="destructive" className="flex-1 cursor-pointer" onClick={() => { handleLogout(); setMobileMenuOpen(false); }}>Logout</Button>
+                              )}
                             </div>
                           </div>
                         </div>
                       ) : (
-                        <Button variant="outline" className="w-full mb-4 cursor-pointer" onClick={() => { setLoginOpen(true); setMobileMenuOpen(false); }}>
-                          <User className="mr-2 h-4 w-4" /> Login
+                        <Button variant="outline" className="w-full mb-4 cursor-pointer" onClick={() => { setAuthMode("login"); setLoginOpen(true); setMobileMenuOpen(false); }}>
+                          <User className="mr-2 h-4 w-4" /> Log in / Sign up
                         </Button>
                       )}
                     </div>
@@ -456,15 +615,59 @@ export function Header() {
               </div>
             </SheetContent>
           </Sheet>
+          ) : null}
         </div>
       </nav>
+
+      <Dialog
+        open={loginOpen}
+        onOpenChange={(open) => {
+          setLoginOpen(open);
+          if (!open) setAuthReason(undefined);
+        }}
+      >
+        <DialogContent className="max-w-md">
+          <DialogHeader className="sr-only">
+            <DialogTitle>Log in or sign up</DialogTitle>
+            <DialogDescription>
+              Sign in or create an account with username, email, and password.
+            </DialogDescription>
+          </DialogHeader>
+          <SiteUserAuth
+            initialMode={authMode}
+            reason={authReason}
+            onUserSuccess={handleUserSuccess}
+            onAdminSuccess={handleLoginSuccess}
+          />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={blockedOpen} onOpenChange={setBlockedOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Account locked</DialogTitle>
+            <DialogDescription>
+              {blockedMessage ||
+                "This account has been locked by CogniCode admin. You cannot log in or register with this email."}
+            </DialogDescription>
+          </DialogHeader>
+          <Button className="rounded-full" onClick={() => setBlockedOpen(false)}>
+            OK
+          </Button>
+        </DialogContent>
+      </Dialog>
 
       {/* ==================== IMPROVED EDIT PROFILE DIALOG ==================== */}
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent className="max-w-md p-0 overflow-hidden sm:max-w-[440px]">
           {/* Sticky Header (same style as Contact modal) */}
           <DialogHeader className="sticky top-0 z-50 bg-background border-b px-6 pt-6 pb-4 flex flex-row items-center justify-between">
-            <DialogTitle className="text-xl font-semibold">Change Details</DialogTitle>
+            <div>
+              <DialogTitle className="text-xl font-semibold">Change Details</DialogTitle>
+              <DialogDescription className="sr-only">
+                Update your CogniCode admin profile details.
+              </DialogDescription>
+            </div>
 
             {/* X Close Button */}
             <Button

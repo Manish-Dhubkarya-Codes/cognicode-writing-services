@@ -19,6 +19,9 @@ export type FeedPost = BlogPost & {
   youtubeUrl?: string;
   mediaGallery?: string[];
   likes?: number;
+  commentsCount?: number;
+  sharesCount?: number;
+  likedByMe?: boolean;
   href: string;
 };
 
@@ -152,7 +155,7 @@ export function mapApiPostToFeed(api: any): FeedPost {
     coverVideo,
     youtubeUrl: api.youtubeUrl || api.youtube_url || undefined,
     mediaGallery: gallery,
-    likes: typeof api.likes === "number" ? api.likes : 120 + (slug.length * 7) % 80,
+    likes: typeof api.likes === "number" ? api.likes : 0,
     href: `/blog/article/?slug=${encodeURIComponent(slug)}`,
   };
 
@@ -163,7 +166,7 @@ export function mapStaticPostToFeed(post: BlogPost): FeedPost {
   return {
     ...post,
     source: "static",
-    likes: 140 + (post.slug.length * 5) % 90,
+    likes: 0,
     href: `/blog/${post.slug}/`,
   };
 }

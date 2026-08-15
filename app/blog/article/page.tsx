@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { Suspense } from "react";
 import { ArticleLoader } from "@/components/blog/article-loader";
 
 export const metadata: Metadata = {
@@ -13,5 +14,9 @@ export const metadata: Metadata = {
 
 /** Client-loaded article route for admin/API posts: /blog/article/?slug=... */
 export default function DynamicBlogArticlePage() {
-  return <ArticleLoader />;
+  return (
+    <Suspense fallback={null}>
+      <ArticleLoader />
+    </Suspense>
+  );
 }

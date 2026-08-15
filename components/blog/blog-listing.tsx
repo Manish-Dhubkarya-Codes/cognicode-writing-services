@@ -1,11 +1,14 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
   BadgeCheck,
+  Bookmark,
   BookOpen,
+  Heart,
+  Share2,
   Download,
   FileSpreadsheet,
   FileText,
@@ -29,6 +32,17 @@ import {
 import { companyProfile } from "@/lib/company-socials";
 import { FeedPost, fetchFeedPosts } from "@/lib/blog-api";
 import { cn } from "@/lib/utils";
+import {
+  EngagementStats,
+  fetchEngagementStats,
+  fetchMyActivity,
+  getLocalSavedSlugs,
+  recordPostVisit,
+  SAVED_POSTS_EVENT,
+} from "@/lib/blog-engagement";
+import { getSiteAdmin, getSiteUser, requestOpenAuth } from "@/lib/site-user";
+import { useBlogLive } from "@/lib/blog-socket";
+import { FollowButton } from "@/components/blog/follow-button";
 
 const resourceIcon = {
   PDF: FileText,
@@ -41,8 +55,13 @@ export function BlogListing() {
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<BlogCategorySlug | "all">("all");
+  const [activityFilter, setActivityFilter] = useState<"all" | "saved" | "liked" | "shared">("all");
+  const [savedSlugs, setSavedSlugs] = useState<string[]>([]);
+  const [likedSlugs, setLikedSlugs] = useState<string[]>([]);
+  const [sharedSlugs, setSharedSlugs] = useState<string[]>([]);
   const [visibleCount, setVisibleCount] = useState(9);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [engagement, setEngagement] = useState<Record<string, EngagementStats>>({});
 
   useEffect(() => {
     try {
@@ -51,14 +70,97 @@ export function BlogListing() {
     } catch {
       setIsAdmin(false);
     }
+    recordPostVisit("", "/blog/");
+    try {
+      const view = new URLSearchParams(window.location.search).get("view");
+      if (view === "saved" || view === "liked" || view === "shared") {
+        setActivityFilter(view);
+      }
+    } catch {
+      // ignore
+    }
+    fetchMyActivity()
+      .then((mine) => {
+        setSavedSlugs(mine.saved);
+        setLikedSlugs(mine.liked);
+        setSharedSlugs(mine.shared);
+      })
+      .catch(() => {
+        setSavedSlugs(getLocalSavedSlugs());
+      });
+    const onSaved = (event: Event) => {
+      const slugs = (event as CustomEvent).detail;
+      if (Array.isArray(slugs)) setSavedSlugs(slugs);
+    };
+    window.addEventListener(SAVED_POSTS_EVENT, onSaved);
+    return () => window.removeEventListener(SAVED_POSTS_EVENT, onSaved);
+  }, []);
+
+  const onLive = useCallback((event: string, payload: any) => {
+    if (!payload?.slug) return;
+    setEngagement((prev) => {
+      const cur = prev[payload.slug] || {
+        likes: 0,
+        comments: 0,
+        shares: 0,
+        likedByMe: false,
+        previewComments: [],
+      };
+      if (event === "blog:like" || event === "blog:share") {
+        return {
+          ...prev,
+          [payload.slug]: {
+            ...cur,
+            likes: typeof payload.likes === "number" ? payload.likes : cur.likes,
+            comments: typeof payload.comments === "number" ? payload.comments : cur.comments,
+            shares: typeof payload.shares === "number" ? payload.shares : cur.shares,
+          },
+        };
+      }
+      if (event === "blog:comment") {
+        const preview =
+          payload.comment && !payload.comment.parentId
+            ? [payload.comment, ...(cur.previewComments || [])].slice(0, 2)
+            : cur.previewComments;
+        return {
+          ...prev,
+          [payload.slug]: {
+            ...cur,
+            comments: typeof payload.comments === "number" ? payload.comments : cur.comments,
+            previewComments: preview,
+          },
+        };
+      }
+      return prev;
+    });
+  }, []);
+  useBlogLive(onLive);
+
+  const handleStats = useCallback((slug: string, next: EngagementStats) => {
+    setEngagement((prev) => {
+      const cur = prev[slug];
+      if (
+        cur &&
+        cur.likes === next.likes &&
+        cur.comments === next.comments &&
+        cur.shares === next.shares &&
+        cur.likedByMe === next.likedByMe
+      ) {
+        return prev;
+      }
+      return { ...prev, [slug]: { ...cur, ...next } };
+    });
   }, []);
 
   useEffect(() => {
     let active = true;
     setLoading(true);
     fetchFeedPosts({ limit: 50 })
-      .then((data) => {
-        if (active) setPosts(data);
+      .then(async (data) => {
+        if (!active) return;
+        setPosts(data);
+        const stats = await fetchEngagementStats(data.map((p) => p.slug));
+        if (active) setEngagement(stats);
       })
       .finally(() => {
         if (active) setLoading(false);
@@ -70,7 +172,10 @@ export function BlogListing() {
 
   const filtered = useMemo(() => {
     let list = posts;
-    if (category !== "all") list = list.filter((p) => p.category === category);
+    if (activityFilter === "saved") list = list.filter((p) => savedSlugs.includes(p.slug));
+    else if (activityFilter === "liked") list = list.filter((p) => likedSlugs.includes(p.slug) || engagement[p.slug]?.likedByMe);
+    else if (activityFilter === "shared") list = list.filter((p) => sharedSlugs.includes(p.slug));
+    else if (category !== "all") list = list.filter((p) => p.category === category);
     if (query.trim()) {
       const q = query.trim().toLowerCase();
       list = list.filter((p) =>
@@ -81,10 +186,23 @@ export function BlogListing() {
       );
     }
     return list;
-  }, [posts, category, query]);
+  }, [posts, category, query, activityFilter, savedSlugs, likedSlugs, sharedSlugs, engagement]);
 
   const visible = filtered.slice(0, visibleCount);
   const featured = filtered.find((p) => p.featured) || filtered[0];
+  const needsLoginForFilter =
+    (activityFilter === "liked" || activityFilter === "shared") &&
+    !getSiteUser() &&
+    !getSiteAdmin();
+
+  const applyFilter = (next: "all" | "saved" | "liked" | "shared") => {
+    if ((next === "liked" || next === "shared") && !getSiteUser() && !getSiteAdmin()) {
+      requestOpenAuth({ mode: "login", reason: next === "liked" ? "like" : "share" });
+    }
+    setActivityFilter(next);
+    setVisibleCount(20);
+    if (next !== "all") setCategory("all");
+  };
 
   return (
     <div className="w-full min-w-0 overflow-x-hidden">
@@ -185,15 +303,7 @@ export function BlogListing() {
                     Message us
                   </Link>
                 </Button>
-                <Button variant="outline" className="w-full rounded-full sm:flex-1" asChild>
-                  <a
-                    href="https://www.instagram.com/cognicodethesiswriting"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Follow
-                  </a>
-                </Button>
+                <FollowButton source="follow-feed" className="w-full rounded-full sm:flex-1" />
               </div>
 
               {isAdmin ? (
@@ -222,6 +332,7 @@ export function BlogListing() {
             <button
               type="button"
               onClick={() => {
+                setActivityFilter("all");
                 setCategory("all");
                 setVisibleCount(9);
               }}
@@ -230,7 +341,7 @@ export function BlogListing() {
               <div
                 className={cn(
                   "flex h-12 w-12 items-center justify-center rounded-full p-[2px] sm:h-16 sm:w-16",
-                  category === "all"
+                  activityFilter === "all" && category === "all"
                     ? "bg-gradient-to-tr from-fuchsia-500 via-rose-500 to-amber-400"
                     : "bg-border"
                 )}
@@ -248,6 +359,7 @@ export function BlogListing() {
                 key={cat.slug}
                 type="button"
                 onClick={() => {
+                  setActivityFilter("all");
                   setCategory(cat.slug);
                   setVisibleCount(9);
                 }}
@@ -256,7 +368,7 @@ export function BlogListing() {
                 <div
                   className={cn(
                     "flex h-12 w-12 items-center justify-center rounded-full p-[2px] sm:h-16 sm:w-16",
-                    category === cat.slug
+                    activityFilter === "all" && category === cat.slug
                       ? "bg-gradient-to-tr from-fuchsia-500 via-rose-500 to-amber-400"
                       : "bg-border"
                   )}
@@ -278,6 +390,34 @@ export function BlogListing() {
       <section className="bg-muted/30 py-6 sm:py-10 md:py-14">
         <div className="mx-auto grid max-w-7xl gap-6 px-3 sm:gap-8 sm:px-6 lg:grid-cols-[minmax(0,1fr)_300px] xl:grid-cols-[minmax(0,1fr)_320px] lg:px-8">
           <div className="mx-auto w-full min-w-0 max-w-xl space-y-4 sm:space-y-6 lg:mx-0 lg:max-w-none">
+            <div className="flex flex-wrap gap-2">
+              {(
+                [
+                  { id: "all", label: "All" },
+                  { id: "saved", label: "Saved", icon: Bookmark },
+                  { id: "liked", label: "Liked", icon: Heart },
+                  { id: "shared", label: "Shared", icon: Share2 },
+                ] as const
+              ).map((item) => {
+                const Icon = "icon" in item ? item.icon : null;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => applyFilter(item.id)}
+                    className={cn(
+                      "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium sm:text-sm",
+                      activityFilter === item.id
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border bg-card text-muted-foreground hover:text-foreground"
+                    )}
+                  >
+                    {Icon ? <Icon className="h-3.5 w-3.5" /> : null}
+                    {item.label}
+                  </button>
+                );
+              })}
+            </div>
             {loading ? (
               <div className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-border bg-card px-4 py-14 sm:flex-row sm:py-20">
                 <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
@@ -287,22 +427,57 @@ export function BlogListing() {
               </div>
             ) : visible.length > 0 ? (
               <>
-                {featured && category === "all" && !query ? (
+                {activityFilter !== "all" ? (
+                  <div className="rounded-xl border border-border bg-card px-3 py-2.5 text-sm text-foreground sm:rounded-2xl sm:px-4 sm:py-3">
+                    <span className="font-semibold capitalize">{activityFilter} posts</span>
+                    <span className="text-muted-foreground">
+                      {activityFilter === "saved"
+                        ? " · Bookmarked guides stay here"
+                        : activityFilter === "liked"
+                          ? " · Posts you liked"
+                          : " · Posts you shared"}
+                    </span>
+                  </div>
+                ) : null}
+                {featured && category === "all" && !query && activityFilter === "all" ? (
                   <div className="rounded-xl border border-primary/15 bg-primary/[0.04] px-3 py-2.5 text-xs text-foreground sm:rounded-2xl sm:px-4 sm:py-3 sm:text-sm">
                     <span className="font-semibold">Pinned · </span>
                     <span className="line-clamp-2 sm:line-clamp-none">{featured.title}</span>
                   </div>
                 ) : null}
                 {visible.map((post) => (
-                  <FeedPostCard key={`${post.source}-${post.id}`} post={post} />
+                  <FeedPostCard
+                    key={`${post.source}-${post.id}`}
+                    post={post}
+                    stats={engagement[post.slug]}
+                    onStats={handleStats}
+                  />
                 ))}
               </>
             ) : (
               <div className="rounded-2xl border border-dashed border-border bg-card px-4 py-12 text-center sm:px-6 sm:py-16">
                 <BookOpen className="mx-auto h-10 w-10 text-muted-foreground/40" />
-                <p className="mt-4 font-medium text-foreground">No posts found</p>
+                <p className="mt-4 font-medium text-foreground">
+                  {needsLoginForFilter
+                    ? "Log in to see this filter"
+                    : activityFilter === "saved"
+                      ? "No saved posts yet"
+                      : activityFilter === "liked"
+                        ? "No liked posts yet"
+                        : activityFilter === "shared"
+                          ? "No shared posts yet"
+                          : "No posts found"}
+                </p>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Try another keyword or clear filters.
+                  {needsLoginForFilter
+                    ? "Sign in with email to view liked or shared posts."
+                    : activityFilter === "saved"
+                      ? "Tap the bookmark on a post to save it here."
+                      : activityFilter === "liked"
+                        ? "Tap the heart on a post to like it."
+                        : activityFilter === "shared"
+                          ? "Share a post to see it here."
+                          : "Try another keyword or clear filters."}
                 </p>
                 <Button
                   className="mt-6 rounded-full"
@@ -310,6 +485,7 @@ export function BlogListing() {
                   onClick={() => {
                     setQuery("");
                     setCategory("all");
+                    setActivityFilter("all");
                   }}
                 >
                   Reset feed

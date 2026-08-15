@@ -41,7 +41,7 @@ import {
   mediaUrl,
 } from "@/app/server/fetch-beckend-services";
 
-const CLIENT_BUILD = "manage-v5-postData";
+const CLIENT_BUILD = "manage-v6-live-api";
 
 type Admin = { adminId: number | string; email: string; name?: string };
 
@@ -429,6 +429,16 @@ export default function BlogManagePage() {
                 Init DB tables
               </Button>
               <Button variant="outline" className="w-full rounded-full sm:w-auto" asChild>
+                <Link prefetch={false} href="/blog/users/">
+                  Site users
+                </Link>
+              </Button>
+              <Button variant="outline" className="w-full rounded-full sm:w-auto" asChild>
+                <Link prefetch={false} href="/blog/users/?tab=comments">
+                  All comments
+                </Link>
+              </Button>
+              <Button variant="outline" className="w-full rounded-full sm:w-auto" asChild>
                 <Link prefetch={false} href="/blog/">
                   View public feed
                 </Link>
@@ -720,13 +730,10 @@ export default function BlogManagePage() {
                               className="h-8 rounded-full text-xs"
                               asChild
                             >
-                              <Link
-                                prefetch={false}
-                                href={`/blog/article/?slug=${encodeURIComponent(post.slug)}`}
-                              >
+                              <a href={`/blog/article/?slug=${encodeURIComponent(post.slug)}`}>
                                 <ExternalLink className="mr-1 h-3 w-3" />
                                 View
-                              </Link>
+                              </a>
                             </Button>
                             <Button
                               size="sm"

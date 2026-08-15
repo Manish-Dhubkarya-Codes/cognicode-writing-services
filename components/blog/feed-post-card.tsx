@@ -1,33 +1,50 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  Bookmark,
-  Heart,
-  MessageCircle,
   MoreHorizontal,
   Play,
-  Send,
   Share2,
   BadgeCheck,
 } from "lucide-react";
 import { FeedPost } from "@/lib/blog-api";
 import { getCategoryName } from "@/lib/blog-data";
 import { cn } from "@/lib/utils";
+import { PostEngagement } from "@/components/blog/post-engagement";
+import { PostComments } from "@/components/blog/post-comments";
+import { EngagementStats, recordPostShare } from "@/lib/blog-engagement";
+import { useBlogLive } from "@/lib/blog-socket";
 
 type FeedPostCardProps = {
   post: FeedPost;
   compact?: boolean;
+  stats?: EngagementStats;
+  onStats?: (slug: string, next: EngagementStats) => void;
 };
 
-export function FeedPostCard({ post, compact = false }: FeedPostCardProps) {
-  const [liked, setLiked] = useState(false);
-  const [saved, setSaved] = useState(false);
+export function FeedPostCard({
+  post,
+  compact = false,
+  stats,
+  onStats,
+}: FeedPostCardProps) {
   const [expanded, setExpanded] = useState(false);
+  const [showComments, setShowComments] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [localStats, setLocalStats] = useState<EngagementStats>({
+    likes: stats?.likes ?? post.likes ?? 0,
+    comments: stats?.comments ?? post.commentsCount ?? 0,
+    shares: stats?.shares ?? post.sharesCount ?? 0,
+    likedByMe: stats?.likedByMe ?? post.likedByMe ?? false,
+    previewComments: stats?.previewComments || [],
+  });
 
-  const likes = (post.likes || 120) + (liked ? 1 : 0);
+  useEffect(() => {
+    if (!stats) return;
+    setLocalStats(stats);
+  }, [stats]);
+
+  const likes = localStats.likes;
   const media =
     post.mediaGallery?.filter(Boolean)?.[0] ||
     post.coverImage ||
@@ -46,8 +63,10 @@ export function FeedPostCard({ post, compact = false }: FeedPostCardProps) {
     try {
       if (navigator.share) {
         await navigator.share({ title: post.title, text: post.excerpt, url });
+        await recordPostShare(post.slug, "native");
       } else {
         await navigator.clipboard.writeText(url);
+        await recordPostShare(post.slug, "copy");
         setCopied(true);
         setTimeout(() => setCopied(false), 1500);
       }
@@ -55,6 +74,50 @@ export function FeedPostCard({ post, compact = false }: FeedPostCardProps) {
       // user cancelled
     }
   };
+
+  const onStatsRef = useRef(onStats);
+  onStatsRef.current = onStats;
+
+  const pushStats = useCallback((next: EngagementStats) => {
+    queueMicrotask(() => onStatsRef.current?.(post.slug, next));
+  }, [post.slug]);
+
+  const applyStats = useCallback((next: EngagementStats) => {
+    setLocalStats((prev) => {
+      const merged = {
+        ...next,
+        previewComments: next.previewComments ?? prev.previewComments,
+      };
+      pushStats(merged);
+      return merged;
+    });
+  }, [pushStats]);
+
+  const onLive = useCallback(
+    (event: string, payload: any) => {
+      if (payload?.slug && payload.slug !== post.slug) return;
+      if (event === "blog:like" || event === "blog:share") {
+        setLocalStats((prev) => ({
+          ...prev,
+          likes: typeof payload.likes === "number" ? payload.likes : prev.likes,
+          comments: typeof payload.comments === "number" ? payload.comments : prev.comments,
+          shares: typeof payload.shares === "number" ? payload.shares : prev.shares,
+        }));
+      }
+      if (event === "blog:comment") {
+        setLocalStats((prev) => ({
+          ...prev,
+          comments: typeof payload.comments === "number" ? payload.comments : prev.comments + 1,
+          previewComments:
+            payload.comment && !payload.comment.parentId
+              ? [payload.comment, ...(prev.previewComments || [])].slice(0, 2)
+              : prev.previewComments,
+        }));
+      }
+    },
+    [post.slug]
+  );
+  useBlogLive(onLive, post.slug);
 
   return (
     <article className="min-w-0 overflow-hidden rounded-xl border border-border/80 bg-card shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-shadow hover:shadow-md sm:rounded-2xl">
@@ -89,7 +152,7 @@ export function FeedPostCard({ post, compact = false }: FeedPostCardProps) {
       </div>
 
       {/* Media */}
-      <Link prefetch={false} href={post.href} className="block min-w-0">
+      <a href={post.href} className="block min-w-0">
         <div
           className={cn(
             "relative overflow-hidden bg-muted",
@@ -140,59 +203,24 @@ export function FeedPostCard({ post, compact = false }: FeedPostCardProps) {
             </div>
           )}
         </div>
-      </Link>
+      </a>
 
       {/* Action bar */}
-      <div className="flex items-center justify-between px-2 pt-2 sm:px-3 sm:pt-3">
-        <div className="flex items-center">
-          <button
-            type="button"
-            onClick={() => setLiked((v) => !v)}
-            className="rounded-full p-1.5 transition-colors hover:bg-muted sm:p-2"
-            aria-label="Like"
-          >
-            <Heart
-              className={cn(
-                "h-5 w-5 transition-colors sm:h-6 sm:w-6",
-                liked ? "fill-rose-500 text-rose-500" : "text-foreground"
-              )}
-            />
-          </button>
-          <Link
-            prefetch={false}
-            href={post.href}
-            className="rounded-full p-1.5 hover:bg-muted sm:p-2"
-            aria-label="Open comments"
-          >
-            <MessageCircle className="h-5 w-5 text-foreground sm:h-6 sm:w-6" />
-          </Link>
-          <button
-            type="button"
-            onClick={shareNative}
-            className="rounded-full p-1.5 hover:bg-muted sm:p-2"
-            aria-label="Share"
-          >
-            <Send className="h-4 w-4 text-foreground sm:h-5 sm:w-5" />
-          </button>
-        </div>
-        <button
-          type="button"
-          onClick={() => setSaved((v) => !v)}
-          className="rounded-full p-1.5 hover:bg-muted sm:p-2"
-          aria-label="Save"
-        >
-          <Bookmark
-            className={cn(
-              "h-5 w-5 sm:h-6 sm:w-6",
-              saved ? "fill-foreground text-foreground" : "text-foreground"
-            )}
-          />
-        </button>
+      <div className="px-2 pt-2 sm:px-3 sm:pt-3">
+        <PostEngagement
+          slug={post.slug}
+          href={post.href}
+          stats={localStats}
+          onStats={applyStats}
+          onComment={() => setShowComments((v) => !v)}
+          compact
+        />
       </div>
 
       <div className="space-y-1.5 px-3 pb-3 pt-0.5 sm:space-y-2 sm:px-4 sm:pb-4 sm:pt-1">
         <p className="text-xs font-semibold text-foreground sm:text-sm">
           {likes.toLocaleString()} likes
+          {localStats.comments ? ` · ${localStats.comments} comments` : ""}
         </p>
 
         <div className="break-words text-xs leading-relaxed text-foreground sm:text-sm">
@@ -214,9 +242,9 @@ export function FeedPostCard({ post, compact = false }: FeedPostCardProps) {
         </div>
 
         <p className="font-serif text-sm font-semibold leading-snug text-foreground sm:text-base">
-          <Link prefetch={false} href={post.href} className="line-clamp-2 hover:underline">
+          <a href={post.href} className="line-clamp-2 hover:underline">
             {post.title}
-          </Link>
+          </a>
         </p>
 
         <div className="flex flex-wrap gap-x-2 gap-y-1 pt-0.5">
@@ -229,14 +257,34 @@ export function FeedPostCard({ post, compact = false }: FeedPostCardProps) {
           </span>
         </div>
 
+        {showComments && !compact ? (
+          <PostComments
+            slug={post.slug}
+            href={post.href}
+            variant="inline"
+            onCount={(count) => {
+              if (typeof count !== "number") return;
+              applyStats({ ...localStats, comments: count });
+            }}
+          />
+        ) : (
+          <PostComments
+            slug={post.slug}
+            href={post.href}
+            variant="preview"
+            previewComments={localStats.previewComments || []}
+            previewCount={localStats.comments}
+            onOpen={() => setShowComments(true)}
+          />
+        )}
+
         <div className="flex flex-col gap-2 pt-1.5 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:pt-2">
-          <Link
-            prefetch={false}
+          <a
             href={post.href}
             className="text-xs text-muted-foreground hover:text-foreground sm:text-sm"
           >
             View full article · {post.readTime}
-          </Link>
+          </a>
           <button
             type="button"
             onClick={shareNative}

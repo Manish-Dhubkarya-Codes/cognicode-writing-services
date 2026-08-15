@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
@@ -21,6 +22,9 @@ type ArticleLoaderProps = {
 };
 
 export function ArticleLoader({ slug: slugProp }: ArticleLoaderProps) {
+  const searchParams = useSearchParams();
+  const querySlug = searchParams.get("slug") || "";
+  const slug = slugProp || querySlug;
   const [post, setPost] = useState<FeedPost | null>(null);
   const [allPosts, setAllPosts] = useState<FeedPost[]>([]);
   const [loading, setLoading] = useState(true);
@@ -29,18 +33,15 @@ export function ArticleLoader({ slug: slugProp }: ArticleLoaderProps) {
   useEffect(() => {
     let active = true;
 
-    const resolveSlug = () => {
-      if (slugProp) return slugProp;
-      if (typeof window === "undefined") return "";
-      return new URLSearchParams(window.location.search).get("slug") || "";
-    };
-
-    const slug = resolveSlug();
     if (!slug) {
+      setPost(null);
       setNotFound(true);
       setLoading(false);
       return;
     }
+
+    setNotFound(false);
+    setLoading(true);
 
     // Instant static paint when available
     const staticPost = getPostBySlug(slug);
@@ -62,7 +63,7 @@ export function ArticleLoader({ slug: slugProp }: ArticleLoaderProps) {
     return () => {
       active = false;
     };
-  }, [slugProp]);
+  }, [slug]);
 
   if (loading && !post) {
     return (

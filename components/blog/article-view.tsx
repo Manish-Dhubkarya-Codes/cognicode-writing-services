@@ -1,23 +1,19 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
   BadgeCheck,
-  Bookmark,
   Calendar,
   CheckCircle2,
   Clock,
   Download,
   Facebook,
-  Heart,
   Linkedin,
   Link2,
   List,
-  MessageCircle,
   Play,
-  Send,
   Share2,
   Twitter,
 } from "lucide-react";
@@ -25,10 +21,20 @@ import { Button } from "@/components/ui/button";
 import { FeedPostCard } from "@/components/blog/feed-post-card";
 import { SocialFollow } from "@/components/blog/social-follow";
 import { NewsletterForm } from "@/components/blog/newsletter-form";
+import { PostEngagement } from "@/components/blog/post-engagement";
+import { PostComments } from "@/components/blog/post-comments";
+import { FollowButton } from "@/components/blog/follow-button";
 import { FeedPost, getRelatedFeedPosts } from "@/lib/blog-api";
 import { getCategoryName } from "@/lib/blog-data";
 import { companySocials, getYoutubeEmbedUrl } from "@/lib/company-socials";
 import { cn } from "@/lib/utils";
+import {
+  EngagementStats,
+  fetchPostEngagement,
+  recordPostShare,
+  recordPostVisit,
+} from "@/lib/blog-engagement";
+import { useBlogLive } from "@/lib/blog-socket";
 
 type ArticleViewProps = {
   post: FeedPost;
@@ -37,9 +43,13 @@ type ArticleViewProps = {
 
 export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
   const [activeId, setActiveId] = useState(post.sections[0]?.id ?? "");
-  const [liked, setLiked] = useState(false);
-  const [saved, setSaved] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [stats, setStats] = useState<EngagementStats>({
+    likes: post.likes || 0,
+    comments: post.commentsCount || 0,
+    shares: post.sharesCount || 0,
+    likedByMe: post.likedByMe || false,
+  });
 
   const related = useMemo(() => {
     if (allPosts.length) return getRelatedFeedPosts(post, allPosts, 3);
@@ -74,6 +84,36 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
     return () => observer.disconnect();
   }, [toc]);
 
+  useEffect(() => {
+    let active = true;
+    fetchPostEngagement(post.slug).then((data) => {
+      if (!active) return;
+      setStats({
+        likes: data.likes || 0,
+        comments: data.comments || 0,
+        shares: data.shares || 0,
+        likedByMe: Boolean(data.likedByMe),
+      });
+    });
+    recordPostVisit(post.slug);
+    return () => {
+      active = false;
+    };
+  }, [post.slug]);
+
+  const onLive = useCallback((event: string, payload: any) => {
+    if (payload?.slug && payload.slug !== post.slug) return;
+    if (event === "blog:like" || event === "blog:share" || event === "blog:comment" || event === "blog:comment-deleted") {
+      setStats((prev) => ({
+        ...prev,
+        likes: typeof payload.likes === "number" ? payload.likes : prev.likes,
+        comments: typeof payload.comments === "number" ? payload.comments : prev.comments,
+        shares: typeof payload.shares === "number" ? payload.shares : prev.shares,
+      }));
+    }
+  }, [post.slug]);
+  useBlogLive(onLive, post.slug);
+
   const shareUrl =
     typeof window !== "undefined"
       ? window.location.href
@@ -82,26 +122,11 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
   const copyLink = async () => {
     try {
       await navigator.clipboard.writeText(shareUrl);
+      await recordPostShare(post.slug, "copy");
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
       setCopied(false);
-    }
-  };
-
-  const shareNative = async () => {
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title: post.title,
-          text: post.excerpt,
-          url: shareUrl,
-        });
-      } else {
-        await copyLink();
-      }
-    } catch {
-      // cancelled
     }
   };
 
@@ -148,15 +173,7 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
                   {getCategoryName(post.category)} · {post.author.name}
                 </p>
               </div>
-              <Button size="sm" className="h-8 shrink-0 rounded-full px-3 text-xs sm:h-9 sm:px-4 sm:text-sm" asChild>
-                <a
-                  href="https://www.instagram.com/cognicodethesiswriting"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Follow
-                </a>
-              </Button>
+              <FollowButton source="follow-article" />
             </div>
 
             <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-muted-foreground sm:mt-6 sm:gap-3 sm:text-sm">
@@ -238,54 +255,34 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
           </div>
 
           {/* IG-style actions */}
-          <div className="mx-auto mt-3 flex max-w-4xl items-center justify-between sm:mt-4">
-            <div className="flex items-center">
-              <button
-                type="button"
-                onClick={() => setLiked((v) => !v)}
-                className="rounded-full p-1.5 hover:bg-muted sm:p-2"
-                aria-label="Like"
-              >
-                <Heart
-                  className={cn(
-                    "h-5 w-5 sm:h-6 sm:w-6",
-                    liked ? "fill-rose-500 text-rose-500" : "text-foreground"
-                  )}
-                />
-              </button>
-              <button type="button" className="rounded-full p-1.5 hover:bg-muted sm:p-2" aria-label="Comment">
-                <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6" />
-              </button>
-              <button
-                type="button"
-                onClick={shareNative}
-                className="rounded-full p-1.5 hover:bg-muted sm:p-2"
-                aria-label="Share"
-              >
-                <Send className="h-4 w-4 sm:h-5 sm:w-5" />
-              </button>
-            </div>
-            <button
-              type="button"
-              onClick={() => setSaved((v) => !v)}
-              className="rounded-full p-1.5 hover:bg-muted sm:p-2"
-              aria-label="Save"
-            >
-              <Bookmark
-                className={cn(
-                  "h-5 w-5 sm:h-6 sm:w-6",
-                  saved ? "fill-foreground text-foreground" : "text-foreground"
-                )}
-              />
-            </button>
+          <div className="mx-auto mt-3 max-w-4xl sm:mt-4">
+            <PostEngagement
+              slug={post.slug}
+              href={post.href}
+              stats={stats}
+              onStats={setStats}
+              onComment={() => {
+                document.getElementById("comments")?.scrollIntoView({ behavior: "smooth" });
+              }}
+            />
           </div>
           <p className="mx-auto mt-1 max-w-4xl text-xs font-semibold leading-5 text-foreground sm:text-sm">
-            {((post.likes || 120) + (liked ? 1 : 0)).toLocaleString()} likes
+            {stats.likes.toLocaleString()} likes
+            {stats.comments ? ` · ${stats.comments} comments` : ""}
             <span className="hidden sm:inline">
               {" "}
               · Share on Instagram, LinkedIn, Facebook or YouTube
             </span>
           </p>
+          <div className="mx-auto mt-5 max-w-4xl border-t border-border pt-5 sm:mt-6 sm:pt-6">
+            <PostComments
+              slug={post.slug}
+              href={post.href}
+              onCount={(count) =>
+                setStats((prev) => ({ ...prev, comments: count || prev.comments }))
+              }
+            />
+          </div>
         </div>
       </section>
 
@@ -324,16 +321,19 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
                       href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
                       label="LinkedIn"
                       icon={Linkedin}
+                      onShare={() => recordPostShare(post.slug, "linkedin")}
                     />
                     <ShareButton
                       href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(shareUrl)}`}
                       label="X"
                       icon={Twitter}
+                      onShare={() => recordPostShare(post.slug, "x")}
                     />
                     <ShareButton
                       href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
                       label="Facebook"
                       icon={Facebook}
+                      onShare={() => recordPostShare(post.slug, "facebook")}
                     />
                     <button
                       type="button"
@@ -665,16 +665,19 @@ function ShareButton({
   href,
   label,
   icon: Icon,
+  onShare,
 }: {
   href: string;
   label: string;
   icon: React.ComponentType<{ className?: string }>;
+  onShare?: () => void;
 }) {
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={() => onShare?.()}
       className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs text-muted-foreground hover:text-foreground"
     >
       <Icon className="h-3.5 w-3.5" />
