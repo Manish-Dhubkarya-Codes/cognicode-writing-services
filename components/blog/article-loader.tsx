@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
@@ -21,7 +21,28 @@ type ArticleLoaderProps = {
   slug?: string;
 };
 
-export function ArticleLoader({ slug: slugProp }: ArticleLoaderProps) {
+export function ArticleLoader({ slug }: ArticleLoaderProps) {
+  return (
+    <Suspense fallback={<ArticleLoading />}>
+      <ArticleLoaderInner slug={slug} />
+    </Suspense>
+  );
+}
+
+function ArticleLoading() {
+  return (
+    <div className="flex min-h-screen flex-col">
+      <Header />
+      <main className="flex flex-1 items-center justify-center mt-17">
+        <Loader2 className="h-7 w-7 animate-spin text-muted-foreground" />
+        <span className="ml-2 text-sm text-muted-foreground">Loading article…</span>
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+function ArticleLoaderInner({ slug: slugProp }: ArticleLoaderProps) {
   const searchParams = useSearchParams();
   const querySlug = searchParams.get("slug") || "";
   const slug = slugProp || querySlug;
@@ -66,16 +87,7 @@ export function ArticleLoader({ slug: slugProp }: ArticleLoaderProps) {
   }, [slug]);
 
   if (loading && !post) {
-    return (
-      <div className="flex min-h-screen flex-col">
-        <Header />
-        <main className="flex flex-1 items-center justify-center mt-17">
-          <Loader2 className="h-7 w-7 animate-spin text-muted-foreground" />
-          <span className="ml-2 text-sm text-muted-foreground">Loading article…</span>
-        </main>
-        <Footer />
-      </div>
-    );
+    return <ArticleLoading />;
   }
 
   if (notFound || !post) {

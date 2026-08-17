@@ -68,8 +68,8 @@ export const postData = async (
   url: string,
   body: any,
   responseType: "json" | "blob" = "json"
-) => {
-  return silentRequest(() =>
+): Promise<any> => {
+  return silentRequest<any>(() =>
     axios.post(joinUrl(url), body, {
       ...noThrow,
       responseType,
@@ -78,20 +78,20 @@ export const postData = async (
   );
 };
 
-export const getData = async (url: string) => {
-  return silentRequest(() =>
+export const getData = async (url: string): Promise<any> => {
+  return silentRequest<any>(() =>
     axios.get(joinUrl(url), { ...noThrow, timeout: 60000 })
   );
 };
 
-export const putData = async (url: string, body: any) => {
-  return silentRequest(() =>
+export const putData = async (url: string, body: any): Promise<any> => {
+  return silentRequest<any>(() =>
     axios.put(joinUrl(url), body, { ...noThrow, timeout: 60000 })
   );
 };
 
-export const deleteData = async (url: string) => {
-  return silentRequest(() =>
+export const deleteData = async (url: string): Promise<any> => {
+  return silentRequest<any>(() =>
     axios.delete(joinUrl(url), { ...noThrow, timeout: 60000 })
   );
 };
