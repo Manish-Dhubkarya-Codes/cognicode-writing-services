@@ -3,6 +3,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Image from "next/image";
 import {
   GraduationCap,
   Target,
@@ -14,6 +15,7 @@ import {
   Heart,
   ArrowRight,
 } from "lucide-react";
+import AboutUs from "../../public/AboutUs.png";
 
 export const metadata: Metadata = {
   title: "About Us | CogniCode",
@@ -85,20 +87,15 @@ export default function AboutPage() {
       <Header />
       <main className="flex-1 mt-17">
         {/* Hero Section */}
-        <section className="bg-foreground py-24 sm:py-32">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mx-auto max-w-2xl text-center">
-              <h1 className="font-serif text-4xl font-bold tracking-tight text-background sm:text-5xl">
-                About CogniCode
-              </h1>
-              <p className="mt-6 text-lg leading-8 text-background/70">
-                We are a team of dedicated academic professionals committed to
-                helping scholars achieve their research goals. With over 15
-                years of experience, we have supported thousands of researchers
-                worldwide.
-              </p>
-            </div>
-          </div>
+        <section className="relative overflow-hidden bg-[#050510]">
+          <Image
+            src={AboutUs}
+            alt="About Us. CogniCode is your academic partner — we leverage technology and a pursuit of excellence to support scholars worldwide."
+            className="h-[260px] w-full object-cover object-left sm:h-auto sm:object-contain"
+            priority
+            sizes="100vw"
+          />
+          <h1 className="sr-only">About CogniCode</h1>
         </section>
 
         {/* Mission & Vision */}

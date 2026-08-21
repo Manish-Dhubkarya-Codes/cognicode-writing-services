@@ -4,23 +4,21 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
-  BadgeCheck,
   Bookmark,
   BookOpen,
-  Heart,
-  Share2,
   Download,
   FileSpreadsheet,
   FileText,
+  Heart,
   ListChecks,
   Loader2,
   PlusCircle,
   Search,
-  Sparkles,
+  Share2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { FeedPostCard } from "@/components/blog/feed-post-card";
+import { ArchiveArticleCard } from "@/components/blog/archive-article-card";
 import { SocialFollow } from "@/components/blog/social-follow";
 import { NewsletterForm } from "@/components/blog/newsletter-form";
 import {
@@ -29,7 +27,7 @@ import {
   freeResources,
   getCategoryName,
 } from "@/lib/blog-data";
-import { companyProfile } from "@/lib/company-socials";
+import { blogPostTypes } from "@/lib/blog-content";
 import { FeedPost, fetchFeedPosts } from "@/lib/blog-api";
 import { cn } from "@/lib/utils";
 import {
@@ -50,16 +48,28 @@ const resourceIcon = {
   Checklist: ListChecks,
 };
 
-export function BlogListing() {
+type BlogListingProps = {
+  initialCategory?: BlogCategorySlug | "all";
+  heading?: string;
+  description?: string;
+};
+
+export function BlogListing({
+  initialCategory = "all",
+  heading,
+  description,
+}: BlogListingProps) {
   const [posts, setPosts] = useState<FeedPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
-  const [category, setCategory] = useState<BlogCategorySlug | "all">("all");
+  const [category, setCategory] = useState<BlogCategorySlug | "all">(initialCategory);
+  const [postType, setPostType] = useState<string>("all");
+  const [activeTag, setActiveTag] = useState<string>("all");
   const [activityFilter, setActivityFilter] = useState<"all" | "saved" | "liked" | "shared">("all");
   const [savedSlugs, setSavedSlugs] = useState<string[]>([]);
   const [likedSlugs, setLikedSlugs] = useState<string[]>([]);
   const [sharedSlugs, setSharedSlugs] = useState<string[]>([]);
-  const [visibleCount, setVisibleCount] = useState(9);
+  const [visibleCount, setVisibleCount] = useState(10);
   const [isAdmin, setIsAdmin] = useState(false);
   const [engagement, setEngagement] = useState<Record<string, EngagementStats>>({});
 
@@ -136,22 +146,6 @@ export function BlogListing() {
   }, []);
   useBlogLive(onLive);
 
-  const handleStats = useCallback((slug: string, next: EngagementStats) => {
-    setEngagement((prev) => {
-      const cur = prev[slug];
-      if (
-        cur &&
-        cur.likes === next.likes &&
-        cur.comments === next.comments &&
-        cur.shares === next.shares &&
-        cur.likedByMe === next.likedByMe
-      ) {
-        return prev;
-      }
-      return { ...prev, [slug]: { ...cur, ...next } };
-    });
-  }, []);
-
   useEffect(() => {
     let active = true;
     setLoading(true);
@@ -170,26 +164,74 @@ export function BlogListing() {
     };
   }, []);
 
+  const categoryCounts = useMemo(() => {
+    const map: Record<string, number> = {};
+    for (const p of posts) {
+      map[p.category] = (map[p.category] || 0) + 1;
+    }
+    return map;
+  }, [posts]);
+
+  const typeCounts = useMemo(() => {
+    const map: Record<string, number> = {};
+    for (const p of posts) {
+      const type = p.postType || "article";
+      map[type] = (map[type] || 0) + 1;
+    }
+    return map;
+  }, [posts]);
+
+  const tagCounts = useMemo(() => {
+    const map: Record<string, number> = {};
+    for (const p of posts) {
+      for (const tag of p.tags || []) {
+        map[tag] = (map[tag] || 0) + 1;
+      }
+    }
+    return Object.entries(map)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 14);
+  }, [posts]);
+
   const filtered = useMemo(() => {
     let list = posts;
     if (activityFilter === "saved") list = list.filter((p) => savedSlugs.includes(p.slug));
-    else if (activityFilter === "liked") list = list.filter((p) => likedSlugs.includes(p.slug) || engagement[p.slug]?.likedByMe);
+    else if (activityFilter === "liked")
+      list = list.filter((p) => likedSlugs.includes(p.slug) || engagement[p.slug]?.likedByMe);
     else if (activityFilter === "shared") list = list.filter((p) => sharedSlugs.includes(p.slug));
-    else if (category !== "all") list = list.filter((p) => p.category === category);
+    else {
+      if (category !== "all") list = list.filter((p) => p.category === category);
+      if (postType !== "all") list = list.filter((p) => (p.postType || "article") === postType);
+      if (activeTag !== "all") {
+        list = list.filter((p) =>
+          (p.tags || []).some((t) => t.toLowerCase() === activeTag.toLowerCase())
+        );
+      }
+    }
     if (query.trim()) {
       const q = query.trim().toLowerCase();
       list = list.filter((p) =>
-        [p.title, p.excerpt, p.author.name, getCategoryName(p.category)]
+        [p.title, p.excerpt, p.author.name, getCategoryName(p.category), p.postType, ...(p.tags || [])]
           .join(" ")
           .toLowerCase()
           .includes(q)
       );
     }
     return list;
-  }, [posts, category, query, activityFilter, savedSlugs, likedSlugs, sharedSlugs, engagement]);
+  }, [
+    posts,
+    category,
+    query,
+    activityFilter,
+    savedSlugs,
+    likedSlugs,
+    sharedSlugs,
+    engagement,
+    postType,
+    activeTag,
+  ]);
 
   const visible = filtered.slice(0, visibleCount);
-  const featured = filtered.find((p) => p.featured) || filtered[0];
   const needsLoginForFilter =
     (activityFilter === "liked" || activityFilter === "shared") &&
     !getSiteUser() &&
@@ -201,31 +243,60 @@ export function BlogListing() {
     }
     setActivityFilter(next);
     setVisibleCount(20);
-    if (next !== "all") setCategory("all");
+    if (next !== "all") {
+      setCategory("all");
+      setPostType("all");
+      setActiveTag("all");
+    }
   };
 
+  const title =
+    heading ||
+    (category === "all" ? "Research Blog" : `${getCategoryName(category)} Archives`);
+  const intro =
+    description ||
+    "Practical thesis, literature review, data analysis, publishing, and AI research articles — structured like a professional knowledge base.";
+
   return (
-    <div className="w-full min-w-0 overflow-x-hidden">
-      {/* Social-style hero */}
+    <div className="w-full min-w-0">
       <section className="border-b border-border/70 bg-gradient-to-b from-muted/70 to-background">
-        <div className="mx-auto max-w-7xl px-3 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
-          <div className="grid items-start gap-6 sm:gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+        <div className="mx-auto max-w-7xl px-3 py-7 sm:px-6 sm:py-10 lg:px-8">
+          <nav className="text-xs text-muted-foreground sm:text-sm" aria-label="Breadcrumb">
+            <ol className="flex flex-wrap items-center gap-1.5">
+              <li>
+                <Link prefetch={false} href="/" className="hover:text-primary">
+                  Home
+                </Link>
+              </li>
+              <li>/</li>
+              <li>
+                <Link prefetch={false} href="/blog/" className="hover:text-primary">
+                  Blog
+                </Link>
+              </li>
+              {category !== "all" ? (
+                <>
+                  <li>/</li>
+                  <li className="text-foreground">{getCategoryName(category)}</li>
+                </>
+              ) : null}
+            </ol>
+          </nav>
+
+          <div className="mt-4 grid items-start gap-6 lg:grid-cols-[1.4fr_0.8fr] lg:items-center">
             <div className="min-w-0">
-              <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-border bg-background px-2.5 py-1 text-[11px] font-medium text-muted-foreground sm:px-3 sm:text-xs">
-                <Sparkles className="h-3.5 w-3.5 shrink-0 text-primary" />
-                <span className="truncate">Company feed · Research tips · Free resources</span>
-              </div>
-              <h1 className="mt-3 font-serif text-2xl font-bold tracking-tight text-foreground xs:text-3xl sm:mt-4 sm:text-4xl md:text-5xl">
-                CogniCode on social-style insights
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary sm:text-xs">
+                CogniCode Knowledge Base
+              </p>
+              <h1 className="mt-2 font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-5xl">
+                {title}
               </h1>
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground sm:mt-4 sm:text-base sm:leading-7 md:text-lg md:leading-8">
-                Scroll like Instagram. Learn like a mentor session. Practical
-                thesis, literature review, data analysis, publishing, and AI
-                research posts — plus free templates for scholars.
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground sm:mt-4 sm:text-base sm:leading-7">
+                {intro}
               </p>
 
               <form
-                className="mt-5 flex w-full max-w-xl flex-col gap-2.5 sm:mt-8 sm:flex-row sm:gap-3"
+                className="mt-5 flex w-full max-w-xl flex-col gap-2.5 sm:mt-7 sm:flex-row sm:gap-3"
                 onSubmit={(e) => e.preventDefault()}
                 role="search"
               >
@@ -235,10 +306,10 @@ export function BlogListing() {
                     value={query}
                     onChange={(e) => {
                       setQuery(e.target.value);
-                      setVisibleCount(9);
+                      setVisibleCount(10);
                     }}
-                    placeholder="Search posts, e.g. SPSS, viva..."
-                    className="h-11 w-full rounded-full border-border/80 bg-background pl-10 text-sm sm:h-12 sm:text-base"
+                    placeholder="Search articles, e.g. SPSS, viva, journal..."
+                    className="h-11 w-full rounded-full border-border/80 bg-background pl-10 text-sm sm:h-12"
                     aria-label="Search blog"
                   />
                 </div>
@@ -246,154 +317,73 @@ export function BlogListing() {
                   Search
                 </Button>
               </form>
-
-              <div className="mt-5 flex flex-col gap-3 sm:mt-6 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
-                <p className="text-sm font-medium text-muted-foreground">
-                  Follow CogniCode
-                </p>
-                <SocialFollow variant="row" />
-              </div>
             </div>
 
-            {/* Company profile card — compact on mobile */}
-            <div className="min-w-0 rounded-2xl border border-border/80 bg-card p-4 shadow-sm sm:rounded-3xl sm:p-6">
-              <div className="flex items-start gap-3 sm:gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-fuchsia-500 via-rose-500 to-amber-400 p-[2px] sm:h-16 sm:w-16">
-                  <div className="flex h-full w-full items-center justify-center rounded-full bg-background font-serif text-base font-bold text-primary sm:text-lg">
-                    CC
-                  </div>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-1">
-                    <h2 className="truncate text-sm font-semibold text-foreground sm:text-base">
-                      {companyProfile.name}
-                    </h2>
-                    <BadgeCheck className="h-4 w-4 shrink-0 fill-sky-500 text-white" />
-                  </div>
-                  <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground sm:text-sm">
-                    {companyProfile.tagline}
-                  </p>
-                </div>
-              </div>
-
-              <p className="mt-3 line-clamp-3 text-xs leading-5 text-muted-foreground sm:mt-4 sm:line-clamp-none sm:text-sm sm:leading-6">
-                {companyProfile.bio}
+            <div className="min-w-0 rounded-2xl border border-border/80 bg-card p-4 shadow-sm sm:p-5">
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Follow CogniCode
               </p>
-
-              <div className="mt-3 grid grid-cols-3 gap-1.5 text-center sm:mt-4 sm:gap-2">
-                <div className="rounded-lg bg-muted/60 px-1 py-2 sm:rounded-xl sm:px-2 sm:py-3">
-                  <p className="text-xs font-bold text-foreground sm:text-sm">
-                    {posts.length || "12+"}
-                  </p>
-                  <p className="text-[10px] text-muted-foreground sm:text-[11px]">Posts</p>
-                </div>
-                <div className="rounded-lg bg-muted/60 px-1 py-2 sm:rounded-xl sm:px-2 sm:py-3">
-                  <p className="text-xs font-bold text-foreground sm:text-sm">8K+</p>
-                  <p className="text-[10px] text-muted-foreground sm:text-[11px]">Scholars</p>
-                </div>
-                <div className="rounded-lg bg-muted/60 px-1 py-2 sm:rounded-xl sm:px-2 sm:py-3">
-                  <p className="text-xs font-bold text-foreground sm:text-sm">4.9</p>
-                  <p className="text-[10px] text-muted-foreground sm:text-[11px]">Rating</p>
-                </div>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {posts.length} articles · templates · mentor notes
+              </p>
+              <div className="mt-3">
+                <SocialFollow variant="row" />
               </div>
-
-              <div className="mt-4 flex flex-col gap-2 sm:mt-5 sm:flex-row sm:flex-wrap">
-                <Button className="w-full rounded-full sm:flex-1" asChild>
-                  <Link prefetch={false} href="/contact">
-                    Message us
-                  </Link>
-                </Button>
+              <div className="mt-4 flex flex-col gap-2 sm:flex-row">
                 <FollowButton source="follow-feed" className="w-full rounded-full sm:flex-1" />
+                {isAdmin ? (
+                  <Button variant="secondary" className="w-full rounded-full sm:flex-1" asChild>
+                    <Link prefetch={false} href="/blog/manage/">
+                      <PlusCircle className="mr-2 h-4 w-4" />
+                      Publish
+                    </Link>
+                  </Button>
+                ) : null}
               </div>
-
-              {isAdmin ? (
-                <Button
-                  variant="secondary"
-                  className="mt-3 w-full rounded-full text-sm"
-                  asChild
-                >
-                  <Link prefetch={false} href="/blog/manage/">
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Admin · Create blog post
-                  </Link>
-                </Button>
-              ) : null}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Stories-style categories — full-bleed horizontal scroll on mobile */}
-      <section className="sticky top-14 z-30 border-b border-border/70 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 sm:top-16 md:top-[4.5rem]">
-        <div className="mx-auto max-w-7xl px-0 py-3 sm:px-6 sm:py-4 lg:px-8">
-          <div
-            className="flex gap-3 overflow-x-auto px-3 pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-4 sm:px-0 [&::-webkit-scrollbar]:hidden"
-          >
-            <button
-              type="button"
+      <section className="sticky top-14 z-30 border-b border-border/70 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 sm:top-16 md:top-[3.9rem]">
+        <div className="mx-auto max-w-7xl px-3 py-3 sm:px-6 lg:px-8">
+          <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <FilterChip
+              active={activityFilter === "all" && category === "all" && postType === "all" && activeTag === "all"}
               onClick={() => {
                 setActivityFilter("all");
                 setCategory("all");
-                setVisibleCount(9);
+                setPostType("all");
+                setActiveTag("all");
+                setVisibleCount(10);
               }}
-              className="flex w-14 shrink-0 flex-col items-center gap-1 sm:w-16 sm:gap-1.5"
-            >
-              <div
-                className={cn(
-                  "flex h-12 w-12 items-center justify-center rounded-full p-[2px] sm:h-16 sm:w-16",
-                  activityFilter === "all" && category === "all"
-                    ? "bg-gradient-to-tr from-fuchsia-500 via-rose-500 to-amber-400"
-                    : "bg-border"
-                )}
-              >
-                <div className="flex h-full w-full items-center justify-center rounded-full bg-background text-[10px] font-semibold sm:text-xs">
-                  All
-                </div>
-              </div>
-              <span className="w-full truncate text-center text-[10px] text-muted-foreground sm:text-[11px]">
-                All posts
-              </span>
-            </button>
-            {blogCategories.map((cat) => (
-              <button
-                key={cat.slug}
-                type="button"
-                onClick={() => {
-                  setActivityFilter("all");
-                  setCategory(cat.slug);
-                  setVisibleCount(9);
-                }}
-                className="flex w-14 shrink-0 flex-col items-center gap-1 sm:w-16 sm:gap-1.5"
-              >
-                <div
-                  className={cn(
-                    "flex h-12 w-12 items-center justify-center rounded-full p-[2px] sm:h-16 sm:w-16",
-                    activityFilter === "all" && category === cat.slug
-                      ? "bg-gradient-to-tr from-fuchsia-500 via-rose-500 to-amber-400"
-                      : "bg-border"
-                  )}
-                >
-                  <div className="flex h-full w-full items-center justify-center rounded-full bg-background px-0.5 text-center text-[9px] font-semibold leading-tight sm:px-1 sm:text-[10px]">
-                    {cat.name.split(" ")[0]}
-                  </div>
-                </div>
-                <span className="w-full truncate text-center text-[10px] text-muted-foreground sm:text-[11px]">
-                  {cat.name}
-                </span>
-              </button>
-            ))}
+              label={`All (${posts.length})`}
+            />
+            {blogPostTypes.map((type) =>
+              typeCounts[type.slug] ? (
+                <FilterChip
+                  key={type.slug}
+                  active={activityFilter === "all" && postType === type.slug}
+                  onClick={() => {
+                    setActivityFilter("all");
+                    setPostType(type.slug);
+                    setVisibleCount(10);
+                  }}
+                  label={`${type.shortLabel} (${typeCounts[type.slug]})`}
+                />
+              ) : null
+            )}
           </div>
         </div>
       </section>
 
-      {/* Feed + sidebar */}
-      <section className="bg-muted/30 py-6 sm:py-10 md:py-14">
-        <div className="mx-auto grid max-w-7xl gap-6 px-3 sm:gap-8 sm:px-6 lg:grid-cols-[minmax(0,1fr)_300px] xl:grid-cols-[minmax(0,1fr)_320px] lg:px-8">
-          <div className="mx-auto w-full min-w-0 max-w-xl space-y-4 sm:space-y-6 lg:mx-0 lg:max-w-none">
+      <section className="bg-muted/30 py-6 sm:py-10 md:py-12">
+        <div className="mx-auto grid max-w-7xl items-start gap-6 px-3 sm:gap-8 sm:px-6 lg:grid-cols-[minmax(0,1fr)_300px] xl:grid-cols-[minmax(0,1fr)_320px] lg:px-8">
+          <div className="min-w-0 space-y-4">
             <div className="flex flex-wrap gap-2">
               {(
                 [
-                  { id: "all", label: "All" },
+                  { id: "all", label: "Recent" },
                   { id: "saved", label: "Saved", icon: Bookmark },
                   { id: "liked", label: "Liked", icon: Heart },
                   { id: "shared", label: "Shared", icon: Share2 },
@@ -418,77 +408,47 @@ export function BlogListing() {
                 );
               })}
             </div>
+
             {loading ? (
               <div className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-border bg-card px-4 py-14 sm:flex-row sm:py-20">
                 <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">
-                  Loading company feed…
-                </span>
+                <span className="text-sm text-muted-foreground">Loading articles…</span>
               </div>
             ) : visible.length > 0 ? (
               <>
-                {activityFilter !== "all" ? (
-                  <div className="rounded-xl border border-border bg-card px-3 py-2.5 text-sm text-foreground sm:rounded-2xl sm:px-4 sm:py-3">
-                    <span className="font-semibold capitalize">{activityFilter} posts</span>
-                    <span className="text-muted-foreground">
-                      {activityFilter === "saved"
-                        ? " · Bookmarked guides stay here"
-                        : activityFilter === "liked"
-                          ? " · Posts you liked"
-                          : " · Posts you shared"}
-                    </span>
-                  </div>
-                ) : null}
-                {featured && category === "all" && !query && activityFilter === "all" ? (
-                  <div className="rounded-xl border border-primary/15 bg-primary/[0.04] px-3 py-2.5 text-xs text-foreground sm:rounded-2xl sm:px-4 sm:py-3 sm:text-sm">
-                    <span className="font-semibold">Pinned · </span>
-                    <span className="line-clamp-2 sm:line-clamp-none">{featured.title}</span>
-                  </div>
-                ) : null}
-                {visible.map((post) => (
-                  <FeedPostCard
-                    key={`${post.source}-${post.id}`}
-                    post={post}
-                    stats={engagement[post.slug]}
-                    onStats={handleStats}
-                  />
-                ))}
+                <p className="text-sm font-medium text-foreground">
+                  {activityFilter === "all" ? "Recent Articles" : `${activityFilter} articles`}
+                  <span className="ml-1 text-muted-foreground">({filtered.length})</span>
+                </p>
+                <div className="space-y-4">
+                  {visible.map((post) => (
+                    <ArchiveArticleCard key={`${post.source}-${post.id}`} post={post} />
+                  ))}
+                </div>
               </>
             ) : (
               <div className="rounded-2xl border border-dashed border-border bg-card px-4 py-12 text-center sm:px-6 sm:py-16">
                 <BookOpen className="mx-auto h-10 w-10 text-muted-foreground/40" />
                 <p className="mt-4 font-medium text-foreground">
-                  {needsLoginForFilter
-                    ? "Log in to see this filter"
-                    : activityFilter === "saved"
-                      ? "No saved posts yet"
-                      : activityFilter === "liked"
-                        ? "No liked posts yet"
-                        : activityFilter === "shared"
-                          ? "No shared posts yet"
-                          : "No posts found"}
+                  {needsLoginForFilter ? "Log in to see this filter" : "No articles found"}
                 </p>
                 <p className="mt-2 text-sm text-muted-foreground">
                   {needsLoginForFilter
                     ? "Sign in with email to view liked or shared posts."
-                    : activityFilter === "saved"
-                      ? "Tap the bookmark on a post to save it here."
-                      : activityFilter === "liked"
-                        ? "Tap the heart on a post to like it."
-                        : activityFilter === "shared"
-                          ? "Share a post to see it here."
-                          : "Try another keyword or clear filters."}
+                    : "Try another keyword, tag, or format."}
                 </p>
                 <Button
                   className="mt-6 rounded-full"
                   variant="outline"
                   onClick={() => {
                     setQuery("");
-                    setCategory("all");
+                    setCategory(initialCategory);
                     setActivityFilter("all");
+                    setPostType("all");
+                    setActiveTag("all");
                   }}
                 >
-                  Reset feed
+                  Reset filters
                 </Button>
               </div>
             )}
@@ -499,37 +459,77 @@ export function BlogListing() {
                   variant="outline"
                   size="lg"
                   className="w-full rounded-full sm:w-auto"
-                  onClick={() => setVisibleCount((c) => c + 6)}
+                  onClick={() => setVisibleCount((c) => c + 8)}
                 >
-                  Load more posts
+                  Load more articles
                 </Button>
               </div>
             ) : null}
           </div>
 
-          {/* Sidebar — stacks under feed on mobile */}
-          <aside className="min-w-0 space-y-4 sm:space-y-6 lg:sticky lg:top-28 lg:self-start">
+          <aside className="min-w-0 space-y-4 sm:space-y-6 lg:sticky lg:top-[13rem] lg:z-10 lg:max-h-[calc(100dvh-13.5rem)] lg:self-start lg:overflow-y-auto lg:overscroll-contain [scrollbar-width:thin]">
             <div className="rounded-xl border border-border/80 bg-card p-4 sm:rounded-2xl sm:p-5">
               <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground sm:text-xs">
-                Follow us
+                Similar Topics
               </p>
-              <p className="mt-2 font-serif text-base font-semibold text-foreground sm:text-lg">
-                Stay connected with CogniCode
-              </p>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Instagram reels, Facebook updates, LinkedIn carousels, and YouTube
-                tip videos.
-              </p>
-              <div className="mt-4">
-                <SocialFollow variant="stack" />
+              <div className="mt-3 flex flex-col">
+                {blogCategories.map((cat) => (
+                  <button
+                    key={cat.slug}
+                    type="button"
+                    onClick={() => {
+                      setActivityFilter("all");
+                      setCategory(cat.slug);
+                      setVisibleCount(10);
+                    }}
+                    className={cn(
+                      "flex items-center justify-between gap-2 border-b border-border/60 py-2 text-left text-sm last:border-0",
+                      category === cat.slug ? "font-semibold text-primary" : "text-foreground hover:text-primary"
+                    )}
+                  >
+                    <span>{cat.name}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {(categoryCounts[cat.slug] || 0).toLocaleString()}+
+                    </span>
+                  </button>
+                ))}
               </div>
             </div>
+
+            {tagCounts.length ? (
+              <div className="rounded-xl border border-border/80 bg-card p-4 sm:rounded-2xl sm:p-5">
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground sm:text-xs">
+                  Popular tags
+                </p>
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  {tagCounts.map(([tag, count]) => (
+                    <button
+                      key={tag}
+                      type="button"
+                      onClick={() => {
+                        setActivityFilter("all");
+                        setActiveTag(activeTag === tag ? "all" : tag);
+                        setVisibleCount(10);
+                      }}
+                      className={cn(
+                        "rounded-md border px-2 py-1 text-[11px]",
+                        activeTag === tag
+                          ? "border-primary bg-primary/10 text-primary"
+                          : "border-border bg-muted/40 text-muted-foreground hover:text-foreground"
+                      )}
+                    >
+                      {tag} {count}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : null}
 
             <div className="rounded-xl border border-border/80 bg-card p-4 sm:rounded-2xl sm:p-5">
               <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground sm:text-xs">
                 Free resources
               </p>
-              <div className="mt-3 space-y-2.5 sm:mt-4 sm:space-y-3">
+              <div className="mt-3 space-y-2.5">
                 {freeResources.slice(0, 4).map((resource) => {
                   const Icon = resourceIcon[resource.type];
                   return (
@@ -537,16 +537,12 @@ export function BlogListing() {
                       key={resource.id}
                       prefetch={false}
                       href={resource.href}
-                      className="flex items-start gap-3 rounded-xl border border-border/60 px-3 py-2.5 transition-colors hover:bg-muted/50 sm:py-3"
+                      className="flex items-start gap-3 rounded-xl border border-border/60 px-3 py-2.5 transition-colors hover:bg-muted/50"
                     >
                       <Icon className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                       <div className="min-w-0">
-                        <p className="text-sm font-medium text-foreground">
-                          {resource.title}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {resource.type} · Request download
-                        </p>
+                        <p className="text-sm font-medium text-foreground">{resource.title}</p>
+                        <p className="text-xs text-muted-foreground">{resource.type}</p>
                       </div>
                     </Link>
                   );
@@ -564,12 +560,11 @@ export function BlogListing() {
               <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground sm:text-xs">
                 Soft next step
               </p>
-              <p className="mt-2 font-serif text-base font-semibold text-foreground sm:text-lg">
+              <p className="mt-2 font-serif text-base font-semibold text-foreground">
                 Need help applying this advice?
               </p>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                Free consultation for thesis, literature review, data analysis,
-                or publishing — no hard sell.
+                Free consultation for thesis, literature review, data analysis, or publishing.
               </p>
               <Button className="mt-4 w-full rounded-full" asChild>
                 <Link prefetch={false} href="/contact">
@@ -582,68 +577,75 @@ export function BlogListing() {
         </div>
       </section>
 
-      {/* Resources band */}
-      <section className="bg-background py-10 sm:py-16 md:py-20">
+      <section className="bg-background py-10 sm:py-16">
         <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <p className="text-xs font-semibold uppercase tracking-wider text-primary sm:text-sm">
-              Free Research Resources
+            <p className="text-xs font-semibold uppercase tracking-wider text-primary">
+              Formats you can publish
             </p>
-            <h2 className="mt-2 font-serif text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">
-              Downloadable tools for real research work
+            <h2 className="mt-2 font-serif text-2xl font-bold text-foreground sm:text-3xl">
+              More than a normal blog
             </h2>
           </div>
-          <div className="mt-6 grid grid-cols-1 gap-4 sm:mt-10 sm:gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {freeResources.map((resource) => {
-              const Icon = resourceIcon[resource.type];
-              return (
-                <div
-                  key={resource.id}
-                  className="min-w-0 rounded-2xl border border-border/80 bg-card p-4 sm:p-6"
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary sm:h-10 sm:w-10">
-                      <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
-                    </div>
-                    <span className="text-xs font-medium text-muted-foreground">
-                      {resource.type}
-                    </span>
-                  </div>
-                  <h3 className="mt-3 font-serif text-base font-semibold sm:mt-4 sm:text-lg">
-                    {resource.title}
-                  </h3>
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    {resource.description}
-                  </p>
-                  <Button variant="outline" className="mt-4 w-full rounded-full sm:mt-5" asChild>
-                    <Link prefetch={false} href={resource.href}>
-                      Request free download
-                    </Link>
-                  </Button>
-                </div>
-              );
-            })}
+          <div className="mt-6 grid grid-cols-2 gap-3 sm:mt-8 sm:grid-cols-3 lg:grid-cols-5">
+            {blogPostTypes.map((type) => (
+              <button
+                key={type.slug}
+                type="button"
+                onClick={() => {
+                  setActivityFilter("all");
+                  setPostType(type.slug);
+                  setVisibleCount(10);
+                  window.scrollTo({ top: 280, behavior: "smooth" });
+                }}
+                className="rounded-2xl border border-border bg-card p-3 text-left hover:border-primary/40"
+              >
+                <p className="text-sm font-semibold">{type.shortLabel}</p>
+                <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{type.description}</p>
+              </button>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Newsletter */}
-      <section className="bg-primary py-10 sm:py-16 md:py-20">
+      <section className="bg-primary py-10 sm:py-16">
         <div className="mx-auto max-w-2xl px-3 text-center sm:px-6">
-          <h2 className="font-serif text-2xl font-bold text-primary-foreground sm:text-3xl md:text-4xl">
-            Get posts in your inbox
+          <h2 className="font-serif text-2xl font-bold text-primary-foreground sm:text-3xl">
+            Get new articles in your inbox
           </h2>
-          <p className="mt-3 text-sm text-primary-foreground/80 sm:mt-4 sm:text-base">
+          <p className="mt-3 text-sm text-primary-foreground/80 sm:text-base">
             Research tips, templates, and company updates — no spam.
           </p>
           <div className="mt-6 sm:mt-8">
-            <NewsletterForm variant="dark" source="blog-home-social" />
-          </div>
-          <div className="mt-6 flex justify-center sm:mt-8">
-            <SocialFollow variant="pills" />
+            <NewsletterForm variant="dark" source="blog-home-archive" />
           </div>
         </div>
       </section>
     </div>
+  );
+}
+
+function FilterChip({
+  active,
+  onClick,
+  label,
+}: {
+  active: boolean;
+  onClick: () => void;
+  label: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium sm:text-sm",
+        active
+          ? "border-primary bg-primary text-primary-foreground"
+          : "border-border bg-card text-muted-foreground hover:text-foreground"
+      )}
+    >
+      {label}
+    </button>
   );
 }

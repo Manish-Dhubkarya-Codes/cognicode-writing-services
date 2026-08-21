@@ -4,13 +4,20 @@
 @tailwind utilities;
 @custom-variant dark (&:is(.dark *));
 
-html,
+html {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  /* clip, not hidden — hidden on html+body creates a scroll container and kills sticky */
+  overflow-x: clip;
+}
+
 body {
   width: 100%;
   max-width: 100%;
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
 }
 
 * {

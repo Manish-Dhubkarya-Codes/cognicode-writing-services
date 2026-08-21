@@ -749,7 +749,7 @@ Submitted On  : ${new Date(selectedRequest.created_at).toLocaleString("en-IN")}
 
       <main className="flex-1 mt-17">
         {/* Hero */}
-<Image src={ContactUs} alt="Hero Image" className="w-full h-[200px]" />
+<Image src={ContactUs} alt="Hero Image" className="w-full" />
 
         {/* Contact Info Cards */}
         <section className="bg-background py-16">

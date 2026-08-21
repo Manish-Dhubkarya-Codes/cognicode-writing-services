@@ -1,11 +1,13 @@
 import {
   BlogCategorySlug,
   BlogPost,
+  BlogPostTypeSlug,
   BlogSection,
   blogPosts as staticPosts,
   getCategoryName,
   getPostBySlug as getStaticPost,
 } from "@/lib/blog-data";
+import { inferPostType } from "@/lib/blog-content";
 import { getData, mediaUrl } from "@/app/server/fetch-beckend-services";
 
 async function publicGet(path: string) {
@@ -43,18 +45,58 @@ function hashGradient(seed: string) {
 
 function parseSections(content: unknown, excerpt?: string): BlogSection[] {
   if (Array.isArray(content) && content.length > 0) {
-    return content.map((section: any, index: number) => ({
-      id: section.id || `section-${index + 1}`,
-      heading: section.heading || `Section ${index + 1}`,
-      level: (section.level === 3 ? 3 : 2) as 2 | 3,
-      paragraphs: Array.isArray(section.paragraphs)
-        ? section.paragraphs
-        : section.body
-          ? [String(section.body)]
-          : [],
-      bullets: section.bullets,
-      callout: section.callout,
-    }));
+    return content.map((section: any, index: number) => {
+      const download = section.download
+        ? {
+            title: section.download.title || "Download",
+            description: section.download.description || "",
+            url: mediaUrl(section.download.url),
+            fileLabel: section.download.fileLabel || "Download file",
+            fileType: section.download.fileType || "file",
+          }
+        : undefined;
+
+      return {
+        id: section.id || `section-${index + 1}`,
+        type: section.type || (section.heading ? "section" : "paragraphs"),
+        heading: section.heading || "",
+        level: (section.level === 3 ? 3 : 2) as 2 | 3,
+        paragraphs: Array.isArray(section.paragraphs)
+          ? section.paragraphs
+          : section.body
+            ? [String(section.body)]
+            : [],
+        bullets: Array.isArray(section.bullets) ? section.bullets : undefined,
+        ordered: Boolean(section.ordered),
+        callout: section.callout,
+        imageUrl: mediaUrl(section.imageUrl || section.image_url),
+        imageAlt: section.imageAlt || section.image_alt || "",
+        videoUrl: mediaUrl(section.videoUrl || section.video_url),
+        youtubeUrl: section.youtubeUrl || section.youtube_url || "",
+        code: section.code || "",
+        language: section.language || "text",
+        tableHeaders: Array.isArray(section.tableHeaders) ? section.tableHeaders : undefined,
+        tableRows: Array.isArray(section.tableRows) ? section.tableRows : undefined,
+        quote: section.quote || "",
+        cite: section.cite || "",
+        download,
+        faqs: Array.isArray(section.faqs)
+          ? section.faqs.map((f: any) => ({
+              question: String(f.question || f.q || ""),
+              answer: String(f.answer || f.a || ""),
+            }))
+          : undefined,
+        links: Array.isArray(section.links)
+          ? section.links
+              .map((item: any) => ({
+                title: String(item.title || item.label || item.url || "Link"),
+                url: String(item.url || ""),
+                description: String(item.description || item.note || ""),
+              }))
+              .filter((item: { url: string }) => item.url)
+          : undefined,
+      } as BlogSection;
+    });
   }
 
   if (typeof content === "string" && content.trim()) {
@@ -64,6 +106,7 @@ function parseSections(content: unknown, excerpt?: string): BlogSection[] {
       .filter(Boolean);
     return blocks.map((block, index) => ({
       id: `section-${index + 1}`,
+      type: "section" as const,
       heading: index === 0 ? "Overview" : `Insight ${index}`,
       level: 2 as const,
       paragraphs: [block],
@@ -73,6 +116,7 @@ function parseSections(content: unknown, excerpt?: string): BlogSection[] {
   return [
     {
       id: "overview",
+      type: "section",
       heading: "Overview",
       level: 2,
       paragraphs: [excerpt || "Read this CogniCode insight for practical academic guidance."],
@@ -110,13 +154,34 @@ export function mapApiPostToFeed(api: any): FeedPost {
       ? [coverImage]
       : [];
 
+  const tags = Array.isArray(api.tags)
+    ? api.tags.map((t: string) => String(t).trim()).filter(Boolean)
+    : Array.isArray(api.keywords)
+      ? api.keywords.slice(0, 6)
+      : [];
+
+  const attachments = Array.isArray(api.attachments)
+    ? api.attachments.map((item: any) => ({
+        title: item.title || "Download",
+        description: item.description || "",
+        url: mediaUrl(item.url),
+        fileLabel: item.fileLabel || "Download",
+        fileType: item.fileType || "file",
+      }))
+    : [];
+
   const post: FeedPost = {
     id: String(api.id || slug),
     slug,
     title: api.title,
+    subtitle: api.subtitle || "",
     excerpt: api.excerpt || api.metaDescription || api.meta_description || "",
     metaDescription: api.metaDescription || api.meta_description || api.excerpt || "",
     category,
+    postType: (api.postType || api.post_type || inferPostType(api.title || "", category)) as BlogPostTypeSlug,
+    tags,
+    difficulty: api.difficulty || "",
+    attachments,
     author: {
       name: authorName,
       role: api.author?.role || api.authorRole || api.author_role || "CogniCode EduTech",
@@ -129,6 +194,7 @@ export function mapApiPostToFeed(api: any): FeedPost {
     },
     date,
     dateISO: String(dateISO).slice(0, 10),
+    updatedISO: String(api.updatedAt || api.updated_at || dateISO).slice(0, 10),
     readTime: api.readTime || api.read_time || "5 min read",
     featured: Boolean(api.featured),
     imageGradient: api.imageGradient || api.image_gradient || hashGradient(slug),
@@ -165,6 +231,12 @@ export function mapApiPostToFeed(api: any): FeedPost {
 export function mapStaticPostToFeed(post: BlogPost): FeedPost {
   return {
     ...post,
+    postType: post.postType || inferPostType(post.title, post.category),
+    tags: post.tags?.length
+      ? post.tags
+      : [getCategoryName(post.category), ...post.keywords].slice(0, 6),
+    difficulty: post.difficulty || "intermediate",
+    updatedISO: post.updatedISO || post.dateISO,
     source: "static",
     likes: 0,
     href: `/blog/${post.slug}/`,
@@ -175,12 +247,20 @@ export function mapStaticPostToFeed(post: BlogPost): FeedPost {
 export async function fetchFeedPosts(options?: {
   category?: string;
   search?: string;
+  type?: string;
+  tag?: string;
   limit?: number;
 }): Promise<FeedPost[]> {
   const params = new URLSearchParams();
   params.set("limit", String(options?.limit || 40));
   if (options?.category && options.category !== "all") {
     params.set("category", options.category);
+  }
+  if (options?.type && options.type !== "all") {
+    params.set("type", options.type);
+  }
+  if (options?.tag && options.tag !== "all") {
+    params.set("tag", options.tag);
   }
   if (options?.search) params.set("search", options.search);
 
@@ -207,10 +287,28 @@ export async function fetchFeedPosts(options?: {
   if (options?.category && options.category !== "all") {
     list = list.filter((p) => p.category === options.category);
   }
+  if (options?.type && options.type !== "all") {
+    list = list.filter((p) => (p.postType || "article") === options.type);
+  }
+  if (options?.tag && options.tag !== "all") {
+    const tag = options.tag.toLowerCase();
+    list = list.filter((p) =>
+      (p.tags || p.keywords || []).some((t) => String(t).toLowerCase() === tag)
+    );
+  }
   if (options?.search?.trim()) {
     const q = options.search.trim().toLowerCase();
     list = list.filter((p) =>
-      [p.title, p.excerpt, p.author.name, getCategoryName(p.category), ...p.keywords]
+      [
+        p.title,
+        p.subtitle,
+        p.excerpt,
+        p.author.name,
+        getCategoryName(p.category),
+        p.postType,
+        ...(p.tags || []),
+        ...p.keywords,
+      ]
         .join(" ")
         .toLowerCase()
         .includes(q)
@@ -235,10 +333,33 @@ export async function fetchPostBySlug(slug: string): Promise<FeedPost | null> {
 }
 
 export function getRelatedFeedPosts(post: FeedPost, all: FeedPost[], limit = 3) {
-  const same = all.filter((p) => p.category === post.category && p.slug !== post.slug);
-  if (same.length >= limit) return same.slice(0, limit);
-  const others = all.filter(
-    (p) => p.slug !== post.slug && !same.some((s) => s.slug === p.slug)
+  const sameType = all.filter(
+    (p) => p.postType === post.postType && p.slug !== post.slug
   );
-  return [...same, ...others].slice(0, limit);
+  const same = all.filter((p) => p.category === post.category && p.slug !== post.slug);
+  const merged = [
+    ...sameType,
+    ...same.filter((p) => !sameType.some((s) => s.slug === p.slug)),
+  ];
+  if (merged.length >= limit) return merged.slice(0, limit);
+  const others = all.filter(
+    (p) => p.slug !== post.slug && !merged.some((s) => s.slug === p.slug)
+  );
+  return [...merged, ...others].slice(0, limit);
+}
+
+export async function fetchBlogTaxonomy() {
+  const empty = { types: [] as { slug: string; post_count: number }[], tags: [] as { slug: string; post_count: number }[] };
+  try {
+    const [types, tags] = await Promise.all([
+      publicGet("blog/types"),
+      publicGet("blog/tags"),
+    ]);
+    return {
+      types: types?.success && Array.isArray(types.data) ? types.data : empty.types,
+      tags: tags?.success && Array.isArray(tags.data) ? tags.data : empty.tags,
+    };
+  } catch {
+    return empty;
+  }
 }

@@ -5,9 +5,9 @@ import { BlogListing } from "@/components/blog/blog-listing";
 import { blogPosts } from "@/lib/blog-data";
 
 export const metadata: Metadata = {
-  title: "Blog & Company Feed | CogniCode EduTech",
+  title: "Research Blog | Guides, Tutorials, Templates | CogniCode EduTech",
   description:
-    "Scroll CogniCode research insights in a social-style feed - thesis writing, literature reviews, data analysis, publishing, AI/ML tips, free templates, and company updates from Instagram, Facebook, LinkedIn and YouTube.",
+    "Structured CogniCode research articles: how-to guides, tutorials, listicles, comparisons, video lessons, and downloadable templates for thesis, literature review, data analysis, and publishing.",
   keywords: [
     "PhD thesis writing guide",
     "literature review",
@@ -18,9 +18,9 @@ export const metadata: Metadata = {
     "CogniCode Instagram",
   ],
   openGraph: {
-    title: "Blog & Company Feed | CogniCode EduTech",
+    title: "Research Blog | CogniCode EduTech",
     description:
-      "Social-style academic guides and free research templates for scholars worldwide.",
+      "Guides, tutorials, listicles, comparisons, video lessons, and downloadable templates for scholars.",
     type: "website",
     url: "https://cognicodeedutech.com/blog",
   },

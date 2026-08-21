@@ -4,29 +4,24 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
-  BadgeCheck,
-  Calendar,
-  CheckCircle2,
-  Clock,
-  Download,
   Facebook,
   Linkedin,
   Link2,
   List,
-  Play,
   Share2,
   Twitter,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { FeedPostCard } from "@/components/blog/feed-post-card";
 import { SocialFollow } from "@/components/blog/social-follow";
 import { NewsletterForm } from "@/components/blog/newsletter-form";
 import { PostEngagement } from "@/components/blog/post-engagement";
 import { PostComments } from "@/components/blog/post-comments";
-import { FollowButton } from "@/components/blog/follow-button";
 import { FeedPost, getRelatedFeedPosts } from "@/lib/blog-api";
 import { getCategoryName } from "@/lib/blog-data";
-import { companySocials, getYoutubeEmbedUrl } from "@/lib/company-socials";
+import { isTocBlock } from "@/lib/blog-content";
+import { ArchiveArticleCard } from "@/components/blog/archive-article-card";
+import { ArticleDocument } from "@/components/blog/article-document";
+import { companySocials } from "@/lib/company-socials";
 import { cn } from "@/lib/utils";
 import {
   EngagementStats,
@@ -56,13 +51,9 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
     return [];
   }, [post, allPosts]);
 
-  const toc = post.sections.map((s) => ({ id: s.id, heading: s.heading }));
-  const youtubeEmbed = getYoutubeEmbedUrl(post.youtubeUrl);
-  const heroMedia =
-    post.mediaGallery?.filter(Boolean)?.[0] ||
-    post.coverImage ||
-    post.coverVideo ||
-    "";
+  const toc = post.sections
+    .filter((s) => isTocBlock(s) && (s.heading || "").trim())
+    .map((s) => ({ id: s.id, heading: s.heading || "Section" }));
 
   useEffect(() => {
     const headings = toc
@@ -131,10 +122,10 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
   };
 
   return (
-    <div className="w-full min-w-0 overflow-x-hidden">
-      <section className="bg-background pt-5 sm:pt-8 md:pt-12">
+    <div className="w-full min-w-0 overflow-x-hidden bg-background">
+      <section className="border-b border-border/70 bg-background pt-5 sm:pt-8">
         <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
-          <nav className="mb-4 text-xs text-muted-foreground sm:mb-6 sm:text-sm" aria-label="Breadcrumb">
+          <nav className="mb-5 text-xs text-muted-foreground sm:mb-8 sm:text-sm" aria-label="Breadcrumb">
             <ol className="flex min-w-0 flex-wrap items-center gap-1.5 sm:gap-2">
               <li>
                 <Link prefetch={false} href="/" className="hover:text-primary">
@@ -147,176 +138,53 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
                   Blog
                 </Link>
               </li>
-              <li className="hidden sm:inline">/</li>
-              <li className="hidden min-w-0 max-w-[50%] truncate text-foreground sm:block">
-                {post.title}
+              <li>/</li>
+              <li>
+                <Link
+                  prefetch={false}
+                  href={`/blog/category/${post.category}/`}
+                  className="hover:text-primary"
+                >
+                  {getCategoryName(post.category)}
+                </Link>
               </li>
             </ol>
           </nav>
-
-          {/* Social post header */}
-          <div className="mx-auto max-w-3xl min-w-0">
-            <div className="flex items-center gap-2.5 sm:gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-fuchsia-500 via-rose-500 to-amber-400 p-[2px] sm:h-12 sm:w-12">
-                <div className="flex h-full w-full items-center justify-center rounded-full bg-background text-xs font-bold text-primary sm:text-sm">
-                  CC
-                </div>
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-1">
-                  <p className="truncate text-sm font-semibold text-foreground sm:text-base">
-                    cognicodeedutech
-                  </p>
-                  <BadgeCheck className="h-4 w-4 shrink-0 fill-sky-500 text-white" />
-                </div>
-                <p className="truncate text-xs text-muted-foreground sm:text-sm">
-                  {getCategoryName(post.category)} · {post.author.name}
-                </p>
-              </div>
-              <FollowButton source="follow-article" />
-            </div>
-
-            <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-muted-foreground sm:mt-6 sm:gap-3 sm:text-sm">
-              <Link
-                prefetch={false}
-                href={`/blog/category/${post.category}/`}
-                className="rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary sm:px-3 sm:text-xs"
-              >
-                {getCategoryName(post.category)}
-              </Link>
-              <span className="inline-flex items-center gap-1">
-                <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                {post.date}
-              </span>
-              <span className="inline-flex items-center gap-1">
-                <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                {post.readTime}
-              </span>
-            </div>
-
-            <h1 className="mt-4 break-words font-serif text-2xl font-bold tracking-tight text-foreground sm:mt-5 sm:text-3xl md:text-4xl lg:text-5xl">
-              {post.title}
-            </h1>
-            <p className="mt-3 text-sm leading-6 text-muted-foreground sm:mt-5 sm:text-base sm:leading-7 md:text-lg md:leading-8">
-              {post.excerpt}
-            </p>
-
-            <div className="mt-4 sm:mt-5">
-              <SocialFollow variant="pills" />
-            </div>
-          </div>
-
-          {/* Hero media */}
-          <div className="relative mx-auto mt-6 max-w-4xl overflow-hidden rounded-xl border border-border/70 bg-muted sm:mt-10 sm:rounded-2xl md:rounded-3xl">
-            {youtubeEmbed ? (
-              <div className="aspect-video w-full">
-                <iframe
-                  src={youtubeEmbed}
-                  title={post.title}
-                  className="h-full w-full"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              </div>
-            ) : heroMedia && !/\.(mp4|webm|mov)(\?|$)/i.test(heroMedia) ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={heroMedia}
-                alt={post.title}
-                className="aspect-[16/10] w-full object-cover sm:aspect-[16/9]"
-              />
-            ) : heroMedia ? (
-              <video
-                src={heroMedia}
-                className="aspect-video w-full object-cover"
-                controls
-                playsInline
-              />
-            ) : (
-              <div
-                className={cn(
-                  "relative aspect-[16/10] bg-gradient-to-br sm:aspect-[16/9]",
-                  post.imageGradient
-                )}
-              >
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.2),transparent_50%)]" />
-                <div className="absolute inset-0 flex items-end p-4 sm:p-8 md:p-12">
-                  <div className="min-w-0">
-                    <p className="text-[10px] uppercase tracking-[0.15em] text-white/70 sm:text-sm sm:tracking-[0.2em]">
-                      CogniCode Insights
-                    </p>
-                    <p className="mt-1 font-serif text-xl font-semibold text-white sm:mt-2 sm:text-3xl md:text-4xl">
-                      {post.imageLabel}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* IG-style actions */}
-          <div className="mx-auto mt-3 max-w-4xl sm:mt-4">
-            <PostEngagement
-              slug={post.slug}
-              href={post.href}
-              stats={stats}
-              onStats={setStats}
-              onComment={() => {
-                document.getElementById("comments")?.scrollIntoView({ behavior: "smooth" });
-              }}
-            />
-          </div>
-          <p className="mx-auto mt-1 max-w-4xl text-xs font-semibold leading-5 text-foreground sm:text-sm">
-            {stats.likes.toLocaleString()} likes
-            {stats.comments ? ` · ${stats.comments} comments` : ""}
-            <span className="hidden sm:inline">
-              {" "}
-              · Share on Instagram, LinkedIn, Facebook or YouTube
-            </span>
-          </p>
-          <div className="mx-auto mt-5 max-w-4xl border-t border-border pt-5 sm:mt-6 sm:pt-6">
-            <PostComments
-              slug={post.slug}
-              href={post.href}
-              onCount={(count) =>
-                setStats((prev) => ({ ...prev, comments: count || prev.comments }))
-              }
-            />
-          </div>
         </div>
       </section>
 
-      <section className="bg-background py-8 sm:py-12 md:py-16">
+      <section className="bg-background py-6 sm:py-10">
         <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
-          <div className="grid min-w-0 gap-8 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-10 xl:grid-cols-[260px_minmax(0,1fr)_240px] xl:gap-12">
+          <div className="grid min-w-0 gap-8 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-10 xl:grid-cols-[240px_minmax(0,1fr)_250px] xl:gap-12">
             <aside className="hidden min-w-0 lg:block">
-              <div className="sticky top-24 space-y-4 xl:top-28">
-                <div className="flex items-center gap-2 text-sm font-semibold">
-                  <List className="h-4 w-4" />
-                  Table of contents
+              <div className="sticky top-24 space-y-5 xl:top-28">
+                <div>
+                  <div className="flex items-center gap-2 text-sm font-semibold">
+                    <List className="h-4 w-4" />
+                    Table of contents
+                  </div>
+                  <nav className="mt-3 space-y-0.5 border-l border-border pl-3">
+                    {toc.map((item) => (
+                      <a
+                        key={item.id}
+                        href={`#${item.id}`}
+                        className={cn(
+                          "block py-1.5 text-[13px] leading-snug transition-colors",
+                          activeId === item.id
+                            ? "font-medium text-primary"
+                            : "text-muted-foreground hover:text-foreground"
+                        )}
+                      >
+                        {item.heading}
+                      </a>
+                    ))}
+                  </nav>
                 </div>
-                <nav className="space-y-1 border-l border-border pl-4">
-                  {toc.map((item) => (
-                    <a
-                      key={item.id}
-                      href={`#${item.id}`}
-                      className={cn(
-                        "block py-1.5 text-sm leading-snug transition-colors",
-                        activeId === item.id
-                          ? "font-medium text-primary"
-                          : "text-muted-foreground hover:text-foreground"
-                      )}
-                    >
-                      {item.heading}
-                    </a>
-                  ))}
-                </nav>
-
-                <div className="rounded-2xl border border-border/80 bg-muted/40 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    Share this post
+                <div className="rounded-md border border-border bg-muted/40 p-3">
+                  <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                    Share
                   </p>
-                  <div className="mt-3 flex flex-wrap gap-2">
+                  <div className="mt-2 flex flex-wrap gap-1.5">
                     <ShareButton
                       href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
                       label="LinkedIn"
@@ -338,7 +206,7 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
                     <button
                       type="button"
                       onClick={copyLink}
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs text-muted-foreground hover:text-foreground"
+                      className="inline-flex items-center gap-1.5 rounded-md border border-border bg-background px-2 py-1 text-[11px] text-muted-foreground hover:text-foreground"
                     >
                       <Link2 className="h-3.5 w-3.5" />
                       {copied ? "Copied" : "Copy"}
@@ -348,32 +216,15 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
               </div>
             </aside>
 
-            <article className="min-w-0 overflow-hidden">
-              <div className="rounded-xl border border-primary/15 bg-primary/[0.04] p-4 sm:rounded-2xl sm:p-6 md:p-8">
-                <h2 className="font-serif text-lg font-bold text-foreground sm:text-xl">
-                  Key Takeaways
-                </h2>
-                <ul className="mt-3 space-y-2.5 sm:mt-5 sm:space-y-3">
-                  {post.keyTakeaways.map((item) => (
-                    <li
-                      key={item}
-                      className="flex gap-2.5 text-sm leading-relaxed text-foreground/90 sm:gap-3 sm:text-base"
-                    >
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary sm:h-5 sm:w-5" />
-                      <span className="min-w-0 break-words">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <details className="mt-5 rounded-xl border border-border p-3 sm:mt-8 sm:rounded-2xl sm:p-4 lg:hidden">
-                <summary className="cursor-pointer list-none text-sm font-semibold text-foreground sm:text-base">
+            <article className="min-w-0">
+              <details className="mb-5 rounded-md border border-border p-3 lg:hidden">
+                <summary className="cursor-pointer list-none text-sm font-semibold">
                   <span className="inline-flex items-center gap-2">
                     <List className="h-4 w-4" />
                     Table of contents
                   </span>
                 </summary>
-                <nav className="mt-3 space-y-2 border-t border-border pt-3 sm:mt-4 sm:pt-4">
+                <nav className="mt-3 space-y-2 border-t border-border pt-3">
                   {toc.map((item) => (
                     <a
                       key={item.id}
@@ -386,136 +237,16 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
                 </nav>
               </details>
 
-              <div className="mt-6 space-y-8 sm:mt-10 sm:space-y-12">
-                {post.sections.map((section, index) => (
-                  <div key={section.id} className="min-w-0">
-                    {section.level === 2 ? (
-                      <h2
-                        id={section.id}
-                        className="scroll-mt-28 break-words font-serif text-xl font-bold tracking-tight text-foreground sm:scroll-mt-32 sm:text-2xl md:text-3xl"
-                      >
-                        {section.heading}
-                      </h2>
-                    ) : (
-                      <h3
-                        id={section.id}
-                        className="scroll-mt-28 break-words font-serif text-lg font-semibold text-foreground sm:scroll-mt-32 sm:text-xl md:text-2xl"
-                      >
-                        {section.heading}
-                      </h3>
-                    )}
+              <ArticleDocument post={post} />
 
-                    <div className="mt-3 space-y-3 sm:mt-4 sm:space-y-4">
-                      {section.paragraphs.map((paragraph) => (
-                        <p
-                          key={paragraph.slice(0, 48)}
-                          className="break-words text-sm leading-7 text-muted-foreground sm:text-base sm:leading-8 md:text-[1.05rem]"
-                        >
-                          {paragraph}
-                        </p>
-                      ))}
-                    </div>
-
-                    {section.bullets?.length ? (
-                      <ul className="mt-4 space-y-2 sm:mt-5 sm:space-y-2.5">
-                        {section.bullets.map((bullet) => (
-                          <li
-                            key={bullet}
-                            className="flex gap-2.5 text-sm leading-6 text-muted-foreground sm:gap-3 sm:text-base sm:leading-7"
-                          >
-                            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                            <span className="min-w-0 break-words">{bullet}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : null}
-
-                    {section.callout ? (
-                      <div className="mt-5 rounded-xl border border-border bg-muted/50 p-3 text-sm leading-6 text-foreground sm:mt-6 sm:rounded-2xl sm:p-5 sm:leading-7 sm:text-base">
-                        {section.callout}
-                      </div>
-                    ) : null}
-
-                    {index === Math.min(3, post.sections.length - 2) ? (
-                      <div className="mt-6 rounded-xl border border-border bg-card p-4 sm:mt-10 sm:rounded-2xl sm:p-6 md:p-8">
-                        <p className="text-[11px] font-semibold uppercase tracking-wider text-primary sm:text-xs">
-                          Expert support
-                        </p>
-                        <h3 className="mt-2 font-serif text-lg font-bold text-foreground sm:text-xl md:text-2xl">
-                          {post.serviceCta.title}
-                        </h3>
-                        <p className="mt-2 text-sm leading-6 text-muted-foreground sm:mt-3 sm:leading-7 sm:text-base">
-                          {post.serviceCta.description}
-                        </p>
-                        <Button className="mt-4 w-full rounded-full sm:mt-5 sm:w-auto" asChild>
-                          <Link prefetch={false} href={post.serviceCta.href}>
-                            {post.serviceCta.buttonLabel}
-                            <ArrowRight className="ml-2 h-4 w-4" />
-                          </Link>
-                        </Button>
-                      </div>
-                    ) : null}
-
-                    {post.resource &&
-                    index === Math.min(2, post.sections.length - 1) ? (
-                      <div className="mt-6 overflow-hidden rounded-xl bg-foreground p-4 text-background sm:mt-10 sm:rounded-2xl sm:p-6 md:p-8">
-                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-5">
-                          <div className="min-w-0">
-                            <p className="text-[11px] font-semibold uppercase tracking-wider text-background/60 sm:text-xs">
-                              Free downloadable resource
-                            </p>
-                            <h3 className="mt-2 font-serif text-lg font-bold sm:text-xl md:text-2xl">
-                              {post.resource.title}
-                            </h3>
-                            <p className="mt-2 max-w-xl text-sm leading-6 text-background/70 sm:leading-7 sm:text-base">
-                              {post.resource.description}
-                            </p>
-                          </div>
-                          <Button
-                            variant="secondary"
-                            size="lg"
-                            asChild
-                            className="w-full shrink-0 rounded-full sm:w-auto"
-                          >
-                            <Link prefetch={false} href="/contact">
-                              <Download className="mr-2 h-4 w-4" />
-                              {post.resource.fileLabel}
-                            </Link>
-                          </Button>
-                        </div>
-                      </div>
-                    ) : null}
-                  </div>
-                ))}
-              </div>
-
-              {/* Company social CTA */}
-              <div className="mt-8 rounded-xl border border-border bg-muted/40 p-4 sm:mt-12 sm:rounded-2xl sm:p-6 md:p-8">
-                <div className="flex items-start gap-3">
-                  <Play className="mt-1 h-5 w-5 shrink-0 text-primary" />
-                  <div className="min-w-0">
-                    <h3 className="font-serif text-lg font-bold text-foreground sm:text-xl">
-                      Prefer short-form tips?
-                    </h3>
-                    <p className="mt-2 text-sm leading-6 text-muted-foreground sm:leading-7">
-                      Follow CogniCode on Instagram, Facebook, LinkedIn and YouTube for
-                      reels, carousels, and walkthroughs based on guides like this one.
-                    </p>
-                    <div className="mt-4">
-                      <SocialFollow variant="stack" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-8 rounded-xl border border-primary/15 bg-primary/[0.04] p-4 sm:mt-12 sm:rounded-2xl sm:p-6 md:p-8">
-                <h3 className="font-serif text-lg font-bold text-foreground sm:text-2xl">
+              <div className="mt-10 rounded-md border border-primary/15 bg-primary/[0.04] p-4 sm:p-6">
+                <h3 className="text-lg font-bold text-foreground sm:text-xl">
                   {post.serviceCta.title}
                 </h3>
-                <p className="mt-2 text-sm text-muted-foreground sm:mt-3 sm:text-base">
+                <p className="mt-2 text-sm text-muted-foreground sm:text-base">
                   {post.serviceCta.description}
                 </p>
-                <div className="mt-4 flex flex-col gap-2 sm:mt-6 sm:flex-row sm:flex-wrap sm:gap-3">
+                <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-3">
                   <Button className="w-full rounded-full sm:w-auto" asChild>
                     <Link prefetch={false} href={post.serviceCta.href}>
                       {post.serviceCta.buttonLabel}
@@ -530,32 +261,26 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
                 </div>
               </div>
 
-              <div className="mt-8 rounded-xl border border-border p-4 sm:mt-12 sm:rounded-2xl sm:p-6 md:p-8">
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-5">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-base font-bold text-primary sm:h-16 sm:w-16 sm:rounded-2xl sm:text-lg">
+              <div className="mt-8 rounded-md border border-border p-4 sm:p-6">
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  About the author
+                </p>
+                <div className="mt-3 flex items-start gap-3">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-primary/10 text-sm font-bold text-primary">
                     {post.author.initials}
                   </div>
-                  <div className="min-w-0">
-                    <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground sm:text-xs">
-                      About the author
-                    </p>
-                    <h3 className="mt-1 font-serif text-lg font-bold text-foreground sm:text-xl">
-                      {post.author.name}
-                    </h3>
-                    <p className="mt-1 text-sm font-medium text-primary">
-                      {post.author.role}
-                    </p>
-                    <p className="mt-2 text-sm leading-6 text-muted-foreground sm:mt-3 sm:leading-7 sm:text-base">
-                      {post.author.bio}
-                    </p>
+                  <div>
+                    <h3 className="font-semibold text-foreground">{post.author.name}</h3>
+                    <p className="text-sm text-primary">{post.author.role}</p>
+                    <p className="mt-1 text-sm leading-6 text-muted-foreground">{post.author.bio}</p>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-8 flex flex-col gap-3 border-t border-border pt-6 sm:mt-10 sm:flex-row sm:flex-wrap sm:items-center sm:pt-8">
-                <span className="inline-flex items-center gap-2 text-sm font-medium text-foreground">
+              <div className="mt-8 flex flex-col gap-3 border-t border-border pt-6">
+                <span className="inline-flex items-center gap-2 text-sm font-medium">
                   <Share2 className="h-4 w-4" />
-                  Share this guide
+                  Share this article
                 </span>
                 <div className="flex flex-wrap gap-2">
                   {companySocials.map((s) => (
@@ -579,38 +304,77 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
                   </button>
                 </div>
               </div>
+
+              <div id="comments" className="mt-10 border-t border-border pt-6">
+                <PostEngagement
+                  slug={post.slug}
+                  href={post.href}
+                  stats={stats}
+                  onStats={setStats}
+                  onComment={() => {
+                    document.getElementById("comments")?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                />
+                <p className="mt-2 text-sm font-medium">
+                  {stats.likes.toLocaleString()} likes
+                  {stats.comments ? ` · ${stats.comments} comments` : ""}
+                </p>
+                <div className="mt-4">
+                  <PostComments
+                    slug={post.slug}
+                    href={post.href}
+                    onCount={(count) =>
+                      setStats((prev) => ({ ...prev, comments: count || prev.comments }))
+                    }
+                  />
+                </div>
+              </div>
             </article>
 
             <aside className="hidden min-w-0 xl:block">
               <div className="sticky top-28 space-y-4">
-                <div className="rounded-2xl border border-border bg-muted/40 p-5">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                <div className="rounded-md border border-border bg-muted/40 p-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                     Need help with this topic?
                   </p>
-                  <p className="mt-3 font-serif text-lg font-semibold text-foreground">
-                    Soft support, not hard sell
+                  <p className="mt-2 font-semibold text-foreground">
+                    Mentors for {getCategoryName(post.category).toLowerCase()}
                   </p>
                   <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                    Talk to a mentor about {getCategoryName(post.category).toLowerCase()}{" "}
-                    for your current chapter or manuscript.
+                    Soft support for the chapter or manuscript you are writing now.
                   </p>
-                  <Button className="mt-5 w-full rounded-full" asChild>
+                  <Button className="mt-4 w-full rounded-full" asChild>
                     <Link prefetch={false} href={post.serviceCta.href}>
                       Related service
                     </Link>
                   </Button>
-                  <Button className="mt-2 w-full rounded-full" variant="outline" asChild>
-                    <Link prefetch={false} href="/contact">
-                      Contact us
-                    </Link>
-                  </Button>
                 </div>
-                <div className="rounded-2xl border border-border bg-card p-5">
-                  <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                <div className="rounded-md border border-border bg-card p-4">
+                  <p className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                     Follow CogniCode
                   </p>
                   <SocialFollow variant="stack" />
                 </div>
+                {related.length ? (
+                  <div className="rounded-md border border-border bg-card p-4">
+                    <p className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                      Similar Topics
+                    </p>
+                    <ul className="space-y-2">
+                      {related.map((item) => (
+                        <li key={item.slug}>
+                          <Link
+                            prefetch={false}
+                            href={item.href}
+                            className="text-sm leading-5 text-foreground hover:text-primary"
+                          >
+                            {item.title}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
               </div>
             </aside>
           </div>
@@ -618,41 +382,39 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
       </section>
 
       {related.length > 0 ? (
-        <section className="bg-muted/50 py-10 sm:py-16 md:py-20">
+        <section className="bg-muted/40 py-10 sm:py-14">
           <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
-            <div className="mb-6 flex flex-col gap-3 sm:mb-10 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
+            <div className="mb-6 flex items-end justify-between gap-4">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-primary sm:text-sm">
-                  Continue scrolling
+                <p className="text-xs font-semibold uppercase tracking-wider text-primary">
+                  Similar topics
                 </p>
-                <h2 className="mt-1 font-serif text-xl font-bold text-foreground sm:mt-2 sm:text-2xl md:text-3xl">
-                  Related posts
-                </h2>
+                <h2 className="mt-1 text-2xl font-bold">Recent Articles</h2>
               </div>
-              <Button variant="outline" className="w-full rounded-full sm:w-auto" asChild>
+              <Button variant="outline" className="hidden rounded-full sm:inline-flex" asChild>
                 <Link prefetch={false} href="/blog/">
-                  All posts
+                  All articles
                 </Link>
               </Button>
             </div>
-            <div className="mx-auto grid max-w-xl grid-cols-1 gap-4 sm:gap-6 lg:max-w-none lg:grid-cols-3">
+            <div className="space-y-4">
               {related.map((item) => (
-                <FeedPostCard key={item.id} post={item} compact />
+                <ArchiveArticleCard key={item.id} post={item} compact />
               ))}
             </div>
           </div>
         </section>
       ) : null}
 
-      <section className="bg-primary py-10 sm:py-16">
+      <section className="bg-primary py-10 sm:py-14">
         <div className="mx-auto max-w-2xl px-3 text-center sm:px-6">
-          <h2 className="font-serif text-2xl font-bold text-primary-foreground sm:text-3xl">
+          <h2 className="text-2xl font-bold text-primary-foreground sm:text-3xl">
             Get the next practical guide
           </h2>
-          <p className="mt-3 text-sm text-primary-foreground/80 sm:mt-4 sm:text-base">
+          <p className="mt-3 text-sm text-primary-foreground/80">
             Research tips and templates for scholars — concise and useful.
           </p>
-          <div className="mt-6 sm:mt-8">
+          <div className="mt-6">
             <NewsletterForm variant="dark" source={`article-${post.slug}`} />
           </div>
         </div>
@@ -678,7 +440,7 @@ function ShareButton({
       target="_blank"
       rel="noopener noreferrer"
       onClick={() => onShare?.()}
-      className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs text-muted-foreground hover:text-foreground"
+      className="inline-flex items-center gap-1.5 rounded-md border border-border bg-background px-2 py-1 text-[11px] text-muted-foreground hover:text-foreground"
     >
       <Icon className="h-3.5 w-3.5" />
       {label}

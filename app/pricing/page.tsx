@@ -3,6 +3,8 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Image from "next/image";
+
 import {
   Check,
   X,
@@ -14,6 +16,7 @@ import {
   Users,
   Shield,
 } from "lucide-react";
+import Pricing from "../../public/Pricing.png";
 
 export const metadata: Metadata = {
   title: "Pricing | CogniCode",
@@ -170,18 +173,15 @@ export default function PricingPage() {
       <Header />
       <main className="flex-1 mt-17">
         {/* Hero Section */}
-        <section className="bg-foreground py-24 sm:py-32">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mx-auto max-w-2xl text-center">
-              <h1 className="font-serif text-4xl font-bold tracking-tight text-background sm:text-5xl">
-                Flexible Pricing Plans
-              </h1>
-              <p className="mt-6 text-lg leading-8 text-background/70">
-                Start with a free consultation, then choose a plan that matches
-                your academic goals and budget. Transparent pricing, no hidden fees.
-              </p>
-            </div>
-          </div>
+        <section className="relative overflow-hidden bg-[#050510]">
+          <Image
+            src={Pricing}
+            alt="Flexible Pricing Plans. Start with a free consultation, then choose a plan that matches your academic goals and budget. Transparent pricing, no hidden fees."
+            className="h-[260px] w-full object-cover object-left sm:h-auto sm:object-contain"
+            priority
+            sizes="100vw"
+          />
+          <h1 className="sr-only">Flexible Pricing Plans</h1>
         </section>
 
         {/* Pricing Cards */}

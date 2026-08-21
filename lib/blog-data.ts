@@ -22,31 +22,96 @@ export type BlogAuthor = {
   initials: string;
 };
 
+export type BlogPostTypeSlug =
+  | "article"
+  | "tutorial"
+  | "how-to"
+  | "listicle"
+  | "news"
+  | "comparison"
+  | "video"
+  | "resource"
+  | "faq"
+  | "case-study";
+
+export type BlogBlockType =
+  | "section"
+  | "heading"
+  | "paragraphs"
+  | "list"
+  | "callout"
+  | "image"
+  | "video"
+  | "youtube"
+  | "code"
+  | "table"
+  | "quote"
+  | "download"
+  | "faq"
+  | "links";
+
 export type BlogSection = {
   id: string;
-  heading: string;
-  level: 2 | 3;
-  paragraphs: string[];
+  type?: BlogBlockType;
+  heading?: string;
+  level?: 2 | 3;
+  paragraphs?: string[];
   bullets?: string[];
+  ordered?: boolean;
   callout?: string;
+  imageUrl?: string;
+  imageAlt?: string;
+  videoUrl?: string;
+  youtubeUrl?: string;
+  code?: string;
+  language?: string;
+  tableHeaders?: string[];
+  tableRows?: string[][];
+  quote?: string;
+  cite?: string;
+  download?: {
+    title: string;
+    description?: string;
+    url: string;
+    fileLabel?: string;
+    fileType?: string;
+  };
+  faqs?: { question: string; answer: string }[];
+  links?: {
+    title: string;
+    url: string;
+    description?: string;
+  }[];
 };
 
 export type BlogPost = {
   id: string;
   slug: string;
   title: string;
+  subtitle?: string;
   excerpt: string;
   metaDescription: string;
   category: BlogCategorySlug;
+  postType?: BlogPostTypeSlug;
+  tags?: string[];
+  difficulty?: "beginner" | "intermediate" | "advanced" | "";
   author: BlogAuthor;
   date: string;
   dateISO: string;
+  updatedISO?: string;
   readTime: string;
   featured?: boolean;
   imageGradient: string;
   imageLabel: string;
   keywords: string[];
   keyTakeaways: string[];
+  attachments?: {
+    title: string;
+    description?: string;
+    url: string;
+    fileLabel?: string;
+    fileType?: string;
+  }[];
   sections: BlogSection[];
   resource?: {
     title: string;
@@ -934,7 +999,56 @@ export const blogPosts: BlogPost[] = [
       [
         "The best review type is the one that honestly serves your research questions and can be executed rigorously within your constraints.",
       ]
-    ),
+    ).concat([
+      {
+        id: "comparison-table",
+        type: "table",
+        heading: "Systematic vs narrative at a glance",
+        level: 2,
+        paragraphs: [
+          "Use this comparison when you write the review-design paragraph in your methodology chapter. Examiners want a justified choice, not a fashionable label.",
+        ],
+        tableHeaders: ["Dimension", "Systematic review", "Narrative review"],
+        tableRows: [
+          ["Main purpose", "Minimise selection bias and map all eligible evidence", "Build a conceptual argument and synthesise debates"],
+          ["Search process", "Protocol, databases, documented Boolean strings", "Purposive, iterative reading of key conversations"],
+          ["Inclusion rules", "Pre-specified inclusion and exclusion criteria", "Flexible, theoretically driven source selection"],
+          ["Typical output", "PRISMA-style flow, evidence tables, quality appraisal", "Thematic synthesis and critical narrative"],
+          ["Best when", "Clinical, policy, or effectiveness questions", "Theory-building, interdisciplinary, or emerging topics"],
+          ["Main risk", "Underestimating screening workload", "Calling it systematic without a protocol"],
+        ],
+      },
+      {
+        id: "decision-callout",
+        type: "callout",
+        heading: "Quick decision rule",
+        level: 2,
+        paragraphs: [],
+        callout:
+          "If your examiner will ask “how did you decide which papers count?”, choose a systematic or structured protocol. If they will ask “how does this conversation position your contribution?”, a rigorous narrative review is often stronger.",
+      },
+      {
+        id: "further-reading",
+        type: "links",
+        heading: "Useful links",
+        level: 2,
+        paragraphs: [
+          "Attach official guidance and tools your reader can open from the page.",
+        ],
+        links: [
+          {
+            title: "PRISMA 2020 statement",
+            url: "https://www.prisma-statement.org/",
+            description: "Reporting standard commonly used for systematic reviews.",
+          },
+          {
+            title: "CogniCode literature review support",
+            url: "/services/literature-review",
+            description: "Internal service page for scholars who need chapter guidance.",
+          },
+        ],
+      },
+    ]),
     serviceCta: {
       title: "Unsure which review design fits your study?",
       description:
@@ -991,7 +1105,26 @@ export const blogPosts: BlogPost[] = [
       [
         "Good statistics starts with good design thinking. Write your decision path down - it becomes both analysis plan and methodology defence.",
       ]
-    ),
+    ).concat([
+      {
+        id: "test-choice-table",
+        type: "table",
+        heading: "Common test families by design",
+        level: 2,
+        paragraphs: [
+          "This is a starting map, not a substitute for assumption checks. Always confirm variable type, independence, and sample size before locking the analysis plan.",
+        ],
+        tableHeaders: ["Research situation", "Typical test family", "What to report"],
+        tableRows: [
+          ["Two independent groups, continuous outcome", "t-test or Mann–Whitney", "Test, statistic, p, effect size, means/medians"],
+          ["Three or more independent groups", "ANOVA or Kruskal–Wallis", "Omnibus result plus planned comparisons"],
+          ["Paired or repeated measures", "Paired t-test or Wilcoxon / RM-ANOVA", "Change, confidence interval, assumption notes"],
+          ["Association between two continuous variables", "Pearson or Spearman correlation", "Coefficient, n, and scatterplot interpretation"],
+          ["Predict an outcome from several predictors", "Regression (linear / logistic)", "Coefficients, model fit, diagnostics"],
+          ["Categorical association", "Chi-square or Fisher exact", "Table, expected counts, effect measure"],
+        ],
+      },
+    ]),
     resource: {
       title: "Statistical Test Decision Tree",
       description: "One-page visual guide from design features to common test families.",
