@@ -178,13 +178,6 @@ Our Mission: To empower scholars worldwide by providing expert academic writing 
     content: `Practical academic guides and free research templates from CogniCode EduTech. Topics include thesis structure, literature review gaps, SPSS interpretation, journal selection, research integrity, AI ethics, and scholar success.`,
   },
   {
-    title: "How to Write a Literature Review That Identifies Research Gaps",
-    description: "Step-by-step literature review framework with matrix template and research gap articulation.",
-    href: "/blog/how-to-write-literature-review-research-gaps",
-    keywords: ["literature review", "research gap", "matrix template", "blog"],
-    content: `Move beyond summary. Learn search strategy, literature matrix, critical analysis, and gap statements examiners respect.`,
-  },
-  {
     title: "PhD Admissions Guidance",
     description: "Complete support for PhD admission process, university selection, SOP, and interview preparation.",
     href: "/admissions",

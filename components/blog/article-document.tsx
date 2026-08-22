@@ -2,13 +2,13 @@
 
 import { Calendar, CheckCircle2, Clock, Download } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { ContentBlockRenderer } from "@/components/blog/content-block-renderer";
 import { FeedPost } from "@/lib/blog-api";
 import { getCategoryName } from "@/lib/blog-data";
 import { getPostType } from "@/lib/blog-content";
 import { getYoutubeEmbedUrl } from "@/lib/company-socials";
 import { cn } from "@/lib/utils";
+import { fileOpenProps, isPdfFile } from "@/lib/blog-file";
 
 type ArticleDocumentProps = {
   post: FeedPost;
@@ -137,44 +137,32 @@ export function ArticleDocument({ post, compact = false }: ArticleDocumentProps)
         ))}
       </div>
 
-      {post.attachments?.length ? (
-        <div className="mt-10 rounded-md border border-border p-4 sm:p-5">
-          <h2 className="text-lg font-bold">Downloads</h2>
-          <ul className="mt-3 space-y-2">
-            {post.attachments.map((file) => (
-              <li key={file.url}>
-                <a
-                  href={file.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
-                >
-                  <Download className="h-4 w-4" />
-                  {file.title || file.fileLabel || "Download"}
-                  {file.fileType ? (
-                    <span className="text-xs text-muted-foreground">({file.fileType})</span>
-                  ) : null}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
-
-      {post.resource ? (
-        <div className="mt-8 rounded-md bg-foreground p-4 text-background sm:p-6">
-          <p className="text-[11px] font-semibold uppercase tracking-wider text-background/60">
-            Free resource
-          </p>
-          <h3 className="mt-1 text-lg font-bold">{post.resource.title}</h3>
-          <p className="mt-1 text-sm text-background/70">{post.resource.description}</p>
-          <Button variant="secondary" className="mt-4 rounded-full" asChild>
-            <Link prefetch={false} href="/contact">
-              <Download className="mr-2 h-4 w-4" />
-              {post.resource.fileLabel}
-            </Link>
-          </Button>
-        </div>
+      {post.resource?.url ? (
+        <a
+          {...fileOpenProps(post.resource.url, {
+            fileType: post.resource.fileType,
+            name: post.resource.title || post.resource.fileLabel,
+          })}
+          className="mt-8 flex items-start gap-3 rounded-md bg-foreground p-4 text-background transition-opacity hover:opacity-95 sm:gap-4 sm:p-6"
+        >
+          <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-background/15">
+            <Download className="h-5 w-5" />
+          </span>
+          <span className="min-w-0">
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-background/60">
+              Free resource
+            </p>
+            <h3 className="mt-1 text-lg font-bold">{post.resource.title}</h3>
+            {post.resource.description ? (
+              <p className="mt-1 text-sm text-background/70">{post.resource.description}</p>
+            ) : null}
+            <p className="mt-2 text-sm font-medium text-background/80">
+              {isPdfFile(post.resource.url, post.resource.fileType, post.resource.title)
+                ? "Open PDF in a new tab"
+                : "Click to download"}
+            </p>
+          </span>
+        </a>
       ) : null}
     </div>
   );

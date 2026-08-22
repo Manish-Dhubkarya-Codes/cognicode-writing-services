@@ -6,7 +6,7 @@ import axios from "axios";
  * Live site (cognicodeedutech.com) always uses the Hostinger API.
  * Localhost uses NEXT_PUBLIC_API_URL, then http://127.0.0.1:3000.
  */
-const LIVE_API = "https://api.cognicodeedutech.com";
+const LIVE_API = "http://localhost:3000";
 
 export function getServerURL() {
   if (typeof window !== "undefined") {
@@ -64,18 +64,108 @@ async function silentRequest<T = any>(
 
 const noThrow = { validateStatus: () => true as const };
 
+export type PostDataExtra = {
+  signal?: AbortSignal;
+  onUploadProgress?: (percent: number) => void;
+};
+
+function postFormData(
+  url: string,
+  body: FormData,
+  extra?: PostDataExtra
+): Promise<any> {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", url);
+    xhr.timeout = 180000;
+    xhr.responseType = "text";
+
+    const onAbort = () => xhr.abort();
+    extra?.signal?.addEventListener("abort", onAbort);
+
+    xhr.upload.onprogress = (event) => {
+      if (!extra?.onUploadProgress) return;
+      const total = event.total || 0;
+      const pct = total ? Math.round((event.loaded * 100) / total) : 0;
+      extra.onUploadProgress(Math.max(0, Math.min(100, pct)));
+    };
+
+    xhr.onload = () => {
+      extra?.signal?.removeEventListener("abort", onAbort);
+      const raw = xhr.responseText || "";
+      try {
+        resolve(raw ? JSON.parse(raw) : null);
+      } catch {
+        resolve({ success: false, message: raw || `Upload failed (${xhr.status})` });
+      }
+    };
+    xhr.onerror = () => {
+      extra?.signal?.removeEventListener("abort", onAbort);
+      resolve({ success: false, message: "Network error while uploading" });
+    };
+    xhr.onabort = () => {
+      extra?.signal?.removeEventListener("abort", onAbort);
+      const abortErr = new Error("UPLOAD_ABORTED");
+      abortErr.name = "AbortError";
+      reject(abortErr);
+    };
+    xhr.ontimeout = () => {
+      extra?.signal?.removeEventListener("abort", onAbort);
+      resolve({ success: false, message: "Upload timed out" });
+    };
+
+    xhr.send(body);
+  });
+}
+
 export const postData = async (
   url: string,
   body: any,
-  responseType: "json" | "blob" = "json"
+  responseType: "json" | "blob" = "json",
+  extra?: PostDataExtra
 ): Promise<any> => {
-  return silentRequest<any>(() =>
-    axios.post(joinUrl(url), body, {
+  const isForm = typeof FormData !== "undefined" && body instanceof FormData;
+  if (isForm && typeof XMLHttpRequest !== "undefined") {
+    try {
+      return await postFormData(joinUrl(url), body, extra);
+    } catch (err: any) {
+      if (err?.name === "AbortError") throw err;
+      return { success: false, message: err?.message || "Upload failed" };
+    }
+  }
+
+  try {
+    const response = await axios.post(joinUrl(url), body, {
       ...noThrow,
       responseType,
-      timeout: 120000,
-    })
-  );
+      timeout: 180000,
+      maxBodyLength: Infinity,
+      maxContentLength: Infinity,
+      signal: extra?.signal,
+      onUploadProgress: extra?.onUploadProgress
+        ? (event) => {
+            const total = event.total || 0;
+            const pct = total
+              ? Math.round((event.loaded * 100) / total)
+              : Math.round((event.progress || 0) * 100);
+            extra.onUploadProgress?.(Math.max(0, Math.min(100, pct)));
+          }
+        : undefined,
+    });
+    return response?.data ?? null;
+  } catch (err: any) {
+    if (
+      extra?.signal?.aborted ||
+      err?.code === "ERR_CANCELED" ||
+      err?.name === "CanceledError" ||
+      err?.name === "AbortError"
+    ) {
+      const abortErr = new Error("UPLOAD_ABORTED");
+      abortErr.name = "AbortError";
+      throw abortErr;
+    }
+    return null;
+  }
 };
 
 export const getData = async (url: string): Promise<any> => {

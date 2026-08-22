@@ -8,13 +8,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { ArticleView } from "@/components/blog/article-view";
 import { Button } from "@/components/ui/button";
-import {
-  FeedPost,
-  fetchFeedPosts,
-  fetchPostBySlug,
-  mapStaticPostToFeed,
-} from "@/lib/blog-api";
-import { getPostBySlug } from "@/lib/blog-data";
+import { FeedPost, fetchFeedPosts, fetchPostBySlug } from "@/lib/blog-api";
 
 type ArticleLoaderProps = {
   /** Prefer explicit slug (static routes). Falls back to ?slug= query. */
@@ -63,18 +57,13 @@ function ArticleLoaderInner({ slug: slugProp }: ArticleLoaderProps) {
 
     setNotFound(false);
     setLoading(true);
-
-    // Instant static paint when available
-    const staticPost = getPostBySlug(slug);
-    if (staticPost && active) {
-      setPost(mapStaticPostToFeed(staticPost));
-    }
+    setPost(null);
 
     Promise.all([fetchPostBySlug(slug), fetchFeedPosts({ limit: 40 })])
       .then(([fetched, feed]) => {
         if (!active) return;
         if (fetched) setPost(fetched);
-        else if (!staticPost) setNotFound(true);
+        else setNotFound(true);
         setAllPosts(feed);
       })
       .finally(() => {

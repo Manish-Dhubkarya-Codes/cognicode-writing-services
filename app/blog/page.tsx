@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { BlogListing } from "@/components/blog/blog-listing";
-import { blogPosts } from "@/lib/blog-data";
+import { fetchFeedPosts } from "@/lib/blog-api";
 
 export const metadata: Metadata = {
   title: "Research Blog | Guides, Tutorials, Templates | CogniCode EduTech",
@@ -29,7 +29,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  const publishedPosts = await fetchFeedPosts({ limit: 12 });
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Blog",
@@ -48,7 +49,7 @@ export default function BlogPage() {
         "https://www.youtube.com/@CogniCodeEduTech",
       ],
     },
-    blogPost: blogPosts.slice(0, 12).map((post) => ({
+    blogPost: publishedPosts.slice(0, 12).map((post) => ({
       "@type": "BlogPosting",
       headline: post.title,
       description: post.metaDescription,
@@ -57,7 +58,7 @@ export default function BlogPage() {
         "@type": "Person",
         name: post.author.name,
       },
-      url: `https://cognicodeedutech.com/blog/${post.slug}/`,
+      url: `https://cognicodeedutech.com${post.href}`,
     })),
   };
 

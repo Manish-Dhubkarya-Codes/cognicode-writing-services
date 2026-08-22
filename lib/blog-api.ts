@@ -3,9 +3,7 @@ import {
   BlogPost,
   BlogPostTypeSlug,
   BlogSection,
-  blogPosts as staticPosts,
   getCategoryName,
-  getPostBySlug as getStaticPost,
 } from "@/lib/blog-data";
 import { inferPostType } from "@/lib/blog-content";
 import { getData, mediaUrl } from "@/app/server/fetch-beckend-services";
@@ -208,7 +206,20 @@ export function mapApiPostToFeed(api: any): FeedPost {
           "Soft next steps if you need expert support",
         ],
     sections: parseSections(api.content, api.excerpt),
-    resource: api.resource || undefined,
+    resource: (() => {
+      const raw = api.resource || api.resource_cta;
+      const firstFile = attachments[0];
+      const url = mediaUrl(raw?.url || firstFile?.url);
+      if (!url && !raw?.title) return undefined;
+      if (!url) return undefined;
+      return {
+        title: raw?.title || firstFile?.title || "Free resource",
+        description: raw?.description || firstFile?.description || "",
+        fileLabel: raw?.fileLabel || firstFile?.fileLabel || firstFile?.title || "Open file",
+        url,
+        fileType: raw?.fileType || firstFile?.fileType || "",
+      };
+    })(),
     serviceCta: api.serviceCta || api.service_cta || {
       title: "Need expert help with this topic?",
       description:
@@ -228,22 +239,15 @@ export function mapApiPostToFeed(api: any): FeedPost {
   return post;
 }
 
-export function mapStaticPostToFeed(post: BlogPost): FeedPost {
-  return {
-    ...post,
-    postType: post.postType || inferPostType(post.title, post.category),
-    tags: post.tags?.length
-      ? post.tags
-      : [getCategoryName(post.category), ...post.keywords].slice(0, 6),
-    difficulty: post.difficulty || "intermediate",
-    updatedISO: post.updatedISO || post.dateISO,
-    source: "static",
-    likes: 0,
-    href: `/blog/${post.slug}/`,
-  };
+function isPublishedPost(api: any): boolean {
+  const status = String(
+    api?.status || api?.publishStatus || api?.publish_status || ""
+  ).toLowerCase();
+  if (!status) return true;
+  return status === "published" || status === "publish";
 }
 
-/** Load published posts: API first, merge with static seeds */
+/** Load published posts from the admin API only */
 export async function fetchFeedPosts(options?: {
   category?: string;
   search?: string;
@@ -268,22 +272,13 @@ export async function fetchFeedPosts(options?: {
   try {
     const res = await publicGet(`blog/posts?${params.toString()}`);
     if (res?.success && Array.isArray(res.data)) {
-      apiPosts = res.data.map(mapApiPostToFeed);
+      apiPosts = res.data.filter(isPublishedPost).map(mapApiPostToFeed);
     }
   } catch {
     apiPosts = [];
   }
 
-  const staticFeed = staticPosts.map(mapStaticPostToFeed);
-  const apiSlugs = new Set(apiPosts.map((p) => p.slug));
-
-  // Prefer API posts; keep static seeds that are not overridden
-  const merged = [
-    ...apiPosts,
-    ...staticFeed.filter((p) => !apiSlugs.has(p.slug)),
-  ];
-
-  let list = merged;
+  let list = apiPosts;
   if (options?.category && options.category !== "all") {
     list = list.filter((p) => p.category === options.category);
   }
@@ -323,13 +318,14 @@ export async function fetchFeedPosts(options?: {
 export async function fetchPostBySlug(slug: string): Promise<FeedPost | null> {
   try {
     const res = await publicGet(`blog/posts/${encodeURIComponent(slug)}`);
-    if (res?.success && res.data) return mapApiPostToFeed(res.data);
+    if (res?.success && res.data && isPublishedPost(res.data)) {
+      return mapApiPostToFeed(res.data);
+    }
   } catch {
     // fall through
   }
 
-  const staticPost = getStaticPost(slug);
-  return staticPost ? mapStaticPostToFeed(staticPost) : null;
+  return null;
 }
 
 export function getRelatedFeedPosts(post: FeedPost, all: FeedPost[], limit = 3) {

@@ -1,12 +1,12 @@
 "use client";
 
-import { Download, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { BlogSection } from "@/lib/blog-data";
 import { getYoutubeEmbedUrl } from "@/lib/company-socials";
 import { mediaUrl } from "@/app/server/fetch-beckend-services";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { LinkedText, sanitizeHref } from "@/lib/blog-rich-text";
+import { fileOpenProps, isPdfFile } from "@/lib/blog-file";
 
 type ContentBlockRendererProps = {
   block: BlogSection;
@@ -184,27 +184,28 @@ export function ContentBlockRenderer({ block }: ContentBlockRendererProps) {
       ) : null}
 
       {type === "download" && block.download?.url ? (
-        <div className="mt-4 overflow-hidden rounded-xl bg-foreground p-4 text-background sm:rounded-2xl sm:p-6">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="min-w-0">
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-background/60">
-                {block.download.fileType || "File"}
-              </p>
-              <h3 className="mt-1 font-serif text-lg font-bold">
-                {block.download.title || heading || "Download"}
-              </h3>
-              {block.download.description ? (
-                <p className="mt-1 text-sm text-background/70">{block.download.description}</p>
-              ) : null}
-            </div>
-            <Button variant="secondary" className="w-full shrink-0 rounded-full sm:w-auto" asChild>
-              <a href={mediaUrl(block.download.url)} target="_blank" rel="noopener noreferrer">
-                <Download className="mr-2 h-4 w-4" />
-                {block.download.fileLabel || "Download"}
-              </a>
-            </Button>
-          </div>
-        </div>
+        <a
+          {...fileOpenProps(mediaUrl(block.download.url), {
+            fileType: block.download.fileType,
+            name: block.download.title || block.download.fileLabel,
+          })}
+          className="mt-4 block overflow-hidden rounded-xl bg-foreground p-4 text-background transition-opacity hover:opacity-95 sm:rounded-2xl sm:p-6"
+        >
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-background/60">
+            {block.download.fileType || "File"}
+          </p>
+          <h3 className="mt-1 font-serif text-lg font-bold">
+            {block.download.title || heading || "File"}
+          </h3>
+          {block.download.description ? (
+            <p className="mt-1 text-sm text-background/70">{block.download.description}</p>
+          ) : null}
+          <p className="mt-3 text-sm font-medium text-background/80">
+            {isPdfFile(block.download.url, block.download.fileType, block.download.title)
+              ? "Open PDF in a new tab"
+              : "Click to download"}
+          </p>
+        </a>
       ) : null}
 
       {type === "faq" && (block.faqs || []).length > 0 ? (

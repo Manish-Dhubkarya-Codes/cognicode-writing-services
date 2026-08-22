@@ -21,7 +21,7 @@ import { getCategoryName } from "@/lib/blog-data";
 import { isTocBlock } from "@/lib/blog-content";
 import { ArchiveArticleCard } from "@/components/blog/archive-article-card";
 import { ArticleDocument } from "@/components/blog/article-document";
-import { companySocials } from "@/lib/company-socials";
+import { ShareArticleButton } from "@/components/blog/share-article-dialog";
 import { cn } from "@/lib/utils";
 import {
   EngagementStats,
@@ -278,37 +278,22 @@ export function ArticleView({ post, allPosts = [] }: ArticleViewProps) {
               </div>
 
               <div className="mt-8 flex flex-col gap-3 border-t border-border pt-6">
-                <span className="inline-flex items-center gap-2 text-sm font-medium">
+                <ShareArticleButton
+                  href={post.href}
+                  title={post.title}
+                  slug={post.slug}
+                  className="inline-flex w-fit items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
+                >
                   <Share2 className="h-4 w-4" />
                   Share this article
-                </span>
-                <div className="flex flex-wrap gap-2">
-                  {companySocials.map((s) => (
-                    <a
-                      key={s.id}
-                      href={s.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground"
-                    >
-                      {s.name}
-                    </a>
-                  ))}
-                  <button
-                    type="button"
-                    onClick={copyLink}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground"
-                  >
-                    <Link2 className="h-3.5 w-3.5" />
-                    {copied ? "Link copied" : "Copy link"}
-                  </button>
-                </div>
+                </ShareArticleButton>
               </div>
 
               <div id="comments" className="mt-10 border-t border-border pt-6">
                 <PostEngagement
                   slug={post.slug}
                   href={post.href}
+                  title={post.title}
                   stats={stats}
                   onStats={setStats}
                   onComment={() => {

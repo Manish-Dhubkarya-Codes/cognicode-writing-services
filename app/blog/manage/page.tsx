@@ -25,6 +25,7 @@ import {
   ComposerForm,
   emptyComposer,
 } from "@/components/blog/blog-composer";
+import type { MediaKind, UploadRequestOptions } from "@/components/blog/upload-slot";
 import {
   getData,
   postData,
@@ -33,6 +34,7 @@ import {
   getServerURL,
   mediaUrl,
 } from "@/app/server/fetch-beckend-services";
+import { uploadBlogFileResumable } from "@/lib/blog-resumable-upload";
 
 const CLIENT_BUILD = "manage-v8-full-page";
 
@@ -49,7 +51,6 @@ export default function BlogManagePage() {
   const [posts, setPosts] = useState<any[]>([]);
   const [loadingPosts, setLoadingPosts] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
   const [form, setForm] = useState<ComposerForm>(emptyComposer());
   const [apiBase, setApiBase] = useState("");
 
@@ -103,45 +104,64 @@ export default function BlogManagePage() {
     }
   }, [admin, toast]);
 
+  const ensureTablesQuiet = useCallback(async () => {
+    if (!admin) return false;
+    const res = await postData(`blog/admin/init-tables?${authQs(admin)}`, {
+      adminId: admin.adminId,
+      email: admin.email,
+    });
+    return Boolean(res?.success);
+  }, [admin]);
+
   useEffect(() => {
-    if (admin) loadPosts();
-  }, [admin, loadPosts]);
+    if (!admin) return;
+    loadPosts();
+    void (async () => {
+      const cats = await getData("blog/categories");
+      if (!cats?.success || !Array.isArray(cats.data) || cats.data.length === 0) {
+        await ensureTablesQuiet();
+      }
+    })();
+  }, [admin, loadPosts, ensureTablesQuiet]);
 
   const handleUpload = async (
     file: File,
-    kind: "image" | "video" | "document" | "gallery"
+    kind: MediaKind,
+    options?: UploadRequestOptions
   ): Promise<string | null> => {
-    if (!admin) return null;
-    setUploading(true);
+    if (!admin) {
+      toast({
+        title: "Sign in as admin to upload",
+        variant: "destructive",
+      });
+      return null;
+    }
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("adminId", String(admin.adminId));
-      formData.append("email", admin.email);
-      formData.append(
-        "mediaType",
-        kind === "video" ? "video" : kind === "document" ? "document" : "image"
-      );
-      const res = await postData(`blog/admin/upload?${authQs(admin)}`, formData);
-      if (!res?.success || !res?.data?.url) {
+      const uploadedUrl = await uploadBlogFileResumable({
+        file,
+        kind,
+        admin,
+        authQuery: authQs(admin),
+        options,
+      });
+      if (!uploadedUrl) {
         toast({
           title: "Upload failed",
-          description: res?.message || "Could not upload file",
+          description: "Could not upload file",
           variant: "destructive",
         });
         return null;
       }
       toast({ title: "Uploaded", description: file.name });
-      return mediaUrl(res.data.url);
+      return uploadedUrl;
     } catch (e: any) {
+      if (e?.name === "AbortError") throw e;
       toast({
         title: "Upload failed",
-        description: e?.message || "Upload failed",
+        description: e?.uploadMessage || e?.message || "Upload failed",
         variant: "destructive",
       });
       return null;
-    } finally {
-      setUploading(false);
     }
   };
 
@@ -159,13 +179,22 @@ export default function BlogManagePage() {
         .map((t) => t.trim())
         .filter(Boolean);
       const typeMeta = getPostType(form.postType);
+      const readyAttachments = form.attachments
+        .filter((item) => item.url)
+        .map(({ title, description, url, fileLabel, fileType }) => ({
+          title,
+          description,
+          url,
+          fileLabel,
+          fileType,
+        }));
       const payload = {
         title: form.title.trim(),
         subtitle: form.subtitle.trim() || null,
         slug: form.slug.trim() || slugifyBlog(form.title),
         excerpt: form.excerpt.trim(),
         metaDescription: form.excerpt.trim() || form.title.trim(),
-        content: form.blocks,
+        content: JSON.parse(JSON.stringify(form.blocks || [])),
         keyTakeaways:
           takeaways.length > 0
             ? takeaways
@@ -174,7 +203,7 @@ export default function BlogManagePage() {
         postType: form.postType,
         tags: form.tags,
         difficulty: form.difficulty,
-        attachments: form.attachments,
+        attachments: readyAttachments,
         authorName: form.authorName || admin.name || "CogniCode Team",
         authorRole: form.authorRole,
         authorBio: "Insights from the CogniCode academic research team.",
@@ -182,7 +211,7 @@ export default function BlogManagePage() {
           .split(" ")
           .map((p) => p[0])
           .join("")
-          .slice(0, 2)
+          .slice(0, 8)
           .toUpperCase(),
         coverImage: form.coverImage || null,
         coverVideo: form.coverVideo || null,
@@ -200,11 +229,13 @@ export default function BlogManagePage() {
         featured: Boolean(form.featured),
         adminId: admin.adminId,
         email: admin.email,
-        resource: form.attachments[0]
+        resource: readyAttachments[0]
           ? {
-              title: form.attachments[0].title,
-              description: form.attachments[0].description || "",
-              fileLabel: form.attachments[0].fileLabel || "Download",
+              title: readyAttachments[0].title,
+              description: readyAttachments[0].description || "",
+              fileLabel: readyAttachments[0].fileLabel || readyAttachments[0].title,
+              url: readyAttachments[0].url,
+              fileType: readyAttachments[0].fileType || "",
             }
           : undefined,
         serviceCta: {
@@ -215,9 +246,16 @@ export default function BlogManagePage() {
         },
       };
 
-      const res = form.id
-        ? await putData(`blog/admin/posts/${form.id}?${authQs(admin)}`, payload)
-        : await postData(`blog/admin/posts?${authQs(admin)}`, payload);
+      const saveOnce = () =>
+        form.id
+          ? putData(`blog/admin/posts/${form.id}?${authQs(admin)}`, payload)
+          : postData(`blog/admin/posts?${authQs(admin)}`, payload);
+
+      let res = await saveOnce();
+      if (!res?.success && !form.id) {
+        await ensureTablesQuiet();
+        res = await saveOnce();
+      }
 
       if (!res?.success) {
         toast({
@@ -266,13 +304,29 @@ export default function BlogManagePage() {
       keyTakeaways: Array.isArray(post.keyTakeaways)
         ? post.keyTakeaways.join("\n")
         : "",
-      blocks: content.length ? content : emptyComposer().blocks,
+      blocks: (content.length ? content : emptyComposer().blocks).map((block: any) => ({
+        ...block,
+        imageUrl: mediaUrl(block.imageUrl) || block.imageUrl || "",
+        videoUrl: mediaUrl(block.videoUrl) || block.videoUrl || "",
+        download: block.download
+          ? { ...block.download, url: mediaUrl(block.download.url) || block.download.url || "" }
+          : block.download,
+      })),
       coverImage: mediaUrl(post.coverImage),
       coverVideo: mediaUrl(post.coverVideo),
       gallery: Array.isArray(post.mediaGallery)
-        ? post.mediaGallery.map((u: string) => mediaUrl(u))
+        ? post.mediaGallery.map((u: string) => mediaUrl(u)).filter(Boolean)
         : [],
-      attachments: Array.isArray(post.attachments) ? post.attachments : [],
+      attachments: Array.isArray(post.attachments)
+        ? post.attachments.map((item: any, index: number) => ({
+            title: item.title || item.fileLabel || "Download",
+            description: item.description || "",
+            url: mediaUrl(item.url),
+            fileLabel: item.fileLabel || item.title || "Download",
+            fileType: item.fileType || "",
+            tempKey: `existing-${post.id}-${index}`,
+          }))
+        : [],
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -405,7 +459,6 @@ export default function BlogManagePage() {
               form={form}
               setForm={setForm}
               saving={saving}
-              uploading={uploading}
               onUpload={handleUpload}
               onSubmit={handleSave}
               onCancelEdit={() => setForm(emptyComposer(admin.name || "CogniCode Team"))}

@@ -12,7 +12,8 @@ import { getCategoryName } from "@/lib/blog-data";
 import { cn } from "@/lib/utils";
 import { PostEngagement } from "@/components/blog/post-engagement";
 import { PostComments } from "@/components/blog/post-comments";
-import { EngagementStats, recordPostShare } from "@/lib/blog-engagement";
+import { EngagementStats } from "@/lib/blog-engagement";
+import { ShareArticleButton } from "@/components/blog/share-article-dialog";
 import { useBlogLive } from "@/lib/blog-socket";
 
 type FeedPostCardProps = {
@@ -30,7 +31,6 @@ export function FeedPostCard({
 }: FeedPostCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [showComments, setShowComments] = useState(false);
-  const [copied, setCopied] = useState(false);
   const [localStats, setLocalStats] = useState<EngagementStats>({
     likes: stats?.likes ?? post.likes ?? 0,
     comments: stats?.comments ?? post.commentsCount ?? 0,
@@ -54,26 +54,6 @@ export function FeedPostCard({
     Boolean(post.coverVideo) ||
     Boolean(post.youtubeUrl) ||
     /\.(mp4|webm|mov)(\?|$)/i.test(media);
-
-  const shareNative = async () => {
-    const url =
-      typeof window !== "undefined"
-        ? `${window.location.origin}${post.href}`
-        : post.href;
-    try {
-      if (navigator.share) {
-        await navigator.share({ title: post.title, text: post.excerpt, url });
-        await recordPostShare(post.slug, "native");
-      } else {
-        await navigator.clipboard.writeText(url);
-        await recordPostShare(post.slug, "copy");
-        setCopied(true);
-        setTimeout(() => setCopied(false), 1500);
-      }
-    } catch {
-      // user cancelled
-    }
-  };
 
   const onStatsRef = useRef(onStats);
   onStatsRef.current = onStats;
@@ -210,6 +190,7 @@ export function FeedPostCard({
         <PostEngagement
           slug={post.slug}
           href={post.href}
+          title={post.title}
           stats={localStats}
           onStats={applyStats}
           onComment={() => setShowComments((v) => !v)}
@@ -285,14 +266,15 @@ export function FeedPostCard({
           >
             View full article · {post.readTime}
           </a>
-          <button
-            type="button"
-            onClick={shareNative}
+          <ShareArticleButton
+            href={post.href}
+            title={post.title}
+            slug={post.slug}
             className="inline-flex w-fit items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
           >
             <Share2 className="h-3.5 w-3.5" />
-            {copied ? "Copied" : "Share"}
-          </button>
+            Share
+          </ShareArticleButton>
         </div>
       </div>
     </article>

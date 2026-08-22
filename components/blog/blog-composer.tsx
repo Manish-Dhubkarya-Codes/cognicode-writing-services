@@ -36,11 +36,16 @@ import {
   slugifyBlog,
   suggestedBlogTags,
 } from "@/lib/blog-content";
-import { mediaUrl } from "@/app/server/fetch-beckend-services";
 import { cn } from "@/lib/utils";
 import { ArticleDocument } from "@/components/blog/article-document";
 import { FeedPost } from "@/lib/blog-api";
 import { getCategoryName } from "@/lib/blog-data";
+import {
+  AttachmentManager,
+  FilePicker,
+  type ComposerAttachment,
+  type UploadFn,
+} from "@/components/blog/upload-slot";
 
 export type ComposerForm = {
   id?: number | string;
@@ -63,13 +68,7 @@ export type ComposerForm = {
   coverImage: string;
   coverVideo: string;
   gallery: string[];
-  attachments: {
-    title: string;
-    description?: string;
-    url: string;
-    fileLabel?: string;
-    fileType?: string;
-  }[];
+  attachments: ComposerAttachment[];
 };
 
 export const emptyComposer = (authorName = "CogniCode Team"): ComposerForm => ({
@@ -99,8 +98,7 @@ type BlogComposerProps = {
   form: ComposerForm;
   setForm: (next: ComposerForm | ((prev: ComposerForm) => ComposerForm)) => void;
   saving: boolean;
-  uploading: boolean;
-  onUpload: (file: File, kind: "image" | "video" | "document" | "gallery") => Promise<string | null>;
+  onUpload: UploadFn;
   onSubmit: (e: React.FormEvent) => void;
   onCancelEdit?: () => void;
 };
@@ -109,13 +107,20 @@ export function BlogComposer({
   form,
   setForm,
   saving,
-  uploading,
   onUpload,
   onSubmit,
   onCancelEdit,
 }: BlogComposerProps) {
   const [tagDraft, setTagDraft] = useState("");
   const [mode, setMode] = useState<"write" | "preview" | "details">("write");
+  const [busyIds, setBusyIds] = useState<string[]>([]);
+  const anyUploading = busyIds.length > 0;
+  const markBusy = (id: string, busy: boolean) => {
+    setBusyIds((prev) => {
+      if (busy) return prev.includes(id) ? prev : [...prev, id];
+      return prev.filter((item) => item !== id);
+    });
+  };
   const typeMeta = getPostType(form.postType);
   const previewSlug = form.slug || slugifyBlog(form.title);
 
@@ -227,16 +232,6 @@ export function BlogComposer({
     setTagDraft("");
   };
 
-  const handleFile = async (
-    file: File | null,
-    kind: "image" | "video" | "document" | "gallery",
-    onUrl?: (url: string) => void
-  ) => {
-    if (!file) return;
-    const url = await onUpload(file, kind);
-    if (url && onUrl) onUrl(url);
-  };
-
   const suggestedLeft = useMemo(
     () => suggestedBlogTags.filter((t) => !form.tags.includes(t)),
     [form.tags]
@@ -254,7 +249,16 @@ export function BlogComposer({
           </p>
         </div>
         {form.id && onCancelEdit ? (
-          <Button type="button" variant="outline" size="sm" className="rounded-full" onClick={onCancelEdit}>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="rounded-full"
+            onClick={() => {
+              setBusyIds([]);
+              onCancelEdit();
+            }}
+          >
             New post
           </Button>
         ) : null}
@@ -459,52 +463,82 @@ export function BlogComposer({
       <div className="rounded-xl border border-dashed border-border bg-muted/30 p-4">
         <p className="text-sm font-medium">Cover media</p>
         <div className="mt-3 grid gap-3 sm:grid-cols-3">
-          <label className="flex cursor-pointer flex-col items-center gap-2 rounded-xl border bg-background px-3 py-4 text-xs">
-            <ImagePlus className="h-5 w-5 text-primary" />
-            Cover image
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              disabled={uploading}
-              onChange={(e) =>
-                handleFile(e.target.files?.[0] || null, "image", (url) =>
-                  setForm((p) => ({ ...p, coverImage: url, gallery: p.gallery.includes(url) ? p.gallery : [...p.gallery, url] }))
-                )
-              }
-            />
-          </label>
-          <label className="flex cursor-pointer flex-col items-center gap-2 rounded-xl border bg-background px-3 py-4 text-xs">
-            <Video className="h-5 w-5 text-primary" />
-            Cover video
-            <input
-              type="file"
-              accept="video/*"
-              className="hidden"
-              disabled={uploading}
-              onChange={(e) =>
-                handleFile(e.target.files?.[0] || null, "video", (url) =>
-                  setForm((p) => ({ ...p, coverVideo: url }))
-                )
-              }
-            />
-          </label>
-          <label className="flex cursor-pointer flex-col items-center gap-2 rounded-xl border bg-background px-3 py-4 text-xs">
-            <ImagePlus className="h-5 w-5 text-primary" />
-            Extra image
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              disabled={uploading}
-              onChange={(e) =>
-                handleFile(e.target.files?.[0] || null, "gallery", (url) =>
-                  setForm((p) => ({ ...p, gallery: [...p.gallery, url] }))
-                )
-              }
-            />
-          </label>
+          <FilePicker
+            key={`cover-image-${form.id || "new"}`}
+            label="Cover image"
+            accept="image/*"
+            icon={ImagePlus}
+            kind="image"
+            preview="image"
+            currentUrl={form.coverImage}
+            onUpload={onUpload}
+            onBusyChange={(busy) => markBusy("cover-image", busy)}
+            onComplete={(url) =>
+              setForm((p) => ({
+                ...p,
+                coverImage: url,
+                gallery: p.gallery.includes(url) ? p.gallery : [...p.gallery, url],
+              }))
+            }
+            onClear={() =>
+              setForm((p) => ({
+                ...p,
+                coverImage: "",
+                gallery: p.gallery.filter((u) => u !== p.coverImage),
+              }))
+            }
+          />
+          <FilePicker
+            key={`cover-video-${form.id || "new"}`}
+            label="Cover video"
+            accept="video/*"
+            icon={Video}
+            kind="video"
+            preview="video"
+            currentUrl={form.coverVideo}
+            onUpload={onUpload}
+            onBusyChange={(busy) => markBusy("cover-video", busy)}
+            onComplete={(url) => setForm((p) => ({ ...p, coverVideo: url }))}
+            onClear={() => setForm((p) => ({ ...p, coverVideo: "" }))}
+          />
+          <FilePicker
+            key={`extra-image-${form.id || "new"}-${form.gallery.length}`}
+            label="Extra image"
+            accept="image/*"
+            icon={ImagePlus}
+            kind="gallery"
+            preview="image"
+            onUpload={onUpload}
+            onBusyChange={(busy) => markBusy("gallery-image", busy)}
+            onComplete={(url) =>
+              setForm((p) => ({ ...p, gallery: [...p.gallery, url] }))
+            }
+            onClear={() => {}}
+          />
         </div>
+        {form.gallery.length ? (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {form.gallery.map((url) => (
+              <div key={url} className="relative">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={url} alt="" className="h-14 w-14 rounded-lg object-cover" />
+                <button
+                  type="button"
+                  className="absolute -right-1 -top-1 rounded-full bg-background px-1 text-[10px] text-red-600 shadow"
+                  onClick={() =>
+                    setForm((p) => ({
+                      ...p,
+                      gallery: p.gallery.filter((item) => item !== url),
+                      coverImage: p.coverImage === url ? "" : p.coverImage,
+                    }))
+                  }
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : null}
         <div className="mt-3 space-y-2">
           <Label htmlFor="youtube">Cover YouTube URL</Label>
           <Input
@@ -514,10 +548,6 @@ export function BlogComposer({
             placeholder="https://www.youtube.com/watch?v=..."
           />
         </div>
-        {form.coverImage ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={form.coverImage} alt="cover" className="mt-3 h-16 w-16 rounded-lg object-cover" />
-        ) : null}
       </div>
       </div>
 
@@ -552,11 +582,11 @@ export function BlogComposer({
                 block={block}
                 index={index}
                 total={form.blocks.length}
-                uploading={uploading}
                 onChange={(patch) => updateBlock(block.id, patch)}
                 onMove={(dir) => moveBlock(index, dir)}
                 onRemove={() => removeBlock(block.id)}
-                onUpload={handleFile}
+                onUpload={onUpload}
+                onBusyChange={(busy) => markBusy(`block-${block.id}`, busy)}
               />
               <InsertRow onInsert={(type) => addBlock(type, index + 1)} />
             </div>
@@ -581,56 +611,23 @@ export function BlogComposer({
 
       <div className="rounded-xl border border-dashed border-border p-4">
         <p className="text-sm font-medium">Article attachments</p>
-        <label className="mt-3 flex cursor-pointer items-center justify-center gap-2 rounded-xl border bg-background px-3 py-4 text-xs">
-          <FileUp className="h-4 w-4 text-primary" />
-          Upload PDF, Excel, PPT, ZIP or DOC
-          <input
-            type="file"
-            accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,.csv,.txt"
-            className="hidden"
-            disabled={uploading}
-            onChange={(e) =>
-              handleFile(e.target.files?.[0] || null, "document", (url) => {
-                const file = e.target.files?.[0];
-                setForm((p) => ({
-                  ...p,
-                  attachments: [
-                    ...p.attachments,
-                    {
-                      title: file?.name || "Download",
-                      url,
-                      fileLabel: "Download",
-                      fileType: (file?.name.split(".").pop() || "file").toUpperCase(),
-                    },
-                  ],
-                }));
-              })
+        <p className="mt-1 text-xs text-muted-foreground">
+          PDF, Word, Excel, PowerPoint, ZIP, CSV, or TXT. Each file has its own progress, stop, resume, and remove.
+        </p>
+        <div className="mt-3">
+          <AttachmentManager
+            items={form.attachments}
+            onUpload={onUpload}
+            onBusyChange={(id, busy) => markBusy(`attachment-${id}`, busy)}
+            onChange={(attachments) =>
+              setForm((p) => ({
+                ...p,
+                attachments:
+                  typeof attachments === "function" ? attachments(p.attachments) : attachments,
+              }))
             }
           />
-        </label>
-        {form.attachments.length ? (
-          <ul className="mt-3 space-y-2">
-            {form.attachments.map((file, i) => (
-              <li key={`${file.url}-${i}`} className="flex items-center justify-between gap-2 text-xs">
-                <span className="truncate">{file.title}</span>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="ghost"
-                  className="h-7 text-red-600"
-                  onClick={() =>
-                    setForm((p) => ({
-                      ...p,
-                      attachments: p.attachments.filter((_, idx) => idx !== i),
-                    }))
-                  }
-                >
-                  Remove
-                </Button>
-              </li>
-            ))}
-          </ul>
-        ) : null}
+        </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
@@ -668,11 +665,16 @@ export function BlogComposer({
       </>
       )}
 
-      <Button type="submit" size="lg" className="w-full rounded-full" disabled={saving || uploading}>
+      <Button type="submit" size="lg" className="w-full rounded-full" disabled={saving || anyUploading}>
         {saving ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             Saving…
+          </>
+        ) : anyUploading ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Waiting for file uploads…
           </>
         ) : (
           <>
@@ -681,6 +683,11 @@ export function BlogComposer({
           </>
         )}
       </Button>
+      {anyUploading ? (
+        <p className="text-center text-xs text-muted-foreground">
+          Stop or wait for the file currently uploading. Other upload areas stay available.
+        </p>
+      ) : null}
     </form>
   );
 }
@@ -725,24 +732,20 @@ function BlockEditor({
   block,
   index,
   total,
-  uploading,
   onChange,
   onMove,
   onRemove,
   onUpload,
+  onBusyChange,
 }: {
   block: BlogSection;
   index: number;
   total: number;
-  uploading: boolean;
   onChange: (patch: Partial<BlogSection>) => void;
   onMove: (dir: -1 | 1) => void;
   onRemove: () => void;
-  onUpload: (
-    file: File | null,
-    kind: "image" | "video" | "document" | "gallery",
-    onUrl?: (url: string) => void
-  ) => void;
+  onUpload: UploadFn;
+  onBusyChange?: (busy: boolean) => void;
 }) {
   const type = block.type || "section";
   const label = blogBlockOptions.find((o) => o.type === type)?.label || "Section";
@@ -829,45 +832,43 @@ function BlockEditor({
 
       {type === "image" ? (
         <div className="space-y-2">
-          <label className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed px-3 py-4 text-xs">
-            <ImagePlus className="h-4 w-4" />
-            Upload image
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              disabled={uploading}
-              onChange={(e) =>
-                onUpload(e.target.files?.[0] || null, "image", (url) => onChange({ imageUrl: url }))
-              }
-            />
-          </label>
+          <FilePicker
+            label="Upload image"
+            accept="image/*"
+            icon={ImagePlus}
+            kind="image"
+            preview="image"
+            currentUrl={block.imageUrl}
+            onUpload={onUpload}
+            onBusyChange={onBusyChange}
+            onComplete={(url, file) =>
+              onChange({ imageUrl: url, imageAlt: block.imageAlt || file.name })
+            }
+            onClear={() => onChange({ imageUrl: "", imageAlt: "" })}
+          />
           <Input
             value={block.imageAlt || ""}
             onChange={(e) => onChange({ imageAlt: e.target.value })}
             placeholder="Alt text / caption"
           />
-          {block.imageUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={mediaUrl(block.imageUrl)} alt="" className="h-20 rounded-lg object-cover" />
-          ) : null}
         </div>
       ) : null}
 
       {type === "video" ? (
-        <label className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed px-3 py-4 text-xs">
-          <Video className="h-4 w-4" />
-          Upload video
-          <input
-            type="file"
+        <div className="space-y-2">
+          <FilePicker
+            label="Upload video"
             accept="video/*"
-            className="hidden"
-            disabled={uploading}
-            onChange={(e) =>
-              onUpload(e.target.files?.[0] || null, "video", (url) => onChange({ videoUrl: url }))
-            }
+            icon={Video}
+            kind="video"
+            preview="video"
+            currentUrl={block.videoUrl}
+            onUpload={onUpload}
+            onBusyChange={onBusyChange}
+            onComplete={(url) => onChange({ videoUrl: url })}
+            onClear={() => onChange({ videoUrl: "" })}
           />
-        </label>
+        </div>
       ) : null}
 
       {type === "youtube" ? (
@@ -945,32 +946,39 @@ function BlockEditor({
             }
             placeholder="File title"
           />
-          <label className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed px-3 py-4 text-xs">
-            <FileUp className="h-4 w-4" />
-            Upload file
-            <input
-              type="file"
-              className="hidden"
-              disabled={uploading}
-              onChange={(e) =>
-                onUpload(e.target.files?.[0] || null, "document", (url) => {
-                  const file = e.target.files?.[0];
-                  onChange({
-                    download: {
-                      title: block.download?.title || file?.name || "Download",
-                      description: block.download?.description || "",
-                      url,
-                      fileLabel: "Download",
-                      fileType: (file?.name.split(".").pop() || "file").toUpperCase(),
-                    },
-                  });
-                })
-              }
-            />
-          </label>
-          {block.download?.url ? (
-            <p className="truncate text-xs text-muted-foreground">{block.download.url}</p>
-          ) : null}
+          <FilePicker
+            label="Upload file"
+            accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,.csv,.txt,application/pdf"
+            icon={FileUp}
+            kind="document"
+            currentName={block.download?.fileLabel || block.download?.title}
+            currentUrl={block.download?.url}
+            onUpload={onUpload}
+            onBusyChange={onBusyChange}
+            onComplete={(url, file) => {
+              const ext = (file.name.split(".").pop() || "file").toUpperCase();
+              onChange({
+                download: {
+                  title: block.download?.title || file.name,
+                  description: block.download?.description || "",
+                  url,
+                  fileLabel: file.name,
+                  fileType: ext,
+                },
+              });
+            }}
+            onClear={() =>
+              onChange({
+                download: {
+                  title: block.download?.title || "",
+                  description: block.download?.description || "",
+                  url: "",
+                  fileLabel: "",
+                  fileType: "",
+                },
+              })
+            }
+          />
         </div>
       ) : null}
 

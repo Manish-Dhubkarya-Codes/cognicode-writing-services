@@ -7,15 +7,16 @@ import { getSiteAdmin, getSiteUser, requestOpenAuth } from "@/lib/site-user";
 import {
   EngagementStats,
   getLocalSavedSlugs,
-  recordPostShare,
   togglePostLike,
   toggleSavedPost,
 } from "@/lib/blog-engagement";
 import { useToast } from "@/hooks/use-toast";
+import { ShareArticleButton } from "@/components/blog/share-article-dialog";
 
 type PostEngagementProps = {
   slug: string;
   href?: string;
+  title?: string;
   stats: EngagementStats;
   onStats: (next: EngagementStats) => void;
   onComment?: () => void;
@@ -25,6 +26,7 @@ type PostEngagementProps = {
 export function PostEngagement({
   slug,
   href,
+  title,
   stats,
   onStats,
   onComment,
@@ -88,24 +90,7 @@ export function PostEngagement({
     }
   };
 
-  const share = async () => {
-    const url =
-      typeof window !== "undefined"
-        ? `${window.location.origin}${href || window.location.pathname}`
-        : href || "";
-    try {
-      if (navigator.share) {
-        await navigator.share({ url, title: document.title });
-        await recordPostShare(slug, "native");
-      } else {
-        await navigator.clipboard.writeText(url);
-        await recordPostShare(slug, "copy");
-        toast({ title: "Link copied" });
-      }
-    } catch {
-      // cancelled
-    }
-  };
+
 
   const toggleSave = async () => {
     const next = !saved;
@@ -142,14 +127,15 @@ export function PostEngagement({
         >
           <MessageCircle className={cn(icon, "text-foreground")} />
         </button>
-        <button
-          type="button"
-          onClick={share}
+        <ShareArticleButton
+          href={href}
+          title={title || (typeof document !== "undefined" ? document.title : "CogniCode article")}
+          slug={slug}
           className="rounded-full p-1.5 hover:bg-muted sm:p-2"
-          aria-label="Share"
         >
           <Send className="h-4 w-4 text-foreground sm:h-5 sm:w-5" />
-        </button>
+          <span className="sr-only">Share</span>
+        </ShareArticleButton>
       </div>
       <button
         type="button"
