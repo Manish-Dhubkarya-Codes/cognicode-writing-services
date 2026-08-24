@@ -75,7 +75,10 @@ export async function uploadBlogFileResumable(input: {
       totalSize: file.size,
       adminId: admin.adminId,
       email: admin.email,
+    }, "json", {
+      signal: options?.signal,
     });
+    throwIfAborted(options?.signal);
     if (!init?.success || !init?.data?.uploadId) {
       return uploadWholeFile(file, kind, authQuery, admin, options);
     }

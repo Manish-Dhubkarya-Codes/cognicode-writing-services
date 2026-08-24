@@ -6,7 +6,7 @@ import axios from "axios";
  * Live site (cognicodeedutech.com) always uses the Hostinger API.
  * Localhost uses NEXT_PUBLIC_API_URL, then http://127.0.0.1:3000.
  */
-const LIVE_API = "http://localhost:3000";
+const LIVE_API = "https://api.cognicodeedutech.com";
 
 export function getServerURL() {
   if (typeof window !== "undefined") {
@@ -79,6 +79,13 @@ function postFormData(
     xhr.open("POST", url);
     xhr.timeout = 180000;
     xhr.responseType = "text";
+
+    if (extra?.signal?.aborted) {
+      const abortErr = new Error("UPLOAD_ABORTED");
+      abortErr.name = "AbortError";
+      reject(abortErr);
+      return;
+    }
 
     const onAbort = () => xhr.abort();
     extra?.signal?.addEventListener("abort", onAbort);

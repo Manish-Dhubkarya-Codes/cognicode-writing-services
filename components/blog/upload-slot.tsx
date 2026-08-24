@@ -156,10 +156,13 @@ export function FilePicker({
   const abortRef = useRef<AbortController | null>(null);
   const fileRef = useRef<File | null>(null);
   const resumeRef = useRef<ResumeState | null>(null);
+  const callbacksRef = useRef({ onUpload, onComplete, onBusyChange, onClear });
+  callbacksRef.current = { onUpload, onComplete, onBusyChange, onClear };
   const [file, setFile] = useState<File | null>(null);
   const [progress, setProgress] = useState(currentUrl ? 100 : 0);
   const [status, setStatus] = useState<SlotStatus>(currentUrl ? "done" : "idle");
   const [localPreview, setLocalPreview] = useState("");
+  const [uploadGen, setUploadGen] = useState(0);
 
   useEffect(() => {
     if (currentUrl) {
@@ -176,65 +179,79 @@ export function FilePicker({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUrl]);
 
-  useEffect(() => {
-    return () => {
-      abortRef.current?.abort();
-      if (localPreview.startsWith("blob:")) URL.revokeObjectURL(localPreview);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const startUpload = async (nextFile: File, fromPause = false) => {
-    abortRef.current?.abort();
-    const ac = new AbortController();
-    abortRef.current = ac;
+  const beginUpload = (nextFile: File, keepResume: boolean) => {
     fileRef.current = nextFile;
     setFile(nextFile);
-    setStatus("uploading");
-    if (!fromPause) {
+    if (!keepResume) {
       resumeRef.current = null;
       setProgress(0);
     }
-    onBusyChange?.(true);
     if (preview === "image" || preview === "video") {
-      if (localPreview.startsWith("blob:")) URL.revokeObjectURL(localPreview);
-      setLocalPreview(URL.createObjectURL(nextFile));
-    }
-    try {
-      const url = await onUpload(nextFile, kind, {
-        signal: ac.signal,
-        resumeState: fromPause ? resumeRef.current : null,
-        onResumeState: (state) => {
-          resumeRef.current = state;
-        },
-        onProgress: (pct) => {
-          if (!ac.signal.aborted) setProgress(pct);
-        },
+      setLocalPreview((prev) => {
+        if (prev.startsWith("blob:")) URL.revokeObjectURL(prev);
+        return URL.createObjectURL(nextFile);
       });
-      if (ac.signal.aborted) return;
-      if (url) {
-        resumeRef.current = null;
-        setProgress(100);
-        setStatus("done");
-        onComplete(url, nextFile);
-      } else {
-        setStatus("error");
-      }
-    } catch (err: any) {
-      if (err?.name === "AbortError" || ac.signal.aborted) {
-        setStatus("paused");
-        return;
-      }
-      setStatus("error");
-    } finally {
-      onBusyChange?.(false);
     }
+    setStatus("uploading");
+    setUploadGen((n) => n + 1);
   };
 
+  useEffect(() => {
+    if (uploadGen === 0) return;
+    const nextFile = fileRef.current;
+    if (!nextFile) return;
+
+    const ac = new AbortController();
+    abortRef.current = ac;
+    callbacksRef.current.onBusyChange?.(true);
+
+    const run = async () => {
+      try {
+        const url = await callbacksRef.current.onUpload(nextFile, kind, {
+          signal: ac.signal,
+          resumeState: resumeRef.current,
+          onResumeState: (state) => {
+            resumeRef.current = state;
+          },
+          onProgress: (pct) => {
+            if (!ac.signal.aborted) setProgress(pct);
+          },
+        });
+        if (ac.signal.aborted) return;
+        if (url) {
+          resumeRef.current = null;
+          setProgress(100);
+          setStatus("done");
+          callbacksRef.current.onComplete(url, nextFile);
+        } else {
+          setStatus("error");
+        }
+      } catch (err: any) {
+        if (err?.name === "AbortError" || ac.signal.aborted) return;
+        setStatus("error");
+      } finally {
+        if (abortRef.current === ac) {
+          callbacksRef.current.onBusyChange?.(false);
+        }
+      }
+    };
+
+    void run();
+    return () => {
+      ac.abort();
+    };
+  }, [uploadGen, kind]);
+
+  useEffect(() => {
+    return () => {
+      if (localPreview.startsWith("blob:")) URL.revokeObjectURL(localPreview);
+    };
+  }, [localPreview]);
+
   const stop = () => {
-    abortRef.current?.abort();
     setStatus("paused");
-    onBusyChange?.(false);
+    abortRef.current?.abort();
+    callbacksRef.current.onBusyChange?.(false);
   };
 
   const resume = () => {
@@ -243,7 +260,7 @@ export function FilePicker({
       inputRef.current?.click();
       return;
     }
-    void startUpload(next, true);
+    beginUpload(next, true);
   };
 
   const remove = () => {
@@ -253,10 +270,11 @@ export function FilePicker({
     setFile(null);
     setStatus("idle");
     setProgress(0);
+    setUploadGen(0);
     if (localPreview.startsWith("blob:")) URL.revokeObjectURL(localPreview);
     setLocalPreview("");
-    onBusyChange?.(false);
-    onClear();
+    callbacksRef.current.onBusyChange?.(false);
+    callbacksRef.current.onClear();
     if (inputRef.current) inputRef.current.value = "";
   };
 
@@ -275,7 +293,7 @@ export function FilePicker({
         onChange={(e) => {
           const next = e.target.files?.[0];
           e.target.value = "";
-          if (next) void startUpload(next);
+          if (next) beginUpload(next, false);
         }}
       />
       <div className="rounded-xl border border-dashed border-border bg-background p-3">
@@ -479,67 +497,80 @@ function AttachmentRow({
   const abortRef = useRef<AbortController | null>(null);
   const fileRef = useRef<File | null>(item._file || null);
   const resumeRef = useRef<ResumeState | null>(null);
+  const callbacksRef = useRef({ onUpload, onPatch, onBusyChange });
+  callbacksRef.current = { onUpload, onPatch, onBusyChange };
   const [progress, setProgress] = useState(item.url ? 100 : 0);
   const [status, setStatus] = useState<SlotStatus>(
     item.url ? "done" : item.error ? "error" : item.pending ? "uploading" : "idle"
   );
-  const started = useRef(false);
+  const [uploadGen, setUploadGen] = useState(() => (!item.url && item._file ? 1 : 0));
 
-  const start = async (next?: File, fromPause = false) => {
+  const beginUpload = (next?: File, keepResume = false) => {
     const file = next || fileRef.current;
     if (!file) return;
     fileRef.current = file;
-    abortRef.current?.abort();
-    const ac = new AbortController();
-    abortRef.current = ac;
-    setStatus("uploading");
-    if (!fromPause) {
+    if (!keepResume) {
       resumeRef.current = null;
       setProgress(0);
     }
-    onPatch({ pending: true, error: undefined });
-    onBusyChange?.(slotId, true);
-    try {
-      const url = await onUpload(file, "document", {
-        signal: ac.signal,
-        resumeState: fromPause ? resumeRef.current : null,
-        onResumeState: (state) => {
-          resumeRef.current = state;
-        },
-        onProgress: (pct) => {
-          if (!ac.signal.aborted) setProgress(pct);
-        },
-      });
-      if (ac.signal.aborted) return;
-      if (url) {
-        resumeRef.current = null;
-        setProgress(100);
-        setStatus("done");
-        onPatch({ url, pending: false, error: undefined, title: file.name, fileLabel: file.name });
-      } else {
-        setStatus("error");
-        onPatch({ pending: false, error: "Upload failed" });
-      }
-    } catch (err: any) {
-      if (err?.name === "AbortError" || ac.signal.aborted) {
-        setStatus("paused");
-        onPatch({ pending: false, error: "Paused" });
-        return;
-      }
-      setStatus("error");
-      onPatch({ pending: false, error: "Upload failed" });
-    } finally {
-      onBusyChange?.(slotId, false);
-    }
+    setStatus("uploading");
+    callbacksRef.current.onPatch({ pending: true, error: undefined });
+    setUploadGen((n) => n + 1);
   };
 
   useEffect(() => {
-    if (started.current) return;
-    started.current = true;
-    if (!item.url && fileRef.current) void start(fileRef.current);
-    return () => abortRef.current?.abort();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (uploadGen === 0) return;
+    const file = fileRef.current;
+    if (!file) return;
+
+    const ac = new AbortController();
+    abortRef.current = ac;
+    callbacksRef.current.onBusyChange?.(slotId, true);
+
+    const run = async () => {
+      try {
+        const url = await callbacksRef.current.onUpload(file, "document", {
+          signal: ac.signal,
+          resumeState: resumeRef.current,
+          onResumeState: (state) => {
+            resumeRef.current = state;
+          },
+          onProgress: (pct) => {
+            if (!ac.signal.aborted) setProgress(pct);
+          },
+        });
+        if (ac.signal.aborted) return;
+        if (url) {
+          resumeRef.current = null;
+          setProgress(100);
+          setStatus("done");
+          callbacksRef.current.onPatch({
+            url,
+            pending: false,
+            error: undefined,
+            title: file.name,
+            fileLabel: file.name,
+          });
+        } else {
+          setStatus("error");
+          callbacksRef.current.onPatch({ pending: false, error: "Upload failed" });
+        }
+      } catch (err: any) {
+        if (err?.name === "AbortError" || ac.signal.aborted) return;
+        setStatus("error");
+        callbacksRef.current.onPatch({ pending: false, error: "Upload failed" });
+      } finally {
+        if (abortRef.current === ac) {
+          callbacksRef.current.onBusyChange?.(slotId, false);
+        }
+      }
+    };
+
+    void run();
+    return () => {
+      ac.abort();
+    };
+  }, [uploadGen, slotId]);
 
   return (
     <li className="flex items-center gap-3 rounded-lg border border-border/70 bg-background px-3 py-2">
@@ -562,10 +593,10 @@ function AttachmentRow({
             variant="ghost"
             className="h-7 px-2 text-[11px]"
             onClick={() => {
-              abortRef.current?.abort();
               setStatus("paused");
-              onPatch({ pending: false, error: "Stopped" });
-              onBusyChange?.(slotId, false);
+              abortRef.current?.abort();
+              callbacksRef.current.onPatch({ pending: false, error: "Stopped" });
+              callbacksRef.current.onBusyChange?.(slotId, false);
             }}
           >
             <Pause className="mr-1 h-3 w-3" />
@@ -578,7 +609,7 @@ function AttachmentRow({
             size="sm"
             variant="ghost"
             className="h-7 px-2 text-[11px]"
-            onClick={() => void start(undefined, true)}
+            onClick={() => beginUpload(undefined, true)}
             disabled={!fileRef.current}
           >
             <Play className="mr-1 h-3 w-3" />
